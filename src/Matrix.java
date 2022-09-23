@@ -6,18 +6,20 @@
  */
 
 public class Matrix {
-    int m;
-    int n;
+    int length;
+    int height;
+    double peopleNumber;
     int[][] matrix;
 
-    public Matrix(int m, int n) {
-        this.m = m;
-        this.n = n;
+    public Matrix(int length, int height, double peopleNumber) {
+        this.length = length;
+        this.height = height;
+        this.peopleNumber = peopleNumber;
     }
 
     void createMatrix() {
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < height; j++) {
                 matrix[i][j] = -1;
             }
         }
