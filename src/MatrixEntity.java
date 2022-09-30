@@ -2,13 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Optional;
 
-/**
- * @author LE BIHAN Léo
- * @author IMAMI Ayoub
- *
- * Matrix class : matrix where the crowd will move
- */
-
 public class MatrixEntity {
     int length; //length of the grid
     int height; //height of the grid

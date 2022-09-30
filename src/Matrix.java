@@ -1,10 +1,3 @@
-/**
- * @author LE BIHAN Léo
- * @author IMAMI Ayoub
- *
- * Matrix class : matrix where the crowd will move
- */
-
 public class Matrix {
     int length; //length of the grid
     int height; //height of the grid

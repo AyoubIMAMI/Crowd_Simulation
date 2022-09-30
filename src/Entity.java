@@ -22,10 +22,14 @@ public class Entity {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof Entity){
-            Entity other = (Entity) o;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity entity = (Entity) o;
+        return Objects.equals(currentPos, entity.currentPos) && Objects.equals(finalPos, entity.finalPos) && Objects.equals(uniqueID, entity.uniqueID);
+    }
 
-        }
-        return false;
+    @Override
+    public int hashCode() {
+        return Objects.hash(currentPos, finalPos, uniqueID);
     }
 }
