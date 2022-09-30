@@ -27,23 +27,7 @@ public class MatrixEntity {
         }
     }
 
-    public JFrame createGraphicGrid(){
-        JFrame frame = new JFrame("My First GUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500,500);
 
-        for(int i = 0 ; i < this.length ; i ++){
-            for(int j = 0 ; j < this.height ; j ++){
-                JPanel p = new JPanel();
-                p.setBorder(BorderFactory.createLineBorder(Color.orange));
-                if(matrix[i][j].isPresent())
-                    p.setBackground(Color.red);
-                frame.getContentPane().add(p); // Adds Button to content pane of frame
-            }
-        }
-        frame.setLayout(new GridLayout(3,3));
-        return frame;
-    }
 
     public Optional<Entity>[][] getMatrix() {
         return matrix;
@@ -63,4 +47,5 @@ public class MatrixEntity {
             }
         }
     }
+
 }

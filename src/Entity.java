@@ -4,8 +4,8 @@ import java.util.UUID;
 public class Entity {
     private Position currentPos;
     private Position finalPos;
-
     private String uniqueID;
+
     public Entity(Position currentPos, Position finalPos) {
         this.currentPos = currentPos;
         this.finalPos = finalPos;
