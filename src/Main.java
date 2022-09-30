@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * @author LE BIHAN Léo
@@ -17,7 +18,10 @@ public class Main {
         matrix.createMatrix();
         MatrixEntity matrixEntity = new MatrixEntity(length, height, Math.pow(2, exponent));
 
-        matrixEntity.addEntity(new Entity(new Position(0,0), new Position(2,2)));
+        Entity ent = new Entity(new Position(0,0), new Position(2,2));
+        ArrayList<Entity> listEntity = new ArrayList<>();
+        listEntity.add(ent);
+        matrixEntity.addEntity(ent);
 
         JFrame frame = matrixEntity.createGraphicGrid();
         frame.setVisible(true);
@@ -26,9 +30,12 @@ public class Main {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        //matrixEntity.move();
-        frame = matrixEntity.createGraphicGrid();
+        ent.move(new Position(1,1));       //matrixEntity.move();
+        matrixEntity.updateGrid(listEntity);
+        System.out.println("fiiin");
+        frame.removeAll();
+        //frame = matrixEntity.createGraphicGrid();
+        frame.validate();
         frame.repaint();
-
     }
 }

@@ -12,6 +12,10 @@ public class Entity {
         this.uniqueID = UUID.randomUUID().toString();
     }
 
+    public void move(Position p){
+        this.currentPos = p;
+    }
+
     public Position getCurrentPos() {
         return currentPos;
     }
