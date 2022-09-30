@@ -11,24 +11,22 @@ public class Display {
     //number of people on the grid following these values : 2^exponent
     private static final int exponent = 0;
 
+    private JFrame frame;
+
+    public Display() {
+        this.frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500,500);
+    }
+
     /**
      * Create the grid and its appearance
      *
      * @return JFrame
      */
-    public JFrame createGraphicGrid(){
-
-        //create the matrix and put entities on it
-        MatrixEntity matrixEntity = new MatrixEntity(length, height, Math.pow(2, exponent));
-        matrixEntity.addEntity(new Entity(new Position(0,0), new Position(2,2)));
-
+    public void updateGraphicGrid(MatrixEntity matrixEntity){
         //get the matrix
         Optional<Entity>[][] matrix = matrixEntity.getMatrix();
-
-        //create the window
-        JFrame frame = new JFrame("My First GUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500,500);
 
         //initialize the grid appearance
         for(int i = 0 ; i < length ; i ++){
@@ -41,23 +39,19 @@ public class Display {
             }
         }
         frame.setLayout(new GridLayout(3,3));
-
-        return frame;
     }
 
     /**
      * Display and update the grid
      */
-    void displayGrid() {
-        JFrame frame = createGraphicGrid();
+    void displayGrid(MatrixEntity matrixEntity) {
+        updateGraphicGrid(matrixEntity);
         frame.setVisible(true);
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        //matrixEntity.move();
-        frame = createGraphicGrid();
-        frame.repaint();
+
     }
 }
