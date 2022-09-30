@@ -42,7 +42,7 @@ public class MatrixEntity {
             for (int j = 0; j < height; j++) {
                 boolean emptyPosition = true;
                 for (Entity entity : listEntity) {
-                    if (entity.getCurrentPos().equals(new Position(i, j))) {
+                    if (entity.getCurrentPosition().equals(new Position(i, j))) {
                         matrix[i][j] = Optional.of(entity);
                         emptyPosition = false;
                         break;
@@ -64,7 +64,7 @@ public class MatrixEntity {
      * @param entity entity to add to the grid
      */
     public void addEntity(Entity entity){
-        Position position = entity.getCurrentPos();
+        Position position = entity.getCurrentPosition();
         matrix[position.getX()][position.getX()] = Optional.of(entity);
     }
 }

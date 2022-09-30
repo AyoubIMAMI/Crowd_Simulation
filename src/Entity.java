@@ -2,26 +2,26 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Entity {
-    private Position currentPos;
-    private Position finalPos;
-    private String uniqueID;
+    private Position currentPosition;
+    private final Position arrivalPosition;
+    private final String uniqueID;
 
-    public Entity(Position currentPos, Position finalPos) {
-        this.currentPos = currentPos;
-        this.finalPos = finalPos;
+    public Entity(Position currentPosition, Position arrivalPosition) {
+        this.currentPosition = currentPosition;
+        this.arrivalPosition = arrivalPosition;
         this.uniqueID = UUID.randomUUID().toString();
     }
 
-    public void move(Position p){
-        this.currentPos = p;
+    public void move(Position position){
+        this.currentPosition = position;
     }
 
-    public Position getCurrentPos() {
-        return currentPos;
+    public Position getCurrentPosition() {
+        return currentPosition;
     }
 
-    public Position getFinalPos() {
-        return finalPos;
+    public Position getArrivalPosition() {
+        return arrivalPosition;
     }
 
     @Override
@@ -29,11 +29,11 @@ public class Entity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity entity = (Entity) o;
-        return Objects.equals(currentPos, entity.currentPos) && Objects.equals(finalPos, entity.finalPos) && Objects.equals(uniqueID, entity.uniqueID);
+        return Objects.equals(currentPosition, entity.currentPosition) && Objects.equals(arrivalPosition, entity.arrivalPosition) && Objects.equals(uniqueID, entity.uniqueID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentPos, finalPos, uniqueID);
+        return Objects.hash(currentPosition, arrivalPosition, uniqueID);
     }
 }
