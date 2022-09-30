@@ -1,14 +1,18 @@
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class MatrixEntity {
-    int length; //length of the grid
-    int height; //height of the grid
-    double peopleNumber; //number of people in the crowd
+
+    //length and height of the grid
+    int length;
+    int height;
+
+    //number of people in the crowd
+    double peopleNumber;
+
+    //matrix which represent the grid
     Optional<Entity>[][] matrix;
-    @SuppressWarnings("unchecked")
+
     public MatrixEntity(int length, int height, double peopleNumber) {
         this.length = length;
         this.height = height;
@@ -28,20 +32,23 @@ public class MatrixEntity {
         }
     }
 
+    /**
+     * Update the positions of the entities
+     *
+     * @param listEntity list of entities
+     */
     public void updateGrid(ArrayList<Entity> listEntity){
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < height; j++) {
-                boolean emptyPos = true;
-                for(int k=0; k < listEntity.size() ; k++){
-                    System.out.println("hello");
-                    Entity e = listEntity.get(k);
-                    if(e.getCurrentPos().equals(new Position(i, j))){
-                        matrix[i][j] = Optional.of(e);
-                        emptyPos=false;
+                boolean emptyPosition = true;
+                for (Entity entity : listEntity) {
+                    if (entity.getCurrentPos().equals(new Position(i, j))) {
+                        matrix[i][j] = Optional.of(entity);
+                        emptyPosition = false;
                         break;
                     }
                 }
-                if(emptyPos) matrix[i][j] = Optional.empty();
+                if(emptyPosition) matrix[i][j] = Optional.empty();
 
             }
         }
@@ -52,8 +59,12 @@ public class MatrixEntity {
         return matrix;
     }
 
-    public void addEntity(Entity e){
-        Position pos = e.getCurrentPos();
-        matrix[pos.getX()][pos.getX()] = Optional.of(e);
+    /**
+     * Add an entity on the grid
+     * @param entity entity to add to the grid
+     */
+    public void addEntity(Entity entity){
+        Position position = entity.getCurrentPos();
+        matrix[position.getX()][position.getX()] = Optional.of(entity);
     }
 }
