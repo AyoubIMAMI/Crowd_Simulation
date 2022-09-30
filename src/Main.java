@@ -1,12 +1,12 @@
+import javax.swing.*;
+import java.awt.*;
+
 /**
  * @author LE BIHAN Léo
  * @author IMAMI Ayoub
  *
  * Main class
  */
-import javax.swing.*;
-import java.awt.*;
-
 public class Main {
     private static final int length = 3;
     private static final int height = 3;
