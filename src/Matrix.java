@@ -15,6 +15,7 @@ public class Matrix {
         this.length = length;
         this.height = height;
         this.peopleNumber = peopleNumber;
+        matrix = new int[length][height];
     }
 
     /**
