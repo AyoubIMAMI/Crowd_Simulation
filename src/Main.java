@@ -28,7 +28,7 @@ public class Main {
         }
         //matrixEntity.move();
         frame = matrixEntity.createGraphicGrid();
-        frame.setVisible(true);
+        frame.repaint();
 
     }
 }
