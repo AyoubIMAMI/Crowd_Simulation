@@ -27,6 +27,24 @@ public class MatrixEntity {
         }
     }
 
+    public void updateGrid(ArrayList<Entity> listEntity){
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < height; j++) {
+                boolean emptyPos = true;
+                for(int k=0; k < listEntity.size() ; k++){
+                    System.out.println("hello");
+                    Entity e = listEntity.get(k);
+                    if(e.getCurrentPos().equals(new Position(i, j))){
+                        matrix[i][j] = Optional.of(e);
+                        emptyPos=false;
+                        break;
+                    }
+                }
+                if(emptyPos) matrix[i][j] = Optional.empty();
+
+            }
+        }
+    }
 
 
     public Optional<Entity>[][] getMatrix() {
@@ -37,15 +55,4 @@ public class MatrixEntity {
         Position pos = e.getCurrentPos();
         matrix[pos.getX()][pos.getX()] = Optional.of(e);
     }
-
-    public void moveEntity(Entity e){
-        for(int i = 0 ; i < this.length ; i ++){
-            for(int j = 0 ; j < this.height ; j ++){
-                if(matrix[i][j].isPresent()){
-                    Entity entity = matrix[i][j].get();
-                }
-            }
-        }
-    }
-
 }
