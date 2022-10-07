@@ -24,9 +24,9 @@ public class Display {
     /**
      * Create the grid and its appearance
      */
-    public void updateGraphicGrid(MatrixEntity matrixEntity){
+    public void updateGraphicGrid(Grid grid){
         //get the matrix
-        Optional<Entity>[][] matrix = matrixEntity.getMatrix();
+        Optional<Entity>[][] matrix = grid.getGrid();
 
         //initialize the grid appearance
         for(int i = 0 ; i < length ; i ++){
@@ -60,8 +60,8 @@ public class Display {
     /**
      * Display and update the grid
      */
-    void displayGrid(MatrixEntity matrixEntity) {
-        updateGraphicGrid(matrixEntity);
+    void displayGrid(Grid grid) {
+        updateGraphicGrid(grid);
         frame.setVisible(true);
     }
 
