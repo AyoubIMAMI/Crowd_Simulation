@@ -3,6 +3,8 @@ import java.util.Optional;
 
 public class MatrixEntity {
 
+    ArrayList<Entity> listEntity;
+
     //length and height of the grid
     int length;
     int height;
@@ -14,6 +16,7 @@ public class MatrixEntity {
     Optional<Entity>[][] matrix;
 
     public MatrixEntity(int length, int height, double peopleNumber) {
+        this.listEntity = new ArrayList<>();
         this.length = length;
         this.height = height;
         this.peopleNumber = peopleNumber;
@@ -64,7 +67,12 @@ public class MatrixEntity {
      * @param entity entity to add to the grid
      */
     public void addEntity(Entity entity){
+        this.listEntity.add(entity);
         Position position = entity.getCurrentPosition();
         matrix[position.getX()][position.getX()] = Optional.of(entity);
+    }
+
+    public ArrayList<Entity> getListEntity() {
+        return listEntity;
     }
 }
