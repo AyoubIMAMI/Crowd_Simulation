@@ -40,7 +40,7 @@ public class Main {
         while(true){
             for(Entity entity: listEnt){
                 if(!entity.isArrived()) {
-                    entity.move(Position.getRandomLogicalPosition(entity.getCurrentPosition(), entity.getArrivalPosition()));
+                    entity.move(Position.getNewPosition(entity.getCurrentPosition(), entity.getArrivalPosition()));
                     Thread.sleep(100);
                     display.updateGrid(grid.getEntitiesList());
                 }

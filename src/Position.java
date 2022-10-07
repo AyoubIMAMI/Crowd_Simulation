@@ -2,6 +2,8 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Position {
+
+    //(i, j) position coordinates
     private int i;
     private int j;
 
@@ -10,36 +12,48 @@ public class Position {
         this.j = j;
     }
 
+    /**
+     * Get random spawning position
+     * @param maxLength max length value available
+     * @param maxHeight max height value available
+     * @return a random position
+     */
     public static Position getRandomPosition(int maxLength, int maxHeight) {
         Random random = new Random();
         return new Position(random.nextInt(0, maxLength-1), random.nextInt(0, maxHeight-1));
     }
 
-    public static Position getRandomLogicalPosition(Position currentPos, Position arrivalPosition) {
-        int iDifference = arrivalPosition.getI() - currentPos.getI();
-        int jDifference = arrivalPosition.getJ() - currentPos.getJ();
+    /**
+     * Compute the new position the reach the arrival position
+     * @param currentPosition entity current position
+     * @param arrivalPosition entity arrival position
+     * @return the new position, closest to the arrival
+     */
+    public static Position getNewPosition(Position currentPosition, Position arrivalPosition) {
+        int iDifference = arrivalPosition.getI() - currentPosition.getI();
+        int jDifference = arrivalPosition.getJ() - currentPosition.getJ();
 
         if(iDifference != 0) iDifference /= Math.abs(iDifference);
         if(jDifference != 0) jDifference /= Math.abs(jDifference);
 
         int xySum = iDifference + jDifference;
 
-        if(xySum == -2) return new Position(currentPos.getI()-1, currentPos.getJ()-1);
+        if(xySum == -2) return new Position(currentPosition.getI()-1, currentPosition.getJ()-1);
 
-        else if(xySum == 2) return new Position(currentPos.getI()+1, currentPos.getJ()+1);
+        else if(xySum == 2) return new Position(currentPosition.getI()+1, currentPosition.getJ()+1);
 
-        else if(xySum == 0 && iDifference == 1) return new Position(currentPos.getI()+1, currentPos.getJ()-1);
+        else if(xySum == 0 && iDifference == 1) return new Position(currentPosition.getI()+1, currentPosition.getJ()-1);
 
-        else if(xySum == 0 && iDifference == -1) return new Position(currentPos.getI()-1, currentPos.getJ()+1);
+        else if(xySum == 0 && iDifference == -1) return new Position(currentPosition.getI()-1, currentPosition.getJ()+1);
 
-        else if(xySum == 1 && iDifference == 1) return new Position(currentPos.getI()+1, currentPos.getJ());
+        else if(xySum == 1 && iDifference == 1) return new Position(currentPosition.getI()+1, currentPosition.getJ());
 
-        else if(xySum == -1 && iDifference == -1) return new Position(currentPos.getI()-1, currentPos.getJ());
+        else if(xySum == -1 && iDifference == -1) return new Position(currentPosition.getI()-1, currentPosition.getJ());
 
-        else if(xySum == 1 && iDifference == 0) return new Position(currentPos.getI(), currentPos.getJ()+1);
+        else if(xySum == 1 && iDifference == 0) return new Position(currentPosition.getI(), currentPosition.getJ()+1);
 
         else
-            return new Position(currentPos.getI(), currentPos.getJ()-1); //if(xySum == -1 && iDifference == 0)
+            return new Position(currentPosition.getI(), currentPosition.getJ()-1); //if(xySum == -1 && iDifference == 0)
     }
 
     public int getI() {
@@ -52,9 +66,8 @@ public class Position {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof Position){
-            Position other = (Position) o;
-            if(this.i == other.getI() && this.j == other.getJ()) return true;
+        if(o instanceof Position other){
+            return this.i == other.getI() && this.j == other.getJ();
         }
         return false;
     }
