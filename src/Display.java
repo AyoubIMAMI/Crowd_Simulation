@@ -45,7 +45,7 @@ public class Display {
         frame.setLayout(new GridLayout(3,3));
     }
 
-    void updateGridV2(ArrayList<Entity> listEntity){
+    void updateGrid(ArrayList<Entity> listEntity){
         for(Entity e: listEntity){
             if(e.hasMove()){
                 Position lastPos = e.getLastPosition().get();
@@ -63,11 +63,5 @@ public class Display {
     void displayGrid(MatrixEntity matrixEntity) {
         updateGraphicGrid(matrixEntity);
         frame.setVisible(true);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 }
