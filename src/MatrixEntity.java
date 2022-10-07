@@ -35,28 +35,6 @@ public class MatrixEntity {
         }
     }
 
-    /**
-     * Update the positions of the entities
-     *
-     * @param listEntity list of entities
-     */
-    public void updateGrid(ArrayList<Entity> listEntity){
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < height; j++) {
-                boolean emptyPosition = true;
-                for (Entity entity : listEntity) {
-                    if (entity.getCurrentPosition().equals(new Position(i, j))) {
-                        matrix[i][j] = Optional.of(entity);
-                        emptyPosition = false;
-                        break;
-                    }
-                }
-                if(emptyPosition) matrix[i][j] = Optional.empty();
-
-            }
-        }
-    }
-
 
     public Optional<Entity>[][] getMatrix() {
         return matrix;
