@@ -6,8 +6,8 @@ import java.util.Optional;
 public class Display {
 
     //length*height of the grid
-    private static final int length = 3;
-    private static final int height = 3;
+    private int length;
+    private int height;
 
     //number of people on the grid following these values : 2^exponent
     private static final int exponent = 0;
@@ -15,7 +15,9 @@ public class Display {
     private JFrame frame;
     private JPanel[][] jPanelList;
 
-    public Display() {
+    public Display(int length, int height) {
+        this.length = length;
+        this.height = height;
         this.frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500,500);
@@ -51,7 +53,7 @@ public class Display {
                 Position lastPos = e.getLastPosition().get();
                 Position currentPos = e.getCurrentPosition();
 
-                jPanelList[lastPos.getX()][lastPos.getY()].setBackground(Color.gray);
+                jPanelList[lastPos.getX()][lastPos.getY()].setBackground(Color.lightGray);
                 jPanelList[currentPos.getX()][currentPos.getY()].setBackground(Color.RED);
             }
         }
