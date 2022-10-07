@@ -52,4 +52,8 @@ public class Entity {
     public boolean hasMove() {
         return this.lastPosition.isPresent();
     }
+
+    public boolean isArrived() {
+        return this.currentPosition.equals(arrivalPosition);
+    }
 }

@@ -25,6 +25,11 @@ public class Main {
             matrixEntity.addEntity(ent);
         }
 
+        /*
+        matrixEntity.addEntity(new Entity(new Position(0,0), new Position(4,4)));
+        matrixEntity.addEntity(new Entity(new Position(0,4), new Position(0,0)));
+        matrixEntity.addEntity(new Entity(new Position(5,5), new Position(5,0)));
+*/
         display.displayGrid(matrixEntity);
         ArrayList<Entity> listEnt = matrixEntity.getListEntity();
         for(Entity entity: listEnt){
