@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class Display {
@@ -12,11 +13,13 @@ public class Display {
     private static final int exponent = 0;
 
     private JFrame frame;
+    private JPanel[][] jPanelList;
 
     public Display() {
         this.frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500,500);
+        jPanelList = new JPanel[length][height];
     }
 
     /**
@@ -35,10 +38,27 @@ public class Display {
                 p.setBorder(BorderFactory.createLineBorder(Color.orange));
                 if(matrix[i][j].isPresent())
                     p.setBackground(Color.red);
+                jPanelList[i][j] = p;
                 frame.getContentPane().add(p); // Adds Button to content pane of frame
             }
         }
         frame.setLayout(new GridLayout(3,3));
+    }
+
+    void updateGridV2(ArrayList<Entity> listEntity){
+        for(Entity e: listEntity){
+            if(e.hasMove()){
+                Position lastPos = e.getLastPosition().get();
+                Position currentPos = e.getCurrentPosition();
+                System.out.println("lastPos.getX() = "+lastPos.getX());
+                System.out.println("lastPos.getY() = "+lastPos.getY());
+                System.out.println("currentPos.getX() = "+currentPos.getX());
+                System.out.println("currentPos.getY() = "+currentPos.getY());
+
+                jPanelList[lastPos.getX()][lastPos.getY()].setBackground(Color.gray);
+                jPanelList[currentPos.getX()][currentPos.getY()].setBackground(Color.RED);
+            }
+        }
     }
 
     /**
