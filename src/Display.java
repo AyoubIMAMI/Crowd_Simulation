@@ -47,6 +47,10 @@ public class Display {
         frame.setLayout(new GridLayout(length,height));
     }
 
+    /**
+     * Use listEntity and the jPanelList to update the graphic grid
+     * @param listEntity
+     */
     void updateGrid(ArrayList<Entity> listEntity){
         for(Entity e: listEntity){
             if(e.hasMove()){

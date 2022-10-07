@@ -18,6 +18,7 @@ public class Main {
         Display display = new Display(length,height);
         MatrixEntity matrixEntity = new MatrixEntity(length,height,3);
 
+        //Generation of all the entities
         for(int i = 0 ; i < 3 ; i++){
             Position currentPos = Position.getRandomPosition(0,2);
             Position finalPos = Position.getRandomPosition(0,2);
@@ -31,11 +32,15 @@ public class Main {
         matrixEntity.addEntity(new Entity(new Position(5,5), new Position(5,0)));
 */
         display.displayGrid(matrixEntity);
+
+        //Make moves all the entities
         ArrayList<Entity> listEnt = matrixEntity.getListEntity();
-        for(Entity entity: listEnt){
-            entity.move(Position.getRandomLogicalPosition(entity.getCurrentPosition(), length, height));
-            display.updateGrid(matrixEntity.getListEntity());
+        while(true){
+            for(Entity entity: listEnt){
+                entity.move(Position.getRandomLogicalPosition(entity.getCurrentPosition(), length, height));
+            }
             Thread.sleep(750);
+            display.updateGrid(matrixEntity.getListEntity());
         }
     }
 }
