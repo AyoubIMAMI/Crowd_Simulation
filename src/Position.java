@@ -10,9 +10,9 @@ public class Position {
         this.y = y;
     }
 
-    public static Position getRandomPosition(int min, int max) {
+    public static Position getRandomPosition(int maxLength, int maxHeight) {
         Random random = new Random();
-        return new Position(random.nextInt(max - min + 1) + min, random.nextInt(max - min + 1) + min);
+        return new Position(random.nextInt(0, maxLength), random.nextInt(0, maxHeight));
     }
 
     public static Position getRandomLogicalPosition(Position currentPos, int lenght, int height) {

@@ -1,9 +1,12 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class MatrixEntity {
 
-    ArrayList<Entity> listEntity;
+    List<Entity> listEntity;
+
+    List<Position> listDeparturePosition;
 
     //length and height of the grid
     int length;
@@ -17,6 +20,7 @@ public class MatrixEntity {
 
     public MatrixEntity(int length, int height, double peopleNumber) {
         this.listEntity = new ArrayList<>();
+        this.listDeparturePosition = new ArrayList<>();
         this.length = length;
         this.height = height;
         this.peopleNumber = peopleNumber;
@@ -50,7 +54,11 @@ public class MatrixEntity {
         matrix[position.getX()][position.getX()] = Optional.of(entity);
     }
 
-    public ArrayList<Entity> getListEntity() {
+    public List<Entity> getListEntity() {
         return listEntity;
+    }
+
+    public List<Position> getListDeparturePosition() {
+        return listDeparturePosition;
     }
 }

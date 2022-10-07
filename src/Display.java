@@ -57,7 +57,7 @@ public class Display {
                 Position lastPos = e.getLastPosition().get();
                 Position currentPos = e.getCurrentPosition();
 
-                jPanelList[lastPos.getX()][lastPos.getY()].setBackground(Color.lightGray);
+                jPanelList[lastPos.getX()][lastPos.getY()].setBackground(Color.WHITE);
                 jPanelList[currentPos.getX()][currentPos.getY()].setBackground(Color.RED);
             }
         }

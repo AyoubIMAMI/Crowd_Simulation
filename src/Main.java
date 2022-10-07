@@ -1,6 +1,3 @@
-import javax.swing.*;
-import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -18,19 +15,26 @@ public class Main {
         Display display = new Display(length,height);
         MatrixEntity matrixEntity = new MatrixEntity(length,height,3);
 
-        //Generation of all the entities
+        Generation of all the entities
         for(int i = 0 ; i < 3 ; i++){
-            Position currentPos = Position.getRandomPosition(0,2);
-            Position finalPos = Position.getRandomPosition(0,2);
-            Entity ent = new Entity(currentPos, finalPos);
-            matrixEntity.addEntity(ent);
+            Position currentPosition = Position.getRandomPosition(length, height);
+            //matrixEntity.list
+            for (Entity entity : matrixEntity.listEntity) {
+                if(entity.getCurrentPosition().equals(currentPosition))
+                    break;
+            }
+            break;
+
+            Position finalPosition = Position.getRandomPosition(length,height);
+            Entity entity = new Entity(currentPosition, finalPosition);
+            matrixEntity.addEntity(entity);
         }
 
         /*
         matrixEntity.addEntity(new Entity(new Position(0,0), new Position(4,4)));
         matrixEntity.addEntity(new Entity(new Position(0,4), new Position(0,0)));
         matrixEntity.addEntity(new Entity(new Position(5,5), new Position(5,0)));
-*/
+        */
         display.displayGrid(matrixEntity);
 
         //Make moves all the entities
