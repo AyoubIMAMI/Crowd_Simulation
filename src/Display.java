@@ -50,10 +50,6 @@ public class Display {
             if(e.hasMove()){
                 Position lastPos = e.getLastPosition().get();
                 Position currentPos = e.getCurrentPosition();
-                System.out.println("lastPos.getX() = "+lastPos.getX());
-                System.out.println("lastPos.getY() = "+lastPos.getY());
-                System.out.println("currentPos.getX() = "+currentPos.getX());
-                System.out.println("currentPos.getY() = "+currentPos.getY());
 
                 jPanelList[lastPos.getX()][lastPos.getY()].setBackground(Color.gray);
                 jPanelList[currentPos.getX()][currentPos.getY()].setBackground(Color.RED);
