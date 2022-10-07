@@ -22,37 +22,41 @@ public class Display {
     }
 
     /**
-     * Create the grid and its appearance
+     * Create the grid appearance
      */
-    public void updateGraphicGrid(Grid grid){
-        //get the matrix
+    public void createGridAppearance(Grid grid){
+        //get the grid
         Optional<Entity>[][] matrix = grid.getGrid();
 
         //initialize the grid appearance
         for(int i = 0 ; i < length ; i ++){
             for(int j = 0 ; j < height ; j ++){
-                JPanel p = new JPanel();
-                p.setBorder(BorderFactory.createLineBorder(Color.orange));
+                JPanel panel = new JPanel();
+                panel.setBorder(BorderFactory.createLineBorder(Color.orange));
+                panel.setBackground(Color.white);
+
                 if(matrix[i][j].isPresent())
-                    p.setBackground(Color.red);
-                jPanelList[i][j] = p;
-                frame.getContentPane().add(p); // Adds Button to content pane of frame
+                    panel.setBackground(Color.red);
+
+                jPanelList[i][j] = panel;
+                frame.getContentPane().add(panel); // Adds Button to content pane of frame
             }
         }
+
         frame.setLayout(new GridLayout(length,height));
     }
 
     /**
-     * Use listEntity and the jPanelList to update the graphic grid
+     * Use entitiesList and the jPanelList to update the graphic grid
      */
-    void updateGrid(List<Entity> listEntity){
-        for(Entity e: listEntity){
-            if(e.hasMove()){
-                Position lastPos = e.getLastPosition().get();
-                Position currentPos = e.getCurrentPosition();
+    void updateGrid(List<Entity> entitiesList){
+        for(Entity entity: entitiesList){
+            if(entity.hasMoved()){
+                Position lastPosition = entity.getLastPosition().get();
+                Position currentPosition = entity.getCurrentPosition();
 
-                jPanelList[lastPos.getI()][lastPos.getJ()].setBackground(Color.WHITE);
-                jPanelList[currentPos.getI()][currentPos.getJ()].setBackground(Color.RED);
+                jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
+                jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(Color.RED);
             }
         }
     }
@@ -61,10 +65,14 @@ public class Display {
      * Display and update the grid
      */
     void displayGrid(Grid grid) {
-        updateGraphicGrid(grid);
+        createGridAppearance(grid);
         frame.setVisible(true);
     }
 
+    /**
+     * Once the entity reach his final position, it disappeared from the grid
+     * @param entity to make disappeared
+     */
     void disappear(Entity entity) {
         jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()].setBackground(Color.WHITE);
     }

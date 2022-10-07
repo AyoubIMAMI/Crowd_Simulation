@@ -49,7 +49,7 @@ public class Entity {
         return Objects.hash(currentPosition, arrivalPosition, uniqueID);
     }
 
-    public boolean hasMove() {
+    public boolean hasMoved() {
         return this.lastPosition.isPresent();
     }
 
