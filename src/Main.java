@@ -13,10 +13,10 @@ public class Main {
     //Display the grid where the crowd move
 
     public static void main(String[] args) throws InterruptedException {
-        int lenght = 3;
-        int height = 3;
-        Display display = new Display(lenght,height);
-        MatrixEntity matrixEntity = new MatrixEntity(lenght,height,3);
+        int length = 6;
+        int height = 6;
+        Display display = new Display(length,height);
+        MatrixEntity matrixEntity = new MatrixEntity(length,height,3);
 
         for(int i = 0 ; i < 3 ; i++){
             Position currentPos = Position.getRandomPosition(0,2);
@@ -28,7 +28,7 @@ public class Main {
         display.displayGrid(matrixEntity);
         ArrayList<Entity> listEnt = matrixEntity.getListEntity();
         for(Entity entity: listEnt){
-            entity.move(Position.getRandomLogicalPosition(entity.getCurrentPosition(), lenght, height));
+            entity.move(Position.getRandomLogicalPosition(entity.getCurrentPosition(), length, height));
             display.updateGrid(matrixEntity.getListEntity());
             Thread.sleep(750);
         }

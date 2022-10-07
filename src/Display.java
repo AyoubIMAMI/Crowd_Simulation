@@ -6,14 +6,14 @@ import java.util.Optional;
 public class Display {
 
     //length*height of the grid
-    private int length;
-    private int height;
+    private final int length;
+    private final int height;
 
     //number of people on the grid following these values : 2^exponent
     private static final int exponent = 0;
 
-    private JFrame frame;
-    private JPanel[][] jPanelList;
+    private final JFrame frame;
+    private final JPanel[][] jPanelList;
 
     public Display(int length, int height) {
         this.length = length;
@@ -44,7 +44,7 @@ public class Display {
                 frame.getContentPane().add(p); // Adds Button to content pane of frame
             }
         }
-        frame.setLayout(new GridLayout(3,3));
+        frame.setLayout(new GridLayout(length,height));
     }
 
     void updateGrid(ArrayList<Entity> listEntity){
