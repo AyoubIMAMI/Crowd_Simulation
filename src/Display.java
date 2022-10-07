@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class Display {
@@ -8,9 +8,6 @@ public class Display {
     //length*height of the grid
     private final int length;
     private final int height;
-
-    //number of people on the grid following these values : 2^exponent
-    private static final int exponent = 0;
 
     private final JFrame frame;
     private final JPanel[][] jPanelList;
@@ -26,8 +23,6 @@ public class Display {
 
     /**
      * Create the grid and its appearance
-     *
-     * @return JFrame
      */
     public void updateGraphicGrid(MatrixEntity matrixEntity){
         //get the matrix
@@ -49,16 +44,15 @@ public class Display {
 
     /**
      * Use listEntity and the jPanelList to update the graphic grid
-     * @param listEntity
      */
-    void updateGrid(ArrayList<Entity> listEntity){
+    void updateGrid(List<Entity> listEntity){
         for(Entity e: listEntity){
             if(e.hasMove()){
                 Position lastPos = e.getLastPosition().get();
                 Position currentPos = e.getCurrentPosition();
 
-                jPanelList[lastPos.getX()][lastPos.getY()].setBackground(Color.WHITE);
-                jPanelList[currentPos.getX()][currentPos.getY()].setBackground(Color.RED);
+                jPanelList[lastPos.getI()][lastPos.getJ()].setBackground(Color.WHITE);
+                jPanelList[currentPos.getI()][currentPos.getJ()].setBackground(Color.RED);
             }
         }
     }
@@ -69,5 +63,9 @@ public class Display {
     void displayGrid(MatrixEntity matrixEntity) {
         updateGraphicGrid(matrixEntity);
         frame.setVisible(true);
+    }
+
+    void disappear(Entity entity) {
+        jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()].setBackground(Color.WHITE);
     }
 }

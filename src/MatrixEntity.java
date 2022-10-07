@@ -6,8 +6,6 @@ public class MatrixEntity {
 
     List<Entity> listEntity;
 
-    List<Position> listDeparturePosition;
-
     //length and height of the grid
     int length;
     int height;
@@ -20,7 +18,6 @@ public class MatrixEntity {
 
     public MatrixEntity(int length, int height, double peopleNumber) {
         this.listEntity = new ArrayList<>();
-        this.listDeparturePosition = new ArrayList<>();
         this.length = length;
         this.height = height;
         this.peopleNumber = peopleNumber;
@@ -51,14 +48,10 @@ public class MatrixEntity {
     public void addEntity(Entity entity){
         this.listEntity.add(entity);
         Position position = entity.getCurrentPosition();
-        matrix[position.getX()][position.getX()] = Optional.of(entity);
+        matrix[position.getI()][position.getJ()] = Optional.of(entity);
     }
 
     public List<Entity> getListEntity() {
         return listEntity;
-    }
-
-    public List<Position> getListDeparturePosition() {
-        return listDeparturePosition;
     }
 }
