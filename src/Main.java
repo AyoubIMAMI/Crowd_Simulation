@@ -27,10 +27,12 @@ public class Main {
 
         display.displayGrid(matrixEntity);
         ArrayList<Entity> listEnt = matrixEntity.getListEntity();
-        for(Entity entity: listEnt){
-            entity.move(Position.getRandomLogicalPosition(entity.getCurrentPosition(), lenght, height));
-            display.updateGrid(matrixEntity.getListEntity());
+        while(true){
+            for(Entity entity: listEnt){
+                entity.move(Position.getRandomLogicalPosition(entity.getCurrentPosition(), lenght, height));
+            }
             Thread.sleep(750);
+            display.updateGrid(matrixEntity.getListEntity());
         }
     }
 }
