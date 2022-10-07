@@ -56,6 +56,14 @@ public class Position {
             return new Position(currentPosition.getI(), currentPosition.getJ()-1); //if(xySum == -1 && iDifference == 0)
     }
 
+    static boolean isPositionTaken(Grid grid, Position currentPosition) {
+        for (Entity entity : grid.entitiesList) {
+            if(entity.getCurrentPosition().equals(currentPosition))
+                return true;
+        }
+        return false;
+    }
+
     public int getI() {
         return i;
     }
