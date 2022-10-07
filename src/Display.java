@@ -52,7 +52,7 @@ public class Display {
     void updateGrid(List<Entity> entitiesList){
         for(Entity entity: entitiesList){
             if(entity.hasMoved()){
-                Position lastPosition = entity.getLastPosition().get();
+                Position lastPosition = entity.getPreviousPosition().get();
                 Position currentPosition = entity.getCurrentPosition();
 
                 jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);

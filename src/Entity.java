@@ -3,24 +3,36 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class Entity {
+    //entity current position
     private Position currentPosition;
-    private Optional<Position> lastPosition;
+
+    //entity previous position
+    private Optional<Position> previousPosition;
     private final Position arrivalPosition;
     private final String uniqueID;
 
     public Entity(Position currentPosition, Position arrivalPosition) {
-        this.lastPosition = Optional.empty();
+        this.previousPosition = Optional.empty();
         this.currentPosition = currentPosition;
         this.arrivalPosition = arrivalPosition;
         this.uniqueID = UUID.randomUUID().toString();
     }
 
+    /**
+     * Change the entity previous position with the current one, and the current one with the new one
+     * @param position - the new entity position
+     */
     public void move(Position position){
-        this.lastPosition = Optional.of(currentPosition);
+        this.previousPosition = Optional.of(currentPosition);
         this.currentPosition = position;
     }
-    public void resetLastPosition(){
-        this.lastPosition = Optional.empty();
+
+    /**
+     * Check is the entity reached its arrival position
+     * @return true if the entity reached its arrival position, false otherwise
+     */
+    public boolean isArrived() {
+        return this.currentPosition.equals(arrivalPosition);
     }
 
     public Position getCurrentPosition() {
@@ -31,8 +43,8 @@ public class Entity {
         return arrivalPosition;
     }
 
-    public Optional<Position> getLastPosition() {
-        return lastPosition;
+    public Optional<Position> getPreviousPosition() {
+        return previousPosition;
     }
 
 
@@ -50,10 +62,7 @@ public class Entity {
     }
 
     public boolean hasMoved() {
-        return this.lastPosition.isPresent();
+        return this.previousPosition.isPresent();
     }
 
-    public boolean isArrived() {
-        return this.currentPosition.equals(arrivalPosition);
-    }
 }
