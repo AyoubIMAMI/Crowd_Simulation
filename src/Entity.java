@@ -1,6 +1,4 @@
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class Entity {
     //entity current position
@@ -10,6 +8,8 @@ public class Entity {
     private Optional<Position> previousPosition;
     private final Position arrivalPosition;
     private final String uniqueID;
+
+    private boolean destroyed = false;
 
     public Entity(Position currentPosition, Position arrivalPosition) {
         this.previousPosition = Optional.empty();
@@ -23,8 +23,17 @@ public class Entity {
      * @param position - the new entity position
      */
     public void move(Position position){
-        this.previousPosition = Optional.of(currentPosition);
-        this.currentPosition = position;
+        if(!Position.allCurrentPositions.contains(position)) {
+            Position.allCurrentPositions.remove(currentPosition);
+            Position.allCurrentPositions.add(position);
+
+            this.previousPosition = Optional.of(currentPosition);
+            this.currentPosition = position;
+        }
+
+        else {
+            this.previousPosition = Optional.empty();
+        }
     }
 
     /**
@@ -33,6 +42,14 @@ public class Entity {
      */
     public boolean isArrived() {
         return this.currentPosition.equals(arrivalPosition);
+    }
+
+    public void destroy() {
+        this.destroyed = true;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 
     public Position getCurrentPosition() {

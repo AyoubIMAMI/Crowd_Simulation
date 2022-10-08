@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -6,6 +8,8 @@ public class Position {
     //(i, j) position coordinates
     private int i;
     private int j;
+
+    static List<Position> allCurrentPositions = new ArrayList<>();
 
     public Position(int i, int j) {
         this.i = i;

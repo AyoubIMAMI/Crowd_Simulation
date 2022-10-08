@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,13 +13,20 @@ public class Display {
     private final JFrame frame;
     private final JPanel[][] jPanelList;
 
+    private final List<Color> colorList;
+    //private final int colorsNumber;
+
     public Display(int length, int height) {
         this.length = length;
         this.height = height;
+        this.jPanelList = new JPanel[length][height];
+
+        this.colorList = new ArrayList<>();
+        //this.colorsNumber = colorListCreation()-1;
+
         this.frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500,500);
-        jPanelList = new JPanel[length][height];
     }
 
     /**
@@ -33,10 +41,13 @@ public class Display {
             for(int j = 0 ; j < height ; j ++){
                 JPanel panel = new JPanel();
                 panel.setBorder(BorderFactory.createLineBorder(Color.orange));
-                panel.setBackground(Color.white);
 
-                if(matrix[i][j].isPresent())
+                if(matrix[i][j].isPresent()) {
                     panel.setBackground(Color.red);
+                }
+
+                else
+                    panel.setBackground(Color.white);
 
                 jPanelList[i][j] = panel;
                 frame.getContentPane().add(panel); // Adds Button to content pane of frame
@@ -49,15 +60,13 @@ public class Display {
     /**
      * Use entitiesList and the jPanelList to update the graphic grid
      */
-    void updateGrid(List<Entity> entitiesList){
-        for(Entity entity: entitiesList){
-            if(entity.hasMoved()){
-                Position lastPosition = entity.getPreviousPosition().get();
-                Position currentPosition = entity.getCurrentPosition();
+    void updateGrid(Entity entity){
+        if(entity.hasMoved()){
+            Position lastPosition = entity.getPreviousPosition().get();
+            Position currentPosition = entity.getCurrentPosition();
 
-                jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
-                jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(Color.RED);
-            }
+            jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
+            jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(Color.red);
         }
     }
 
@@ -74,6 +83,23 @@ public class Display {
      * @param entity to make disappeared
      */
     void disappear(Entity entity) {
-        jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()].setBackground(Color.WHITE);
+        JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
+
+        if(!entity.isDestroyed()) {
+            jPanel.setBackground(Color.WHITE);
+            Position.allCurrentPositions.remove(entity.getArrivalPosition());
+            entity.destroy();
+        }
+    }
+
+    int colorListCreation() {
+        colorList.add(Color.RED);
+        colorList.add(Color.BLUE);
+        colorList.add(Color.GREEN);
+        colorList.add(Color.PINK);
+        colorList.add(Color.MAGENTA);
+        colorList.add(Color.YELLOW);
+
+        return colorList.size();
     }
 }
