@@ -9,16 +9,18 @@ import java.util.List;
 public class Main {
 
     //grid of size length*height
-    static int length = 10;
-    static int height = 10;
+    static int length = 100;
+    static int height = 120;
 
     //number of entities on the grid
-    static int entitiesNumber = 1;
+    static int entitiesNumber = 128;
 
     //Display the grid where the crowd move
     public static void main(String[] args) throws InterruptedException {
 
+        //create an instance to display the grid
         Display display = new Display(length, height);
+        //create the grid
         Grid grid = new Grid(length, height, entitiesNumber);
 
         //create the entities
@@ -32,9 +34,11 @@ public class Main {
             grid.addEntity(entity);
             Position.allCurrentPositions.add(currentPosition);
 
+            /*
             System.out.println("depart i: " + currentPosition.getI() + "    j: " + currentPosition.getJ());
             System.out.println("depart i: " + arrivalPosition.getI() + "    j: " + arrivalPosition.getJ());
             System.out.println();
+            */
         }
 
         /*
@@ -50,6 +54,7 @@ public class Main {
         grid.addEntity(entit);
         Position.allCurrentPositions.add(currentPosition);*/
 
+        //create the grid appearance and display it
         display.displayGrid(grid);
 
         //Make all the entities move
@@ -58,7 +63,7 @@ public class Main {
             for(Entity entity: entitiesList){
                 if(!entity.isArrived()) {
                     entity.move(Position.getNewPosition(entity.getCurrentPosition(), entity.getArrivalPosition()));
-                    Thread.sleep(500);
+                    Thread.sleep(1);
                     display.updateGrid(entity);
                 }
 
@@ -71,4 +76,4 @@ public class Main {
     }
 }
 
-//TODO - Reset les positions en ca de collision - proposer une autre position que la meilleure possible pour éviter le blocage - probleme de couleurs qui clignote
+//TODO Proposer une autre position que la meilleure possible pour éviter le blocage - mettre plusieurs couleurs pour les entités

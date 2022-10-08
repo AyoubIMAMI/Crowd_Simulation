@@ -9,6 +9,7 @@ public class Position {
     private int i;
     private int j;
 
+    //current position of the entities - need to avoid entities overlay
     static List<Position> allCurrentPositions = new ArrayList<>();
 
     public Position(int i, int j) {
@@ -60,6 +61,12 @@ public class Position {
             return new Position(currentPosition.getI(), currentPosition.getJ()-1); //if(xySum == -1 && iDifference == 0)
     }
 
+    /**
+     * Check if a position is taken or not to avoid overlay spawning entities
+     * @param grid the grid
+     * @param currentPosition spawning position
+     * @return true if the position is already taken
+     */
     static boolean isPositionTaken(Grid grid, Position currentPosition) {
         for (Entity entity : grid.entitiesList) {
             if(entity.getCurrentPosition().equals(currentPosition))

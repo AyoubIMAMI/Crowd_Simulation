@@ -14,7 +14,6 @@ public class Display {
     private final JPanel[][] jPanelList;
 
     private final List<Color> colorList;
-    //private final int colorsNumber;
 
     public Display(int length, int height) {
         this.length = length;
@@ -22,7 +21,6 @@ public class Display {
         this.jPanelList = new JPanel[length][height];
 
         this.colorList = new ArrayList<>();
-        //this.colorsNumber = colorListCreation()-1;
 
         this.frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,7 +56,7 @@ public class Display {
     }
 
     /**
-     * Use entitiesList and the jPanelList to update the graphic grid
+     * Update the graphic grid if the entity has moved
      */
     void updateGrid(Entity entity){
         if(entity.hasMoved()){
@@ -71,7 +69,7 @@ public class Display {
     }
 
     /**
-     * Display and update the grid
+     * Update and display the grid
      */
     void displayGrid(Grid grid) {
         createGridAppearance(grid);

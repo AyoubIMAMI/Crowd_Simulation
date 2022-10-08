@@ -1,14 +1,20 @@
 import java.util.*;
 
 public class Entity {
+
     //entity current position
     private Position currentPosition;
 
     //entity previous position
     private Optional<Position> previousPosition;
+
+    //arrival position
     private final Position arrivalPosition;
+
+    //unique ID
     private final String uniqueID;
 
+    //when an entity arrived to its arrival position, it is destroyed
     private boolean destroyed = false;
 
     public Entity(Position currentPosition, Position arrivalPosition) {
@@ -44,10 +50,25 @@ public class Entity {
         return this.currentPosition.equals(arrivalPosition);
     }
 
+    /**
+     * Check if an entity has moved
+     * @return true if the entity has moved
+     */
+    public boolean hasMoved() {
+        return this.previousPosition.isPresent();
+    }
+
+    /**
+     * When an entity arrived to its arrival position, it is destroyed
+     */
     public void destroy() {
         this.destroyed = true;
     }
 
+    /**
+     * Check if an entity is destroyed
+     * @return destroyed attribute boolean
+     */
     public boolean isDestroyed() {
         return destroyed;
     }
@@ -76,10 +97,6 @@ public class Entity {
     @Override
     public int hashCode() {
         return Objects.hash(currentPosition, arrivalPosition, uniqueID);
-    }
-
-    public boolean hasMoved() {
-        return this.previousPosition.isPresent();
     }
 
 }
