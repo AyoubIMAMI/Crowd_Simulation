@@ -14,6 +14,7 @@ public class Display {
     private final JPanel[][] jPanelList;
 
     private final List<Color> colorList;
+    private final int colorsNumber;
 
     public Display(int length, int height) {
         this.length = length;
@@ -21,6 +22,7 @@ public class Display {
         this.jPanelList = new JPanel[length][height];
 
         this.colorList = new ArrayList<>();
+        this.colorsNumber = colorListCreation();
 
         this.frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,6 +36,8 @@ public class Display {
         //get the grid
         Optional<Entity>[][] matrix = grid.getGrid();
 
+        int colorIndex = 0;
+
         //initialize the grid appearance
         for(int i = 0 ; i < length ; i ++){
             for(int j = 0 ; j < height ; j ++){
@@ -41,7 +45,10 @@ public class Display {
                 panel.setBorder(BorderFactory.createLineBorder(Color.orange));
 
                 if(matrix[i][j].isPresent()) {
-                    panel.setBackground(Color.red);
+                    Color colorToSet = colorList.get(colorIndex % colorsNumber);
+                    panel.setBackground(colorToSet);
+                    matrix[i][j].get().setEntityColor(colorToSet);
+                    colorIndex++;
                 }
 
                 else
@@ -64,7 +71,7 @@ public class Display {
             Position currentPosition = entity.getCurrentPosition();
 
             jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
-            jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(Color.red);
+            jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
         }
     }
 

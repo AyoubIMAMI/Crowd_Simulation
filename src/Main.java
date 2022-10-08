@@ -9,11 +9,11 @@ import java.util.List;
 public class Main {
 
     //grid of size length*height
-    static int length = 100;
-    static int height = 120;
+    static int length = 10;
+    static int height = 12;
 
     //number of entities on the grid
-    static int entitiesNumber = 128;
+    static int entitiesNumber = 10;
 
     //Display the grid where the crowd move
     public static void main(String[] args) throws InterruptedException {
@@ -63,7 +63,7 @@ public class Main {
             for(Entity entity: entitiesList){
                 if(!entity.isArrived()) {
                     entity.move(Position.getNewPosition(entity.getCurrentPosition(), entity.getArrivalPosition()));
-                    Thread.sleep(1);
+                    Thread.sleep(500);
                     display.updateGrid(entity);
                 }
 
@@ -76,4 +76,4 @@ public class Main {
     }
 }
 
-//TODO Proposer une autre position que la meilleure possible pour éviter le blocage - mettre plusieurs couleurs pour les entités
+//TODO Proposer une autre position que la meilleure possible pour éviter le blocage

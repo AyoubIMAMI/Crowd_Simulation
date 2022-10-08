@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.*;
 
 public class Entity {
@@ -16,6 +17,8 @@ public class Entity {
 
     //when an entity arrived to its arrival position, it is destroyed
     private boolean destroyed = false;
+
+    private Color entityColor;
 
     public Entity(Position currentPosition, Position arrivalPosition) {
         this.previousPosition = Optional.empty();
@@ -83,6 +86,14 @@ public class Entity {
 
     public Optional<Position> getPreviousPosition() {
         return previousPosition;
+    }
+
+    public Color getEntityColor() {
+        return entityColor;
+    }
+
+    public void setEntityColor(Color color) {
+        this.entityColor = color;
     }
 
 
