@@ -20,21 +20,24 @@ public class Entity {
 
     private Color entityColor;
 
-    public Entity(Position currentPosition, Position arrivalPosition) {
+    private PositionManager positionManager;
+
+    public Entity(Position currentPosition, Position arrivalPosition, PositionManager positionManager) {
         this.previousPosition = Optional.empty();
         this.currentPosition = currentPosition;
         this.arrivalPosition = arrivalPosition;
         this.uniqueID = UUID.randomUUID().toString();
+        this.positionManager = positionManager;
     }
 
     /**
      * Change the entity previous position with the current one, and the current one with the new one
      * @param position - the new entity position
      */
-    public void move(Position position){
-        if(!Position.allCurrentPositions.contains(position)) {
-            Position.allCurrentPositions.remove(currentPosition);
-            Position.allCurrentPositions.add(position);
+    public void move(){
+        Position position = positionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
+        if(!positionManager.positionIsAlreadyTaken(position)) {
+           positionManager.updatePositionOfEntity(this.currentPosition, position);
 
             this.previousPosition = Optional.of(currentPosition);
             this.currentPosition = position;
@@ -96,6 +99,9 @@ public class Entity {
         this.entityColor = color;
     }
 
+    public PositionManager getPositionManager() {
+        return positionManager;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -109,5 +115,4 @@ public class Entity {
     public int hashCode() {
         return Objects.hash(currentPosition, arrivalPosition, uniqueID);
     }
-
 }

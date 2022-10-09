@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,17 +23,19 @@ public class Main {
         Display display = new Display(length, height);
         //create the grid
         Grid grid = new Grid(length, height, entitiesNumber);
+        //create the position manager
+        PositionManager positionManager = new PositionManager();
 
         //create the entities
         for(int i = 0; i < entitiesNumber; i++){
-            Position currentPosition = Position.getRandomPosition(length, height);
-            while(Position.isPositionTaken(grid, currentPosition))
-                currentPosition = Position.getRandomPosition(length, height);
+            Position currentPosition = positionManager.getRandomPosition(length, height);
+            while(positionManager.isPositionTaken(grid, currentPosition))
+                currentPosition = positionManager.getRandomPosition(length, height);
 
-            Position arrivalPosition = Position.getRandomPosition(length, height);
-            Entity entity = new Entity(currentPosition, arrivalPosition);
+            Position arrivalPosition = positionManager.getRandomPosition(length, height);
+            Entity entity = new Entity(currentPosition, arrivalPosition, positionManager);
             grid.addEntity(entity);
-            Position.allCurrentPositions.add(currentPosition);
+            positionManager.addPosition(currentPosition);
 
             /*
             System.out.println("depart i: " + currentPosition.getI() + "    j: " + currentPosition.getJ());
@@ -62,7 +65,7 @@ public class Main {
         while(entitiesList.size() != 0){
             for(Entity entity: entitiesList){
                 if(!entity.isArrived()) {
-                    entity.move(Position.getNewPosition(entity.getCurrentPosition(), entity.getArrivalPosition()));
+                    entity.move();
                     Thread.sleep(500);
                     display.updateGrid(entity);
                 }
