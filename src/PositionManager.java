@@ -73,7 +73,7 @@ public class PositionManager {
      */
     public static Position getRandomPosition(int maxLength, int maxHeight) {
         Random random = new Random();
-        return new Position(random.nextInt(0, maxLength-1), random.nextInt(0, maxHeight-1));
+        return new Position(random.nextInt(0, maxLength), random.nextInt(0, maxHeight));
     }
 
     public List<Position> getAllCurrentPositions() {

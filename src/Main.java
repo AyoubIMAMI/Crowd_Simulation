@@ -10,11 +10,14 @@ import java.util.List;
 public class Main {
 
     //grid of size length*height
-    static int length = 10;
-    static int height = 12;
+    static int length = 1;
+    static int height = 10;
 
     //number of entities on the grid
-    static int entitiesNumber = 10;
+    static int entitiesNumber = 3;
+
+    //sleep time in ms
+    static int time = 750;
 
     //Display the grid where the crowd move
     public static void main(String[] args) throws InterruptedException {
@@ -27,12 +30,15 @@ public class Main {
         PositionManager positionManager = new PositionManager();
 
 
-        /*for(int i = 0 ; i < 12 ; i+=2){
+        /*
+        for(int i = 0 ; i < 12 ; i+=2){
             Entity e = new Entity(new Position(0,i), new Position(5,4), positionManager, i);
             grid.addEntity(e);
             positionManager.addPosition(e.getCurrentPosition());
-        }*/
+        }
+        */
 
+        /*
         Entity e1 = new Entity(new Position(0,0), new Position(0,6), positionManager, 0);
         grid.addEntity(e1);
         positionManager.addPosition(e1.getCurrentPosition());
@@ -42,30 +48,31 @@ public class Main {
         Entity e2 = new Entity(new Position(0,6), new Position(0,0), positionManager, 1);
         grid.addEntity(e2);
         positionManager.addPosition(e2.getCurrentPosition());
-        positionManager.addEntity(e2);
+        positionManager.addEntity(e2);*/
 
 
 
         //create the entities
-        /*for(int i = 0; i < entitiesNumber; i++){
+
+        for(int i = 0; i < entitiesNumber; i++){
             Position currentPosition = positionManager.getRandomPosition(length, height);
             while(positionManager.isPositionTaken(grid, currentPosition))
                 currentPosition = positionManager.getRandomPosition(length, height);
 
             Position arrivalPosition = positionManager.getRandomPosition(length, height);
-            Entity entity = new Entity(currentPosition, arrivalPosition, positionManager);
+            Entity entity = new Entity(currentPosition, arrivalPosition, positionManager, i);
             grid.addEntity(entity);
             positionManager.addPosition(currentPosition);
             positionManager.addEntity(entity);
 
-         */
 
-            /*
             System.out.println("depart i: " + currentPosition.getI() + "    j: " + currentPosition.getJ());
             System.out.println("depart i: " + arrivalPosition.getI() + "    j: " + arrivalPosition.getJ());
             System.out.println();
 
-        }*/
+
+        }
+
 
         /*
         Position currentPosition = new Position(4, 0);
@@ -78,10 +85,12 @@ public class Main {
         finalPosition = new Position(0, 1);
         entit = new Entity(currentPosition, finalPosition);
         grid.addEntity(entit);
-        Position.allCurrentPositions.add(currentPosition);*/
+        Position.allCurrentPositions.add(currentPosition);
+        */
 
         //create the grid appearance and display it
         display.displayGrid(grid);
+        Thread.sleep(time);
 
         //Make all the entities move
         List<Entity> entitiesList = grid.getEntitiesList();
@@ -105,13 +114,14 @@ public class Main {
                         System.out.println(entity.getEntityColor().toString()+"- Entity move - "+entity.getCurrentPosition());
                         display.updateGrid(entity);
                     }
-                    Thread.sleep(750);
 
                 }
                 else {
                     display.disappear(entity);
                     entity.destroy();
                 }
+
+                Thread.sleep(time);
             }
             i++;
         }
@@ -119,5 +129,3 @@ public class Main {
         System.out.println("END");
     }
 }
-
-//TODO Proposer une autre position que la meilleure possible pour éviter le blocage
