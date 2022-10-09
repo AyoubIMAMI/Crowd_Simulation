@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class Display {
@@ -9,65 +10,101 @@ public class Display {
     private final int length;
     private final int height;
 
-    //number of people on the grid following these values : 2^exponent
-    private static final int exponent = 0;
-
     private final JFrame frame;
     private final JPanel[][] jPanelList;
+
+    private final List<Color> colorList;
+    private final int colorsNumber;
 
     public Display(int length, int height) {
         this.length = length;
         this.height = height;
+        this.jPanelList = new JPanel[length][height];
+
+        this.colorList = new ArrayList<>();
+        this.colorsNumber = colorListCreation();
+
         this.frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500,500);
-        jPanelList = new JPanel[length][height];
     }
 
     /**
-     * Create the grid and its appearance
-     *
-     * @return JFrame
+     * Create the grid appearance
      */
-    public void updateGraphicGrid(MatrixEntity matrixEntity){
-        //get the matrix
-        Optional<Entity>[][] matrix = matrixEntity.getMatrix();
+    public void createGridAppearance(Grid grid){
+        //get the grid
+        Optional<Entity>[][] matrix = grid.getGrid();
+
+        int colorIndex = 0;
 
         //initialize the grid appearance
         for(int i = 0 ; i < length ; i ++){
             for(int j = 0 ; j < height ; j ++){
-                JPanel p = new JPanel();
-                p.setBorder(BorderFactory.createLineBorder(Color.orange));
-                if(matrix[i][j].isPresent())
-                    p.setBackground(Color.red);
-                jPanelList[i][j] = p;
-                frame.getContentPane().add(p); // Adds Button to content pane of frame
+                JPanel panel = new JPanel();
+                panel.setBorder(BorderFactory.createLineBorder(Color.orange));
+
+                if(matrix[i][j].isPresent()) {
+                    Color colorToSet = colorList.get(colorIndex % colorsNumber);
+                    panel.setBackground(colorToSet);
+                    matrix[i][j].get().setEntityColor(colorToSet);
+                    colorIndex++;
+                }
+
+                else
+                    panel.setBackground(Color.white);
+
+                jPanelList[i][j] = panel;
+                frame.getContentPane().add(panel); // Adds Button to content pane of frame
             }
         }
+
         frame.setLayout(new GridLayout(length,height));
     }
 
     /**
-     * Use listEntity and the jPanelList to update the graphic grid
-     * @param listEntity
+     * Update the graphic grid if the entity has moved
      */
-    void updateGrid(ArrayList<Entity> listEntity){
-        for(Entity e: listEntity){
-            if(e.hasMove()){
-                Position lastPos = e.getLastPosition().get();
-                Position currentPos = e.getCurrentPosition();
+    void updateGrid(Entity entity){
+        if(entity.hasMoved()){
+            Position lastPosition = entity.getPreviousPosition().get();
+            Position currentPosition = entity.getCurrentPosition();
 
-                jPanelList[lastPos.getX()][lastPos.getY()].setBackground(Color.lightGray);
-                jPanelList[currentPos.getX()][currentPos.getY()].setBackground(Color.RED);
-            }
+            jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
+            jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
         }
     }
 
     /**
-     * Display and update the grid
+     * Update and display the grid
      */
-    void displayGrid(MatrixEntity matrixEntity) {
-        updateGraphicGrid(matrixEntity);
+    void displayGrid(Grid grid) {
+        createGridAppearance(grid);
         frame.setVisible(true);
+    }
+
+    /**
+     * Once the entity reach his final position, it disappeared from the grid
+     * @param entity to make disappeared
+     */
+    void disappear(Entity entity) {
+        JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
+
+        if(!entity.isDestroyed()) {
+            jPanel.setBackground(Color.WHITE);
+            Position.allCurrentPositions.remove(entity.getArrivalPosition());
+            entity.destroy();
+        }
+    }
+
+    int colorListCreation() {
+        colorList.add(Color.RED);
+        colorList.add(Color.BLUE);
+        colorList.add(Color.GREEN);
+        colorList.add(Color.PINK);
+        colorList.add(Color.MAGENTA);
+        colorList.add(Color.YELLOW);
+
+        return colorList.size();
     }
 }
