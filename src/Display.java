@@ -93,8 +93,23 @@ public class Display {
         if(!entity.isDestroyed()) {
             jPanel.setBackground(Color.WHITE);
             Position.allCurrentPositions.remove(entity.getArrivalPosition());
-            entity.destroy();
         }
+    }
+
+    /**
+     * Once the entity reach his final position, it disappeared from the grid
+     * @param entity to make disappeared
+     */
+    void killVisually(Entity entity) {
+        JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
+        jPanel.setBackground(Color.darkGray);
+        entity.setKillVisually(true);
+    }
+
+    public void reviveVisually(Entity entity) {
+        JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
+        jPanel.setBackground(entity.getEntityColor());
+        System.out.println("nooooooooooooooooow");
     }
 
     int colorListCreation() {
@@ -107,4 +122,10 @@ public class Display {
 
         return colorList.size();
     }
+
+    public void close() {
+        this.frame.dispose();
+    }
+
+
 }

@@ -38,4 +38,8 @@ public class Position {
         return Objects.hash(i, j);
     }
 
+    @Override
+    public String toString() {
+        return "["+i+";"+j+"]";
+    }
 }

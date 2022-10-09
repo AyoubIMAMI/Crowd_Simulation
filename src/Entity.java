@@ -13,38 +13,48 @@ public class Entity {
     private final Position arrivalPosition;
 
     //unique ID
-    private final String uniqueID;
+    private final int id;
 
     //when an entity arrived to its arrival position, it is destroyed
-    private boolean destroyed = false;
+    private boolean destroyed;
 
     private Color entityColor;
 
     private PositionManager positionManager;
 
-    public Entity(Position currentPosition, Position arrivalPosition, PositionManager positionManager) {
+    private boolean kill;
+
+    private boolean killVisually;
+
+
+
+    public Entity(Position currentPosition, Position arrivalPosition, PositionManager positionManager, int id) {
         this.previousPosition = Optional.empty();
         this.currentPosition = currentPosition;
         this.arrivalPosition = arrivalPosition;
-        this.uniqueID = UUID.randomUUID().toString();
+        this.id = id;
         this.positionManager = positionManager;
+        this.kill = false;
+        this.destroyed = false;
+        this.killVisually = false;
     }
 
     /**
      * Change the entity previous position with the current one, and the current one with the new one
-     * @param position - the new entity position
      */
     public void move(){
         Position position = positionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         if(!positionManager.positionIsAlreadyTaken(position)) {
-           positionManager.updatePositionOfEntity(this.currentPosition, position);
-
+            positionManager.updatePositionOfEntity(this.currentPosition, position);
             this.previousPosition = Optional.of(currentPosition);
             this.currentPosition = position;
         }
 
         else {
             this.previousPosition = Optional.empty();
+            if(positionManager.isThereAConflict(currentPosition, position)){
+                positionManager.manageConflict(this, position);
+            }
         }
     }
 
@@ -68,7 +78,7 @@ public class Entity {
      * When an entity arrived to its arrival position, it is destroyed
      */
     public void destroy() {
-        this.destroyed = true;
+        positionManager.destroyPosition(this.currentPosition);
     }
 
     /**
@@ -103,16 +113,42 @@ public class Entity {
         return positionManager;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity entity = (Entity) o;
-        return Objects.equals(currentPosition, entity.currentPosition) && Objects.equals(arrivalPosition, entity.arrivalPosition) && Objects.equals(uniqueID, entity.uniqueID);
+        return Objects.equals(currentPosition, entity.currentPosition) && Objects.equals(arrivalPosition, entity.arrivalPosition) && Objects.equals(id, entity.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentPosition, arrivalPosition, uniqueID);
+        return Objects.hash(currentPosition, arrivalPosition, id);
+    }
+
+    public void kill() {
+        this.kill = true;
+        positionManager.removePosition(currentPosition);
+    }
+
+    public void revive() {
+        this.kill = false;
+        positionManager.addPosition(currentPosition);
+    }
+
+    public boolean isKilled(){
+        return this.kill;
+    }
+
+    public boolean isKillVisually() {
+        return killVisually;
+    }
+
+    public void setKillVisually(boolean killVisually) {
+        this.killVisually = killVisually;
     }
 }

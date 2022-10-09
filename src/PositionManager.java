@@ -1,17 +1,21 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class PositionManager {
 
     private List<Position> allCurrentPositions;
+    private List<Entity> allEntity;
 
     public PositionManager() {
         this.allCurrentPositions = new ArrayList<>();
+        this.allEntity = new ArrayList<>();
     }
 
-    public void addPosition(Position p){
-        this.allCurrentPositions.add(p);
+    public void addPosition(Position position){
+        this.allCurrentPositions.add(position);
+    }
+
+    public void addEntity(Entity entity){
+        this.allEntity.add(entity);
     }
 
     /**
@@ -76,12 +80,61 @@ public class PositionManager {
         return allCurrentPositions;
     }
 
-    public boolean positionIsAlreadyTaken(Position p){
-        return this.allCurrentPositions.contains(p);
+    public boolean positionIsAlreadyTaken(Position position){
+        return this.allCurrentPositions.contains(position);
     }
 
     public void updatePositionOfEntity(Position currentPosition, Position newPosition){
         this.allCurrentPositions.remove(currentPosition);
         this.allCurrentPositions.add(newPosition);
+    }
+
+    public void destroyPosition(Position position) {
+        this.allCurrentPositions.remove(position);
+    }
+
+    public boolean listOfAllPositionsIsEmpty() {
+        return this.allCurrentPositions.size() == 0;
+    }
+
+    public Optional<Entity> findEntityAtAPosition(Position position){
+        for(Entity entity: allEntity){
+            if(entity.getCurrentPosition().equals(position))return Optional.of(entity);
+        }
+        return Optional.empty();
+    }
+
+    public boolean doTheEntityWantToGoToPosition(Position currentPosition, Position otherCurrentPosition, Position otherArrivalPosition) {
+        Position futurPosition = getNewPosition(otherCurrentPosition, otherArrivalPosition);
+        return currentPosition.equals(futurPosition);
+    }
+
+    public boolean isThereAConflict(Position currentPosition, Position otherPosition) {
+        Optional<Entity> optionalEntity = findEntityAtAPosition(otherPosition);
+        Entity conflictEntity = optionalEntity.get();
+        return doTheEntityWantToGoToPosition(currentPosition, conflictEntity.getCurrentPosition(), conflictEntity.getArrivalPosition());
+    }
+
+    public void manageConflict(Entity entity, Position conflictPosition){
+        Optional<Entity> optionalEntity = findEntityAtAPosition(conflictPosition);
+        Entity conflictEntity = optionalEntity.get();
+        Entity entityThatWillBeKill = null;
+        if(entity.getId() < conflictEntity.getId())
+            entityThatWillBeKill = entity;
+        else
+            entityThatWillBeKill = conflictEntity;
+        entityThatWillBeKill.kill();
+    }
+
+
+    public boolean canEntityBeRevive(Entity entity) {
+        boolean whereIWantToGoIsFree = !positionIsAlreadyTaken(getNewPosition(entity.getCurrentPosition(), entity.getArrivalPosition()));
+        boolean whereIAmIsOccuped = positionIsAlreadyTaken(entity.getCurrentPosition());
+        boolean ImKilled = entity.isKilled();
+        return whereIWantToGoIsFree && !whereIAmIsOccuped && ImKilled;
+    }
+
+    public void removePosition(Position currentPosition) {
+        this.allCurrentPositions.remove(currentPosition);
     }
 }

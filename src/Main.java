@@ -27,11 +27,24 @@ public class Main {
         PositionManager positionManager = new PositionManager();
 
 
-        for(int i = 0 ; i < 12 ; i+=2){
-            Entity e = new Entity(new Position(0,i), new Position(5,i), positionManager);
+        /*for(int i = 0 ; i < 12 ; i+=2){
+            Entity e = new Entity(new Position(0,i), new Position(5,4), positionManager, i);
             grid.addEntity(e);
             positionManager.addPosition(e.getCurrentPosition());
-        }
+        }*/
+
+        Entity e1 = new Entity(new Position(0,0), new Position(0,6), positionManager, 0);
+        grid.addEntity(e1);
+        positionManager.addPosition(e1.getCurrentPosition());
+        positionManager.addEntity(e1);
+
+
+        Entity e2 = new Entity(new Position(0,6), new Position(0,0), positionManager, 1);
+        grid.addEntity(e2);
+        positionManager.addPosition(e2.getCurrentPosition());
+        positionManager.addEntity(e2);
+
+
 
         //create the entities
         /*for(int i = 0; i < entitiesNumber; i++){
@@ -43,6 +56,9 @@ public class Main {
             Entity entity = new Entity(currentPosition, arrivalPosition, positionManager);
             grid.addEntity(entity);
             positionManager.addPosition(currentPosition);
+            positionManager.addEntity(entity);
+
+         */
 
             /*
             System.out.println("depart i: " + currentPosition.getI() + "    j: " + currentPosition.getJ());
@@ -69,20 +85,38 @@ public class Main {
 
         //Make all the entities move
         List<Entity> entitiesList = grid.getEntitiesList();
-        while(entitiesList.size() != 0){
+        int i=0;
+        while(!positionManager.listOfAllPositionsIsEmpty()){
+            System.out.println("-----------tour n°"+i+"-----------");
             for(Entity entity: entitiesList){
                 if(!entity.isArrived()) {
-                    entity.move();
-                    Thread.sleep(500);
-                    display.updateGrid(entity);
-                }
+                    if(positionManager.canEntityBeRevive(entity)){
+                        display.reviveVisually(entity);
+                        entity.revive();
+                        System.out.println(entity.getEntityColor().toString()+"- Entity revive"+entity.getCurrentPosition());
+                    }
+                    else if(entity.isKilled()){
+                        System.out.println(entity.getEntityColor().toString()+"- Entity is Killed"+entity.getCurrentPosition());
+                        if(!positionManager.positionIsAlreadyTaken(entity.getCurrentPosition()))
+                            display.killVisually(entity);
+                    }
+                    else{
+                        entity.move();
+                        System.out.println(entity.getEntityColor().toString()+"- Entity move - "+entity.getCurrentPosition());
+                        display.updateGrid(entity);
+                    }
+                    Thread.sleep(750);
 
+                }
                 else {
                     display.disappear(entity);
+                    entity.destroy();
                 }
-
             }
+            i++;
         }
+        display.close();
+        System.out.println("END");
     }
 }
 
