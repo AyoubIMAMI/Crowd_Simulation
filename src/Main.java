@@ -26,8 +26,15 @@ public class Main {
         //create the position manager
         PositionManager positionManager = new PositionManager();
 
+
+        for(int i = 0 ; i < 12 ; i+=2){
+            Entity e = new Entity(new Position(0,i), new Position(5,i), positionManager);
+            grid.addEntity(e);
+            positionManager.addPosition(e.getCurrentPosition());
+        }
+
         //create the entities
-        for(int i = 0; i < entitiesNumber; i++){
+        /*for(int i = 0; i < entitiesNumber; i++){
             Position currentPosition = positionManager.getRandomPosition(length, height);
             while(positionManager.isPositionTaken(grid, currentPosition))
                 currentPosition = positionManager.getRandomPosition(length, height);
@@ -41,8 +48,8 @@ public class Main {
             System.out.println("depart i: " + currentPosition.getI() + "    j: " + currentPosition.getJ());
             System.out.println("depart i: " + arrivalPosition.getI() + "    j: " + arrivalPosition.getJ());
             System.out.println();
-            */
-        }
+
+        }*/
 
         /*
         Position currentPosition = new Position(4, 0);
