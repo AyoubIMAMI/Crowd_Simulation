@@ -3,6 +3,8 @@ import java.util.*;
 
 public class Entity {
 
+    private Position startPosition;
+
     //entity current position
     private Position currentPosition;
 
@@ -26,17 +28,20 @@ public class Entity {
 
     private boolean killVisually;
 
+    private int killTime;
 
 
-    public Entity(Position currentPosition, Position arrivalPosition, PositionManager positionManager, int id) {
+    public Entity(Position startPosition, Position arrivalPosition, PositionManager positionManager, int id) {
+        this.startPosition = startPosition;
         this.previousPosition = Optional.empty();
-        this.currentPosition = currentPosition;
+        this.currentPosition = startPosition;
         this.arrivalPosition = arrivalPosition;
         this.id = id;
         this.positionManager = positionManager;
         this.kill = false;
         this.destroyed = false;
         this.killVisually = false;
+        this.killTime = 0;
     }
 
     /**
@@ -44,18 +49,14 @@ public class Entity {
      */
     public void move(){
         Position position = positionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
-        if(!positionManager.positionIsAlreadyTaken(position)) {
+        if(!positionManager.isPositionTaken(position)) {
             positionManager.updatePositionOfEntity(this.currentPosition, position);
             this.previousPosition = Optional.of(currentPosition);
             this.currentPosition = position;
         }
 
-        else {
-            this.previousPosition = Optional.empty();
-            if(positionManager.isThereAConflict(currentPosition, position)){
-                positionManager.manageConflict(this, position);
-            }
-        }
+        else
+            positionManager.manageConflict(this, position);
     }
 
     /**
@@ -78,7 +79,7 @@ public class Entity {
      * When an entity arrived to its arrival position, it is destroyed
      */
     public void destroy() {
-        positionManager.destroyPosition(this.currentPosition);
+        positionManager.destroyPosition(this);
     }
 
     /**
@@ -133,11 +134,14 @@ public class Entity {
     public void kill() {
         this.kill = true;
         positionManager.removePosition(currentPosition);
+        System.out.println(this.getEntityColor().toString()+"- Entity killed - "+this.getCurrentPosition());
     }
 
     public void revive() {
         this.kill = false;
-        positionManager.addPosition(currentPosition);
+        this.killTime = 0;
+        this.currentPosition = startPosition;
+        positionManager.addPosition(startPosition);
     }
 
     public boolean isKilled(){
@@ -150,5 +154,17 @@ public class Entity {
 
     public void setKillVisually(boolean killVisually) {
         this.killVisually = killVisually;
+    }
+
+    public Position getStartPosition() {
+        return this.startPosition;
+    }
+
+    public int getKillTime() {
+        return this.killTime;
+    }
+
+    public void incrementKillTime() {
+        this.killTime++;
     }
 }

@@ -4,10 +4,12 @@ public class PositionManager {
 
     private List<Position> allCurrentPositions;
     private List<Entity> allEntity;
+    private List<Entity> entitiesOut;
 
     public PositionManager() {
         this.allCurrentPositions = new ArrayList<>();
         this.allEntity = new ArrayList<>();
+        this.entitiesOut = new ArrayList<>();
     }
 
     public void addPosition(Position position){
@@ -53,16 +55,11 @@ public class PositionManager {
 
     /**
      * Check if a position is taken or not to avoid overlay spawning entities
-     * @param grid the grid
-     * @param currentPosition spawning position
+     * @param position spawning position
      * @return true if the position is already taken
      */
-    static boolean isPositionTaken(Grid grid, Position currentPosition) {
-        for (Entity entity : grid.entitiesList) {
-            if(entity.getCurrentPosition().equals(currentPosition))
-                return true;
-        }
-        return false;
+    boolean isPositionTaken(Position position) {
+        return this.allCurrentPositions.contains(position);
     }
 
     /**
@@ -80,26 +77,21 @@ public class PositionManager {
         return allCurrentPositions;
     }
 
-    public boolean positionIsAlreadyTaken(Position position){
-        return this.allCurrentPositions.contains(position);
-    }
-
     public void updatePositionOfEntity(Position currentPosition, Position newPosition){
         this.allCurrentPositions.remove(currentPosition);
         this.allCurrentPositions.add(newPosition);
     }
 
-    public void destroyPosition(Position position) {
-        this.allCurrentPositions.remove(position);
+    public void destroyPosition(Entity entity) {
+        this.allCurrentPositions.remove(entity.getCurrentPosition());
+        if(!this.entitiesOut.contains(entity))
+            this.entitiesOut.add(entity);
     }
 
-    public boolean listOfAllPositionsIsEmpty() {
-        return this.allCurrentPositions.size() == 0;
-    }
-
-    public Optional<Entity> findEntityAtAPosition(Position position){
+    public Optional<Entity> findEntityByPosition(Position position){
         for(Entity entity: allEntity){
-            if(entity.getCurrentPosition().equals(position))return Optional.of(entity);
+            if(entity.getCurrentPosition().equals(position))
+                return Optional.of(entity);
         }
         return Optional.empty();
     }
@@ -109,32 +101,34 @@ public class PositionManager {
         return currentPosition.equals(futurPosition);
     }
 
-    public boolean isThereAConflict(Position currentPosition, Position otherPosition) {
-        Optional<Entity> optionalEntity = findEntityAtAPosition(otherPosition);
-        Entity conflictEntity = optionalEntity.get();
-        return doTheEntityWantToGoToPosition(currentPosition, conflictEntity.getCurrentPosition(), conflictEntity.getArrivalPosition());
-    }
-
     public void manageConflict(Entity entity, Position conflictPosition){
-        Optional<Entity> optionalEntity = findEntityAtAPosition(conflictPosition);
+        Optional<Entity> optionalEntity = findEntityByPosition(conflictPosition);
         Entity conflictEntity = optionalEntity.get();
-        Entity entityThatWillBeKill = null;
+        Entity entityToKill;
         if(entity.getId() < conflictEntity.getId())
-            entityThatWillBeKill = entity;
+            entityToKill = entity;
         else
-            entityThatWillBeKill = conflictEntity;
-        entityThatWillBeKill.kill();
+            entityToKill = conflictEntity;
+        entityToKill.kill();
     }
 
 
     public boolean canEntityBeRevive(Entity entity) {
-        boolean whereIWantToGoIsFree = !positionIsAlreadyTaken(getNewPosition(entity.getCurrentPosition(), entity.getArrivalPosition()));
-        boolean whereIAmIsOccuped = positionIsAlreadyTaken(entity.getCurrentPosition());
+        boolean killTime = (entity.getKillTime() == 2);
+        boolean isStartingPositionTaken = isPositionTaken(entity.getStartPosition());
         boolean ImKilled = entity.isKilled();
-        return whereIWantToGoIsFree && !whereIAmIsOccuped && ImKilled;
+        return !isStartingPositionTaken && ImKilled && killTime;
     }
 
     public void removePosition(Position currentPosition) {
         this.allCurrentPositions.remove(currentPosition);
+    }
+
+    public boolean allEntitiesExited() {
+        return this.entitiesOut.size() == Main.entitiesNumber;
+    }
+
+    List<Entity> getEntitiesOut() {
+        return this.entitiesOut;
     }
 }

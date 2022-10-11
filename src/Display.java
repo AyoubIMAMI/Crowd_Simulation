@@ -42,7 +42,7 @@ public class Display {
         for(int i = 0 ; i < length ; i ++){
             for(int j = 0 ; j < height ; j ++){
                 JPanel panel = new JPanel();
-                panel.setBorder(BorderFactory.createLineBorder(Color.orange));
+                panel.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 
                 if(matrix[i][j].isPresent()) {
                     Color colorToSet = colorList.get(colorIndex % colorsNumber);

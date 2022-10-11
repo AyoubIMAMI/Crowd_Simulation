@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,14 +9,14 @@ import java.util.List;
 public class Main {
 
     //grid of size length*height
-    static int length = 1;
-    static int height = 10;
+    static int length = 100;
+    static int height = 120;
 
     //number of entities on the grid
-    static int entitiesNumber = 3;
+    static int entitiesNumber = 50;
 
     //sleep time in ms
-    static int time = 750;
+    static int time = 1;
 
     //Display the grid where the crowd move
     public static void main(String[] args) throws InterruptedException {
@@ -38,7 +37,7 @@ public class Main {
         }
         */
 
-        /*
+/*
         Entity e1 = new Entity(new Position(0,0), new Position(0,6), positionManager, 0);
         grid.addEntity(e1);
         positionManager.addPosition(e1.getCurrentPosition());
@@ -55,18 +54,18 @@ public class Main {
         //create the entities
 
         for(int i = 0; i < entitiesNumber; i++){
-            Position currentPosition = positionManager.getRandomPosition(length, height);
-            while(positionManager.isPositionTaken(grid, currentPosition))
-                currentPosition = positionManager.getRandomPosition(length, height);
+            Position startPosition = positionManager.getRandomPosition(length, height);
+            while(positionManager.isPositionTaken(startPosition))
+                startPosition = positionManager.getRandomPosition(length, height);
 
             Position arrivalPosition = positionManager.getRandomPosition(length, height);
-            Entity entity = new Entity(currentPosition, arrivalPosition, positionManager, i);
+            Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
             grid.addEntity(entity);
-            positionManager.addPosition(currentPosition);
+            positionManager.addPosition(startPosition);
             positionManager.addEntity(entity);
 
 
-            System.out.println("depart i: " + currentPosition.getI() + "    j: " + currentPosition.getJ());
+            System.out.println("depart i: " + startPosition.getI() + "    j: " + startPosition.getJ());
             System.out.println("depart i: " + arrivalPosition.getI() + "    j: " + arrivalPosition.getJ());
             System.out.println();
 
@@ -95,19 +94,18 @@ public class Main {
         //Make all the entities move
         List<Entity> entitiesList = grid.getEntitiesList();
         int i=0;
-        while(!positionManager.listOfAllPositionsIsEmpty()){
+        while(!positionManager.allEntitiesExited()){
             System.out.println("-----------tour n°"+i+"-----------");
             for(Entity entity: entitiesList){
                 if(!entity.isArrived()) {
                     if(positionManager.canEntityBeRevive(entity)){
-                        display.reviveVisually(entity);
                         entity.revive();
+                        display.reviveVisually(entity);
                         System.out.println(entity.getEntityColor().toString()+"- Entity revive"+entity.getCurrentPosition());
                     }
-                    else if(entity.isKilled()){
-                        System.out.println(entity.getEntityColor().toString()+"- Entity is Killed"+entity.getCurrentPosition());
-                        if(!positionManager.positionIsAlreadyTaken(entity.getCurrentPosition()))
-                            display.killVisually(entity);
+
+                    else if(entity.isKilled()) {
+                        entity.incrementKillTime();
                     }
                     else{
                         entity.move();
@@ -117,13 +115,16 @@ public class Main {
 
                 }
                 else {
+                    System.out.println(entity.getEntityColor().toString()+"- Entity arrived - "+entity.getCurrentPosition());
                     display.disappear(entity);
                     entity.destroy();
                 }
 
+                display.updateGrid(entity);
                 Thread.sleep(time);
             }
             i++;
+            System.out.println("--------------------------------------------------------------------------------number of out entity : " + positionManager.getEntitiesOut().size());
         }
         display.close();
         System.out.println("END");
