@@ -37,7 +37,7 @@ public class Main {
         }
         */
 
-/*
+
         Entity e1 = new Entity(new Position(0,0), new Position(0,6), positionManager, 0);
         grid.addEntity(e1);
         positionManager.addPosition(e1.getCurrentPosition());
@@ -47,12 +47,12 @@ public class Main {
         Entity e2 = new Entity(new Position(0,6), new Position(0,0), positionManager, 1);
         grid.addEntity(e2);
         positionManager.addPosition(e2.getCurrentPosition());
-        positionManager.addEntity(e2);*/
+        positionManager.addEntity(e2);
 
 
 
         //create the entities
-
+/*
         for(int i = 0; i < entitiesNumber; i++){
             Position startPosition = positionManager.getRandomPosition(length, height);
             while(positionManager.isPositionTaken(startPosition))
@@ -100,7 +100,6 @@ public class Main {
                 if(!entity.isArrived()) {
                     if(positionManager.canEntityBeRevive(entity)){
                         entity.revive();
-                        display.reviveVisually(entity);
                         System.out.println(entity.getEntityColor().toString()+"- Entity revive"+entity.getCurrentPosition());
                     }
 
