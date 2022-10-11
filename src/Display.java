@@ -65,14 +65,19 @@ public class Display {
     /**
      * Update the graphic grid if the entity has moved
      */
-    void updateGrid(Entity entity){
-        if(entity.hasMoved()){
-            Position lastPosition = entity.getPreviousPosition().get();
-            Position currentPosition = entity.getCurrentPosition();
+    void updateGrid(Grid grid){
+        List<Entity> entitiesList = grid.getEntitiesList();
+        for(Entity entity : entitiesList) {
+            if(entity.hasMoved() && !entity.isKilled()) {
+                Position lastPosition = entity.getPreviousPosition().get();
+                Position currentPosition = entity.getCurrentPosition();
 
-            jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
-            jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
+                jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
+                jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
+            }
         }
+
+
     }
 
     /**
@@ -89,11 +94,8 @@ public class Display {
      */
     void disappear(Entity entity) {
         JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
-
-        if(!entity.isDestroyed()) {
-            jPanel.setBackground(Color.WHITE);
-            Position.allCurrentPositions.remove(entity.getArrivalPosition());
-        }
+        jPanel.setBackground(Color.WHITE);
+        Position.allCurrentPositions.remove(entity.getArrivalPosition());
     }
 
     /**

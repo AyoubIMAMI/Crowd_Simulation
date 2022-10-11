@@ -9,14 +9,14 @@ import java.util.List;
 public class Main {
 
     //grid of size length*height
-    static int length = 100;
-    static int height = 120;
+    static int length = 1;
+    static int height = 10;
 
     //number of entities on the grid
-    static int entitiesNumber = 50;
+    static int entitiesNumber = 2;
 
     //sleep time in ms
-    static int time = 1;
+    static int time = 1000;
 
     //Display the grid where the crowd move
     public static void main(String[] args) throws InterruptedException {
@@ -110,17 +110,16 @@ public class Main {
                     else{
                         entity.move();
                         System.out.println(entity.getEntityColor().toString()+"- Entity move - "+entity.getCurrentPosition());
-                        display.updateGrid(entity);
                     }
 
                 }
-                else {
+                else if(!entity.isDestroyed()) {
                     System.out.println(entity.getEntityColor().toString()+"- Entity arrived - "+entity.getCurrentPosition());
-                    display.disappear(entity);
                     entity.destroy();
+                    display.disappear(entity);
                 }
 
-                display.updateGrid(entity);
+                display.updateGrid(grid);
                 Thread.sleep(time);
             }
             i++;

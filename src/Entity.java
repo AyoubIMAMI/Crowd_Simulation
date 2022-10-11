@@ -79,6 +79,7 @@ public class Entity {
      * When an entity arrived to its arrival position, it is destroyed
      */
     public void destroy() {
+        this.destroyed = true;
         positionManager.destroyPosition(this);
     }
 
