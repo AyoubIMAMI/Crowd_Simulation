@@ -2,22 +2,10 @@ import java.util.*;
 
 public class PositionManager {
 
-    private List<Position> allCurrentPositions;
-    private List<Entity> allEntity;
-    private List<Entity> entitiesOut;
+    private Grid grid;
 
-    public PositionManager() {
-        this.allCurrentPositions = new ArrayList<>();
-        this.allEntity = new ArrayList<>();
-        this.entitiesOut = new ArrayList<>();
-    }
-
-    public void addPosition(Position position){
-        this.allCurrentPositions.add(position);
-    }
-
-    public void addEntity(Entity entity){
-        this.allEntity.add(entity);
+    public PositionManager(Grid grid) {
+        this.grid = grid;
     }
 
     /**
@@ -59,7 +47,7 @@ public class PositionManager {
      * @return true if the position is already taken
      */
     boolean isPositionTaken(Position position) {
-        return this.allCurrentPositions.contains(position);
+        return grid.getCurrentPositions().contains(position);
     }
 
     /**
@@ -73,32 +61,17 @@ public class PositionManager {
         return new Position(random.nextInt(0, maxLength), random.nextInt(0, maxHeight));
     }
 
-    public List<Position> getAllCurrentPositions() {
-        return allCurrentPositions;
-    }
-
     public void updatePositionOfEntity(Position currentPosition, Position newPosition){
-        this.allCurrentPositions.remove(currentPosition);
-        this.allCurrentPositions.add(newPosition);
-    }
-
-    public void destroyPosition(Entity entity) {
-        this.allCurrentPositions.remove(entity.getCurrentPosition());
-        if(!this.entitiesOut.contains(entity))
-            this.entitiesOut.add(entity);
+        grid.removeCurrentPosition(currentPosition);
+        grid.addCurrentPosition(newPosition);
     }
 
     public Optional<Entity> findEntityByPosition(Position position){
-        for(Entity entity: allEntity){
+        for(Entity entity: grid.getEntitiesList()){
             if(entity.getCurrentPosition().equals(position))
                 return Optional.of(entity);
         }
         return Optional.empty();
-    }
-
-    public boolean doTheEntityWantToGoToPosition(Position currentPosition, Position otherCurrentPosition, Position otherArrivalPosition) {
-        Position futurPosition = getNewPosition(otherCurrentPosition, otherArrivalPosition);
-        return currentPosition.equals(futurPosition);
     }
 
     public void manageConflict(Entity entity, Position conflictPosition){
@@ -109,7 +82,7 @@ public class PositionManager {
             entityToKill = entity;
         else
             entityToKill = conflictEntity;
-        entityToKill.kill();
+        grid.kill(entityToKill);
     }
 
 
@@ -120,15 +93,7 @@ public class PositionManager {
         return !isStartingPositionTaken && ImKilled && killTime;
     }
 
-    public void removePosition(Position currentPosition) {
-        this.allCurrentPositions.remove(currentPosition);
-    }
-
-    public boolean allEntitiesExited() {
-        return this.entitiesOut.size() == Main.entitiesNumber;
-    }
-
-    List<Entity> getEntitiesOut() {
-        return this.entitiesOut;
+    public void removeCurrentPosition(Position currentPosition) {
+        grid.removeCurrentPosition(currentPosition);
     }
 }

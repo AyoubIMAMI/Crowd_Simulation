@@ -66,7 +66,10 @@ public class Display {
      * Update the graphic grid if the entity has moved
      */
     void updateGrid(Entity entity){
-        if(entity.hasMoved()){
+        if(entity.isArrived()) {
+            disappear(entity);
+        }
+        else if(entity.hasMoved()){
             Position lastPosition = entity.getPreviousPosition().get();
             Position currentPosition = entity.getCurrentPosition();
 
@@ -94,16 +97,6 @@ public class Display {
             jPanel.setBackground(Color.WHITE);
             Position.allCurrentPositions.remove(entity.getArrivalPosition());
         }
-    }
-
-    /**
-     * Once the entity reach his final position, it disappeared from the grid
-     * @param entity to make disappeared
-     */
-    void killVisually(Entity entity) {
-        JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
-        jPanel.setBackground(Color.darkGray);
-        entity.setKillVisually(true);
     }
 
     public void reviveVisually(Entity entity) {

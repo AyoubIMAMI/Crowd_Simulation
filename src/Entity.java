@@ -3,7 +3,11 @@ import java.util.*;
 
 public class Entity {
 
-    private Position startPosition;
+    //entity starting position
+    private final Position startPosition;
+
+    //arrival position
+    private final Position arrivalPosition;
 
     //entity current position
     private Position currentPosition;
@@ -11,24 +15,23 @@ public class Entity {
     //entity previous position
     private Optional<Position> previousPosition;
 
-    //arrival position
-    private final Position arrivalPosition;
-
     //unique ID
     private final int id;
 
-    //when an entity arrived to its arrival position, it is destroyed
-    private boolean destroyed;
-
+    //entity color
     private Color entityColor;
 
-    private PositionManager positionManager;
+    //positionManager which decides to move, die, revive or exit
+    private final PositionManager positionManager;
 
+    //has been killed
     private boolean kill;
 
-    private boolean killVisually;
-
+    //once killed, dead for at least 2 rounds
     private int killTime;
+
+    //when an entity arrived to its arrival position, it is destroyed
+    private boolean destroyed;
 
 
     public Entity(Position startPosition, Position arrivalPosition, PositionManager positionManager, int id) {
@@ -40,7 +43,6 @@ public class Entity {
         this.positionManager = positionManager;
         this.kill = false;
         this.destroyed = false;
-        this.killVisually = false;
         this.killTime = 0;
     }
 
@@ -48,7 +50,7 @@ public class Entity {
      * Change the entity previous position with the current one, and the current one with the new one
      */
     public void move(){
-        Position position = positionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
+        Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         if(!positionManager.isPositionTaken(position)) {
             positionManager.updatePositionOfEntity(this.currentPosition, position);
             this.previousPosition = Optional.of(currentPosition);
@@ -60,14 +62,6 @@ public class Entity {
     }
 
     /**
-     * Check is the entity reached its arrival position
-     * @return true if the entity reached its arrival position, false otherwise
-     */
-    public boolean isArrived() {
-        return this.currentPosition.equals(arrivalPosition);
-    }
-
-    /**
      * Check if an entity has moved
      * @return true if the entity has moved
      */
@@ -76,10 +70,11 @@ public class Entity {
     }
 
     /**
-     * When an entity arrived to its arrival position, it is destroyed
+     * Check is the entity reached its arrival position
+     * @return true if the entity reached its arrival position, false otherwise
      */
-    public void destroy() {
-        positionManager.destroyPosition(this);
+    public boolean isArrived() {
+        return this.currentPosition.equals(arrivalPosition);
     }
 
     /**
@@ -89,6 +84,11 @@ public class Entity {
     public boolean isDestroyed() {
         return destroyed;
     }
+
+    public boolean isKilled(){
+        return this.kill;
+    }
+
 
     public Position getCurrentPosition() {
         return currentPosition;
@@ -106,54 +106,8 @@ public class Entity {
         return entityColor;
     }
 
-    public void setEntityColor(Color color) {
-        this.entityColor = color;
-    }
-
-    public PositionManager getPositionManager() {
-        return positionManager;
-    }
-
     public int getId() {
         return id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Entity entity = (Entity) o;
-        return Objects.equals(currentPosition, entity.currentPosition) && Objects.equals(arrivalPosition, entity.arrivalPosition) && Objects.equals(id, entity.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(currentPosition, arrivalPosition, id);
-    }
-
-    public void kill() {
-        this.kill = true;
-        positionManager.removePosition(currentPosition);
-        System.out.println(this.getEntityColor().toString()+"- Entity killed - "+this.getCurrentPosition());
-    }
-
-    public void revive() {
-        this.kill = false;
-        this.killTime = 0;
-        this.currentPosition = startPosition;
-        positionManager.addPosition(startPosition);
-    }
-
-    public boolean isKilled(){
-        return this.kill;
-    }
-
-    public boolean isKillVisually() {
-        return killVisually;
-    }
-
-    public void setKillVisually(boolean killVisually) {
-        this.killVisually = killVisually;
     }
 
     public Position getStartPosition() {
@@ -164,7 +118,49 @@ public class Entity {
         return this.killTime;
     }
 
+    public PositionManager getPositionManager() {
+        return positionManager;
+    }
+
+    public void setEntityColor(Color color) {
+        this.entityColor = color;
+    }
+
+    public void setDestroyed(boolean destroyed) {this.destroyed = destroyed;}
+
+    public void setKill(boolean kill) {
+        this.kill = kill;
+    }
+
+    public void resetKillTime() {
+        this.killTime = 0;
+    }
+
+    public void resetCurrentPosition() {
+        this.currentPosition = this.startPosition;
+    }
+
     public void incrementKillTime() {
         this.killTime++;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity entity = (Entity) o;
+        return id == entity.id && kill == entity.kill && killTime == entity.killTime && destroyed == entity.destroyed
+                && Objects.equals(startPosition, entity.startPosition)
+                && Objects.equals(arrivalPosition, entity.arrivalPosition)
+                && Objects.equals(currentPosition, entity.currentPosition)
+                && Objects.equals(previousPosition, entity.previousPosition)
+                && Objects.equals(entityColor, entity.entityColor)
+                && Objects.equals(positionManager, entity.positionManager);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startPosition, arrivalPosition, currentPosition, previousPosition, id, entityColor,
+                positionManager, kill, killTime, destroyed);
     }
 }
