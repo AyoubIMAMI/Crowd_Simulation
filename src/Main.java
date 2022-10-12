@@ -56,7 +56,6 @@ public class Main {
                 if(!entity.isArrived()) {
                     if(positionManager.canEntityBeRevive(entity)){
                         grid.revive(entity);
-                        display.reviveVisually(entity);
                         System.out.println(entity.getEntityColor().toString()+"- Entity revive"+entity.getCurrentPosition());
                     }
 
@@ -66,16 +65,15 @@ public class Main {
                     else{
                         entity.move();
                         System.out.println(entity.getEntityColor().toString()+"- Entity move - "+entity.getCurrentPosition());
-                        display.updateGrid(entity);
                     }
 
                 }
-                else {
+                else if(!entity.isDestroyed()) {
                     System.out.println(entity.getEntityColor().toString()+"- Entity arrived - "+entity.getCurrentPosition());
                     grid.destroy(entity);
                 }
 
-                display.updateGrid(entity);
+                display.updateGrid(grid);
                 Thread.sleep(time);
             }
             i++;

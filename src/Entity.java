@@ -106,6 +106,14 @@ public class Entity {
         return entityColor;
     }
 
+    public void setEntityColor(Color color) {
+        this.entityColor = color;
+    }
+
+    public PositionManager getPositionManager() {
+        return positionManager;
+    }
+
     public int getId() {
         return id;
     }

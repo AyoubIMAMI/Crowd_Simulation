@@ -65,16 +65,27 @@ public class Display {
     /**
      * Update the graphic grid if the entity has moved
      */
-    void updateGrid(Entity entity){
-        if(entity.isArrived()) {
-            disappear(entity);
-        }
-        else if(entity.hasMoved()){
-            Position lastPosition = entity.getPreviousPosition().get();
-            Position currentPosition = entity.getCurrentPosition();
+    void updateGrid(Grid grid){
+        List<Entity> entitiesList = grid.getEntitiesList();
+        for(Entity entity : entitiesList) {
+            if(entity.isArrived()) {
+                disappear(entity);
+            }
 
-            jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
-            jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
+            else if(entity.hasMoved() && !entity.isDestroyed()) {
+                Position lastPosition = entity.getPreviousPosition().get();
+                Position currentPosition = entity.getCurrentPosition();
+
+                jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
+                jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
+            }
+
+            else if(entity.isKilled() && entity.getKillTime() == 0) {
+                Position currentPosition = entity.getCurrentPosition();
+                jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(Color.white);
+            }
+
+
         }
     }
 
@@ -91,12 +102,8 @@ public class Display {
      * @param entity to make disappeared
      */
     void disappear(Entity entity) {
-        JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
-
-        if(!entity.isDestroyed()) {
-            jPanel.setBackground(Color.WHITE);
-            Position.allCurrentPositions.remove(entity.getArrivalPosition());
-        }
+        JPanel jPanel = jPanelList[entity.getArrivalPosition().getI()][entity.getArrivalPosition().getJ()];
+        jPanel.setBackground(Color.WHITE);
     }
 
     public void reviveVisually(Entity entity) {
