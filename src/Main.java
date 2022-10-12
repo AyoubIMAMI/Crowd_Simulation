@@ -68,7 +68,7 @@ public class Main {
                     }
 
                 }
-                else if(!entity.isDestroyed()) {
+                else if(entity.isDestroyed()) {
                     System.out.println(entity.getEntityColor().toString()+"- Entity arrived - "+entity.getCurrentPosition());
                     grid.destroy(entity);
                 }

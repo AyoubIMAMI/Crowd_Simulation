@@ -72,7 +72,7 @@ public class Display {
                 disappear(entity);
             }
 
-            else if(entity.hasMoved() && !entity.isDestroyed()) {
+            else if(entity.hasMoved() && entity.isDestroyed()) {
                 Position lastPosition = entity.getPreviousPosition().get();
                 Position currentPosition = entity.getCurrentPosition();
 

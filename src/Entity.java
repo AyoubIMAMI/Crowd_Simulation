@@ -82,7 +82,7 @@ public class Entity {
      * @return destroyed attribute boolean
      */
     public boolean isDestroyed() {
-        return destroyed;
+        return !destroyed;
     }
 
     public boolean isKilled(){
@@ -106,10 +106,6 @@ public class Entity {
         return entityColor;
     }
 
-    public void setEntityColor(Color color) {
-        this.entityColor = color;
-    }
-
     public PositionManager getPositionManager() {
         return positionManager;
     }
@@ -124,10 +120,6 @@ public class Entity {
 
     public int getKillTime() {
         return this.killTime;
-    }
-
-    public PositionManager getPositionManager() {
-        return positionManager;
     }
 
     public void setEntityColor(Color color) {
