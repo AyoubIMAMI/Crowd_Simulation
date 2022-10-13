@@ -74,7 +74,7 @@ public class PositionManager {
         return Optional.empty();
     }
 
-    public void manageConflict(Entity entity, Position conflictPosition){
+    public Entity manageConflict(Entity entity, Position conflictPosition){
         Optional<Entity> optionalEntity = findEntityByPosition(conflictPosition);
         Entity conflictEntity = optionalEntity.get();
         Entity entityToKill;
@@ -83,14 +83,16 @@ public class PositionManager {
         else
             entityToKill = conflictEntity;
         grid.kill(entityToKill);
+
+        return entityToKill;
     }
 
 
     public boolean canEntityBeRevive(Entity entity) {
-        boolean killTime = (entity.getKillTime() == 2);
+        boolean killTimeEnd = (entity.getKillTime() == 2);
         boolean isStartingPositionTaken = isPositionTaken(entity.getStartPosition());
         boolean ImKilled = entity.isKilled();
-        return !isStartingPositionTaken && ImKilled && killTime;
+        return !isStartingPositionTaken && ImKilled && killTimeEnd;
     }
 
     public void removeCurrentPosition(Position currentPosition) {

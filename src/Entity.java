@@ -49,16 +49,17 @@ public class Entity {
     /**
      * Change the entity previous position with the current one, and the current one with the new one
      */
-    public void move(){
+    public Optional<Entity> move(){
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         if(!positionManager.isPositionTaken(position)) {
             positionManager.updatePositionOfEntity(this.currentPosition, position);
             this.previousPosition = Optional.of(currentPosition);
             this.currentPosition = position;
         }
-
         else
-            positionManager.manageConflict(this, position);
+            return Optional.of(positionManager.manageConflict(this, position));
+
+        return Optional.empty();
     }
 
     /**
@@ -144,7 +145,10 @@ public class Entity {
     }
 
     public void incrementKillTime() {
-        this.killTime++;
+        if(killTime == 2)
+            killTime = 0;
+        else
+            this.killTime++;
     }
 
     @Override

@@ -81,6 +81,7 @@ public class Grid {
      */
     public void destroy(Entity entity) {
         removeCurrentPosition(entity.getCurrentPosition());
+        entity.setDestroyed(true);
         entitiesOut.add(entity);
     }
 
