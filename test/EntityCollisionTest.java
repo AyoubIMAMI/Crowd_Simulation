@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class entityCollision {
+public class EntityCollisionTest {
     static int lines = 1;
     static int columns = 10;
 
@@ -58,7 +58,7 @@ public class entityCollision {
                     grid.destroy(entity);
                 }
 
-                display.updateGrid(entity);
+                display.updateGrid(entity, java.util.Optional.empty(), false);
                 Thread.sleep(time);
             }
             grid.cleanUp();
