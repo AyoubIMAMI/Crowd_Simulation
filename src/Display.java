@@ -65,27 +65,31 @@ public class Display {
     /**
      * Update the graphic grid if the entity has moved
      */
-    void updateGrid(Grid grid){
-        List<Entity> entitiesList = grid.getEntitiesList();
-        for(Entity entity : entitiesList) {
-            if(entity.isArrived()) {
-                disappear(entity);
-            }
+    void updateGrid(Entity entity){
 
-            else if(entity.hasMoved() && entity.isDestroyed()) {
-                Position lastPosition = entity.getPreviousPosition().get();
-                Position currentPosition = entity.getCurrentPosition();
+        if(entity.isArrived()) {
+            disappear(entity);
+        }
 
-                jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
-                jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
-            }
+        else if(entity.isKilled() && entity.getKillTime() == 0) {
+            Position currentPosition = entity.getCurrentPosition();
+            jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(Color.white);
+            entity.resetCurrentPosition();
+            entity.resetPreviousPosition();
+        }
 
-            else if(entity.isKilled() && entity.getKillTime() == 0) {
-                Position currentPosition = entity.getCurrentPosition();
-                jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(Color.white);
-            }
+        else if(entity.hasMoved()) {
+            Position lastPosition = entity.getPreviousPosition().get();
+            Position currentPosition = entity.getCurrentPosition();
+
+            jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
+            jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
+        }
 
 
+        else {
+            Position currentPosition = entity.getCurrentPosition();
+            jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
         }
     }
 

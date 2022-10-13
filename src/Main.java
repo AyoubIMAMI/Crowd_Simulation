@@ -50,7 +50,7 @@ public class Main {
         //Make all the entities move
         List<Entity> entitiesList = grid.getEntitiesList();
         int i=0;
-        while(!grid.allEntitiesExited(entitiesNumber)){
+        while(entitiesList.size() != 0){
             System.out.println("-----------tour n°"+i+"-----------");
             for(Entity entity: entitiesList){
                 if(!entity.isArrived()) {
@@ -68,14 +68,16 @@ public class Main {
                     }
 
                 }
-                else if(entity.isDestroyed()) {
+                else {
                     System.out.println(entity.getEntityColor().toString()+"- Entity arrived - "+entity.getCurrentPosition());
                     grid.destroy(entity);
                 }
 
-                display.updateGrid(grid);
+                display.updateGrid(entity);
                 Thread.sleep(time);
             }
+            grid.cleanUp();
+            entitiesList = grid.getEntitiesList();
             i++;
             System.out.println("--------------------------------------------------------------------------------number of out entity : " + grid.getEntitiesOut().size());
         }

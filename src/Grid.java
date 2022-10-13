@@ -73,7 +73,6 @@ public class Grid {
     public void revive(Entity entity) {
         entity.setKill(false);
         entity.resetKillTime();
-        entity.resetCurrentPosition();
         this.currentPositions.add(entity.getCurrentPosition());
     }
 
@@ -81,10 +80,15 @@ public class Grid {
      * When an entity arrived to its arrival position, it is destroyed
      */
     public void destroy(Entity entity) {
-        entity.setDestroyed(true);
         removeCurrentPosition(entity.getCurrentPosition());
-        if(!getEntitiesOut().contains(entity))
-            getEntitiesOut().add(entity);
+        entitiesOut.add(entity);
+    }
+
+    public void cleanUp() {
+        for(Entity entity : entitiesOut)
+            entitiesList.remove(entity);
+
+        entitiesOut.clear();
     }
 
     public void entityExit(Entity entity) {

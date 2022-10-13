@@ -140,6 +140,9 @@ public class Entity {
         this.currentPosition = this.startPosition;
     }
 
+    public void resetPreviousPosition() {this.previousPosition = Optional.empty();
+    }
+
     public void incrementKillTime() {
         this.killTime++;
     }
@@ -163,4 +166,5 @@ public class Entity {
         return Objects.hash(startPosition, arrivalPosition, currentPosition, previousPosition, id, entityColor,
                 positionManager, kill, killTime, destroyed);
     }
+
 }
