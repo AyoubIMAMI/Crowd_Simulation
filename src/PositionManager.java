@@ -18,27 +18,22 @@ public class PositionManager {
         int iDifference = arrivalPosition.getI() - currentPosition.getI();
         int jDifference = arrivalPosition.getJ() - currentPosition.getJ();
 
-        if(iDifference != 0) iDifference /= Math.abs(iDifference);
-        if(jDifference != 0) jDifference /= Math.abs(jDifference);
+        int iSign = 0;
+        int jSign = 0;
 
-        int xySum = iDifference + jDifference;
+        if(iDifference != 0) iSign = iDifference/Math.abs(iDifference);
+        if(jDifference != 0) jSign = jDifference/Math.abs(jDifference);
 
-        if(xySum == -2) return new Position(currentPosition.getI()-1, currentPosition.getJ()-1);
-
-        else if(xySum == 2) return new Position(currentPosition.getI()+1, currentPosition.getJ()+1);
-
-        else if(xySum == 0 && iDifference == 1) return new Position(currentPosition.getI()+1, currentPosition.getJ()-1);
-
-        else if(xySum == 0 && iDifference == -1) return new Position(currentPosition.getI()-1, currentPosition.getJ()+1);
-
-        else if(xySum == 1 && iDifference == 1) return new Position(currentPosition.getI()+1, currentPosition.getJ());
-
-        else if(xySum == -1 && iDifference == -1) return new Position(currentPosition.getI()-1, currentPosition.getJ());
-
-        else if(xySum == 1 && iDifference == 0) return new Position(currentPosition.getI(), currentPosition.getJ()+1);
-
-        else
-            return new Position(currentPosition.getI(), currentPosition.getJ()-1); //if(xySum == -1 && iDifference == 0)
+        if(iDifference == 0 && jDifference != 0)
+            return new Position(currentPosition.getI(), currentPosition.getJ()+jSign);
+        else if(iDifference != 0 && jDifference == 0)
+            return new Position(currentPosition.getI()+iSign, currentPosition.getJ());
+        else{
+            if(iDifference < jDifference)
+                return new Position(currentPosition.getI()+iSign, currentPosition.getJ());
+            else
+                return new Position(currentPosition.getI(), currentPosition.getJ()+jSign);
+        }
     }
 
     /**
