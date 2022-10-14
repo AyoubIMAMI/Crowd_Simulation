@@ -4,43 +4,57 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Manage the simulation display
+ */
 public class Display {
+    //lines*columns of the grid
+    private final int lines;
+    private final int columns;
 
-    //length*height of the grid
-    private final int length;
-    private final int height;
-
+    //window manager
     private final JFrame frame;
+    //window content manager
     private final JPanel[][] jPanelList;
 
+    //colors associated to entities
     private final List<Color> colorList;
+    //number of different colors
     private final int colorsNumber;
 
-    public Display(int length, int height) {
-        this.length = length;
-        this.height = height;
-        this.jPanelList = new JPanel[length][height];
-
+    public Display(int lines, int columns) {
+        this.lines = lines;
+        this.columns = columns;
         this.colorList = new ArrayList<>();
         this.colorsNumber = colorListCreation();
-
+        this.jPanelList = new JPanel[lines][columns];
         this.frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500,500);
     }
 
     /**
+     * Create and display the grid
+     * @param grid where entities move to create and display
+     */
+    void displayGrid(Grid grid) {
+        createGridAppearance(grid);
+        frame.setVisible(true);
+    }
+
+    /**
      * Create the grid appearance
+     * @param grid in which entities move
      */
     public void createGridAppearance(Grid grid){
-        //get the grid
         Optional<Entity>[][] matrix = grid.getGrid();
 
+        //needed to browse the list since there can be more entities than colors
         int colorIndex = 0;
 
         //initialize the grid appearance
-        for(int i = 0 ; i < length ; i ++){
-            for(int j = 0 ; j < height ; j ++){
+        for(int i = 0; i < lines; i ++){
+            for(int j = 0; j < columns; j ++){
                 JPanel panel = new JPanel();
                 panel.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 
@@ -50,7 +64,6 @@ public class Display {
                     matrix[i][j].get().setEntityColor(colorToSet);
                     colorIndex++;
                 }
-
                 else
                     panel.setBackground(Color.white);
 
@@ -59,11 +72,14 @@ public class Display {
             }
         }
 
-        frame.setLayout(new GridLayout(length,height));
+        frame.setLayout(new GridLayout(lines, columns));
     }
 
     /**
-     * Update the graphic grid if the entity has moved
+     * Update the grid appearance
+     * @param entity involved in this round
+     * @param potentialVictim potential entity which got killed (conflict) during this round
+     * @param victimRevived true if the entity involved in this round got revived
      */
     void updateGrid(Entity entity, Optional<Entity> potentialVictim, boolean victimRevived){
         if(potentialVictim.isPresent()) {
@@ -73,30 +89,19 @@ public class Display {
             killedEntity.resetCurrentPosition();
             killedEntity.resetPreviousPosition();
         }
-
         else if(entity.isArrived() && !entity.isDestroyed()) {
             disappear(entity);
         }
         else if(entity.hasMoved()) {
             Position lastPosition = entity.getPreviousPosition().get();
             Position currentPosition = entity.getCurrentPosition();
-
             jPanelList[lastPosition.getI()][lastPosition.getJ()].setBackground(Color.WHITE);
             jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
         }
-
         else if(victimRevived) {
             Position currentPosition = entity.getCurrentPosition();
             jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(entity.getEntityColor());
         }
-    }
-
-    /**
-     * Update and display the grid
-     */
-    void displayGrid(Grid grid) {
-        createGridAppearance(grid);
-        frame.setVisible(true);
     }
 
     /**
@@ -108,12 +113,10 @@ public class Display {
         jPanel.setBackground(Color.WHITE);
     }
 
-    public void reviveVisually(Entity entity) {
-        JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
-        jPanel.setBackground(entity.getEntityColor());
-        //System.out.println("nooooooooooooooooow");
-    }
-
+    /**
+     * Fill the colors list
+     * @return the size of the list - needed to browse the list since there can be more entities than colors
+     */
     int colorListCreation() {
         colorList.add(Color.RED);
         colorList.add(Color.BLUE);
@@ -125,9 +128,10 @@ public class Display {
         return colorList.size();
     }
 
+    /**
+     * Close the display window
+     */
     public void close() {
         this.frame.dispose();
     }
-
-
 }
