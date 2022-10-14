@@ -20,9 +20,8 @@ public class Simulation {
 
     /**
      * Initialize the simulation: grid appearance and entities creation
-     * @throws InterruptedException sleepTime
      */
-    public void initialize() throws InterruptedException {
+    public void initialize() {
         for(int i = 0; i < Main.entitiesNumber; i++){
             Position startPosition = positionManager.getRandomPosition();
             while(positionManager.isPositionTaken(startPosition))
@@ -34,7 +33,6 @@ public class Simulation {
         }
 
         display.displayGrid(grid);
-        sleep(sleepTime);
     }
 
     /**
@@ -42,6 +40,9 @@ public class Simulation {
      * @throws InterruptedException sleepTime
      */
     public void run() throws InterruptedException {
+        //let the display appears
+        sleep(sleepTime);
+
         List<Entity> entitiesList = grid.getEntitiesList();
         while (entitiesList.size() != 0) {
             for (Entity entity : entitiesList) {
