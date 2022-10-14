@@ -2,6 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Grid on which entities will move
+ */
 public class Grid {
 
     //grid of size lines*columns
@@ -20,7 +23,7 @@ public class Grid {
     //list of the entities current position
     List<Position> currentPositions;
 
-    //grid where the crowd move
+    //grid where the entities move
     Optional<Entity>[][] grid;
 
     public Grid(int lines, int columns, double entitiesNumber) {
@@ -35,7 +38,7 @@ public class Grid {
     }
 
     /**
-     * Create the length*height size grid where the crowd move
+     * Create the lines*columns size grid where the entities move
      */
     private void createGrid() {
         for (int i = 0; i < lines; i++) {
@@ -56,20 +59,35 @@ public class Grid {
         grid[position.getI()][position.getJ()] = Optional.of(entity);
     }
 
+    /**
+     * Add the position to the list of current position
+     * @param position to add
+     */
     public void addCurrentPosition(Position position) {
         this.currentPositions.add(position);
     }
 
+    /**
+     * Remove the position from the list of current position
+     * @param position to remove
+     */
     public void removeCurrentPosition(Position position) {
         this.currentPositions.remove(position);
     }
 
+    /**
+     * Kill an entity - set its kill attribute to true
+     * @param entity to kill
+     */
     public void kill(Entity entity) {
         entity.setKill(true);
         this.currentPositions.remove(entity.getCurrentPosition());
-        //System.out.println(entity.getEntityColor().toString()+"- Entity killed - "+entity.getCurrentPosition());
     }
 
+    /**
+     * Revive entity - set its kill attribute to false and reset its kill time
+     * @param entity to revive
+     */
     public void revive(Entity entity) {
         entity.setKill(false);
         entity.resetKillTime();
@@ -78,6 +96,7 @@ public class Grid {
 
     /**
      * When an entity arrived to its arrival position, it is destroyed
+     * @param entity to destroy
      */
     public void destroy(Entity entity) {
         removeCurrentPosition(entity.getCurrentPosition());
@@ -85,15 +104,14 @@ public class Grid {
         entitiesOut.add(entity);
     }
 
+    /**
+     * Remove entities which got out from the entities list
+     */
     public void cleanUp() {
         for(Entity entity : entitiesOut)
             entitiesList.remove(entity);
 
         entitiesOut.clear();
-    }
-
-    public void entityExit(Entity entity) {
-        this.entitiesOut.add(entity);
     }
 
     public Optional<Entity>[][] getGrid() {
@@ -104,13 +122,7 @@ public class Grid {
         return entitiesList;
     }
 
-    public List<Entity> getEntitiesOut() {
-        return entitiesOut;
-    }
-
-    public List<Position> getCurrentPositions() {return currentPositions;}
-
-    public boolean allEntitiesExited(int entitiesNumber) {
-        return this.entitiesOut.size() == entitiesNumber;
+    public List<Position> getCurrentPositions() {
+        return currentPositions;
     }
 }
