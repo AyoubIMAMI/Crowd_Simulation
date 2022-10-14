@@ -67,7 +67,7 @@ public class Grid {
     public void kill(Entity entity) {
         entity.setKill(true);
         this.currentPositions.remove(entity.getCurrentPosition());
-        System.out.println(entity.getEntityColor().toString()+"- Entity killed - "+entity.getCurrentPosition());
+        //System.out.println(entity.getEntityColor().toString()+"- Entity killed - "+entity.getCurrentPosition());
     }
 
     public void revive(Entity entity) {

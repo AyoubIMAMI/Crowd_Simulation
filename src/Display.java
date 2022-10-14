@@ -111,7 +111,7 @@ public class Display {
     public void reviveVisually(Entity entity) {
         JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
         jPanel.setBackground(entity.getEntityColor());
-        System.out.println("nooooooooooooooooow");
+        //System.out.println("nooooooooooooooooow");
     }
 
     int colorListCreation() {

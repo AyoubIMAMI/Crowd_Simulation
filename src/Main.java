@@ -14,14 +14,14 @@ public class Main {
     static long startTime = System.nanoTime();
 
     //grid of size length*height
-    static int lines = 130;
-    static int columns = 130;
+    static int lines = 100;
+    static int columns = 120;
 
     //number of entities on the grid
-    static int entitiesNumber = 10000;
+    static int entitiesNumber = 1024;
 
     //sleep time in ms
-    static int time = 1;
+    static int time = 0;
 
     //Display the grid where the crowd move
     public static void main(String[] args) throws InterruptedException {
@@ -42,10 +42,6 @@ public class Main {
             Position arrivalPosition = positionManager.getRandomPosition(lines, columns);
             Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
             grid.addEntity(entity);
-
-            System.out.println("departure i: " + startPosition.getI() + "    j: " + startPosition.getJ());
-            System.out.println("arrival   i: " + arrivalPosition.getI() + "    j: " + arrivalPosition.getJ());
-            System.out.println();
         }
 
         /*
@@ -65,9 +61,7 @@ public class Main {
 
         //Make all the entities move
         List<Entity> entitiesList = grid.getEntitiesList();
-        int i=0;
         while(entitiesList.size() != 0){
-            System.out.println("-----------tour n°"+i+"-----------");
             for(Entity entity: entitiesList){
                 Optional<Entity> potentialVictim = Optional.empty();
                 boolean victimRevived = false;
@@ -75,7 +69,6 @@ public class Main {
                     if(positionManager.canEntityBeRevive(entity)){
                         grid.revive(entity);
                         victimRevived = true;
-                        System.out.println(entity.getEntityColor().toString()+"- Entity revive"+entity.getCurrentPosition());
                     }
 
                     else if(entity.isKilled()) {
@@ -83,12 +76,10 @@ public class Main {
                     }
                     else{
                         potentialVictim = entity.move();
-                        System.out.println(entity.getEntityColor().toString()+"- Entity move - "+entity.getCurrentPosition());
                     }
 
                 }
                 else {
-                    System.out.println(entity.getEntityColor().toString()+"- Entity arrived - "+entity.getCurrentPosition());
                     grid.destroy(entity);
                 }
 
@@ -97,16 +88,12 @@ public class Main {
             }
             grid.cleanUp();
             entitiesList = grid.getEntitiesList();
-            i++;
-            System.out.println("--------------------------------------------------------------------------------number of out entity : " + grid.getEntitiesOut().size());
         }
         display.close();
-        System.out.println("END\n\n");
-
-
 
         long endTime = System.nanoTime();
         long totalTime = endTime - startTime;
-        System.out.println("Program ran for " + totalTime/(6*Math.pow(10,10)) + " minutes.");
+        System.out.println("Program ran for " + totalTime/(Math.pow(10,9)) + " seconds with a time sleep of " + time + " milliseconds.");
+        System.out.println("Program ran for " + totalTime/(6*Math.pow(10,10)) + " minutes with a time sleep of " + time + " milliseconds.");
     }
 }
