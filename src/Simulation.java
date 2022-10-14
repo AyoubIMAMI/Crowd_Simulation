@@ -1,8 +1,10 @@
 import java.util.List;
 import java.util.Optional;
-
 import static java.lang.Thread.sleep;
 
+/**
+ * Initialize and run the simulation
+ */
 public class Simulation {
     public Grid grid;
     public PositionManager positionManager;
@@ -16,10 +18,30 @@ public class Simulation {
         this.positionManager = positionManager;
     }
 
-    public void run() throws InterruptedException {
+    /**
+     * Initialize the simulation: grid appearance and entities creation
+     * @throws InterruptedException sleepTime
+     */
+    public void initialize() throws InterruptedException {
+        for(int i = 0; i < Main.entitiesNumber; i++){
+            Position startPosition = positionManager.getRandomPosition();
+            while(positionManager.isPositionTaken(startPosition))
+                startPosition = positionManager.getRandomPosition();
+
+            Position arrivalPosition = positionManager.defineArrivalPosition();
+            Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
+            grid.addEntity(entity);
+        }
+
         display.displayGrid(grid);
         sleep(sleepTime);
+    }
 
+    /**
+     * Run the simulation - round by round
+     * @throws InterruptedException sleepTime
+     */
+    public void run() throws InterruptedException {
         List<Entity> entitiesList = grid.getEntitiesList();
         while (entitiesList.size() != 0) {
             for (Entity entity : entitiesList) {
@@ -31,6 +53,11 @@ public class Simulation {
         display.close();
     }
 
+    /**
+     * Make a move on an entity: move, revive or destroy. And update the display
+     * @param entity entity to move on this round
+     * @throws InterruptedException sleepTime
+     */
     public void playRound(Entity entity) throws InterruptedException {
         Optional<Entity> potentialVictim = Optional.empty();
         boolean victimRevived = false;
@@ -49,19 +76,10 @@ public class Simulation {
         sleep(sleepTime);
     }
 
-    public void initialize() {
-        //create the entities
-        for(int i = 0; i < Main.entitiesNumber; i++){
-            Position startPosition = positionManager.getRandomPosition();
-            while(positionManager.isPositionTaken(startPosition))
-                startPosition = positionManager.getRandomPosition();
-
-            Position arrivalPosition = positionManager.defineArrivalPosition();
-            Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
-            grid.addEntity(entity);
-        }
-    }
-
+    /**
+     * Compute the execution time
+     * @param startTime time for which the program started
+     */
     public void time(long startTime) {
         long endTime = System.nanoTime();
         long totalTime = endTime - startTime;
