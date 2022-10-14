@@ -54,7 +54,7 @@ public class Entity {
     public Optional<Entity> move(){
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         if(!positionManager.isPositionTaken(position)) {
-            positionManager.updatePositionOfEntity(this.currentPosition, position);
+            positionManager.updateCurrentPositionList(this.currentPosition, position);
             this.previousPosition = Optional.of(currentPosition);
             this.currentPosition = position;
         }
