@@ -47,16 +47,14 @@ public class PositionManager {
 
     /**
      * Get random spawning position
-     * @param maxLength max length value available
-     * @param maxHeight max height value available
      * @return a random position
      */
-    public static Position getRandomPosition(int maxLength, int maxHeight) {
+    public Position getRandomPosition() {
         Random random = new Random();
-        return new Position(random.nextInt(0, maxLength), random.nextInt(0, maxHeight));
+        return new Position(random.nextInt(0, Main.lines), random.nextInt(0, Main.columns));
     }
 
-    public Position defineArrivalPosition(int maxLines, int maxColumns) {
+    public Position defineArrivalPosition() {
         int i;
         int j;
 
@@ -69,22 +67,22 @@ public class PositionManager {
         // ---
         if(setLineOrColumn == 0 && setZeroOrMax == 0) {
             i = 0;
-            j = random.nextInt(0, maxColumns-1);
+            j = random.nextInt(0, Main.columns-1);
         }
 
         //  ___
         // |  |
         // ---  <- here
         else if(setLineOrColumn == 0 && setZeroOrMax == 1) {
-            i = maxLines-1;
-            j = random.nextInt(0, maxColumns-1);
+            i = Main.lines-1;
+            j = random.nextInt(0, Main.columns-1);
         }
 
         //           ___
         // here ->  |  |
         //          ---
         else if(setLineOrColumn == 1 && setZeroOrMax == 0) {
-            i = random.nextInt(0, maxLines-1);
+            i = random.nextInt(0, Main.lines-1);
             j = 0;
         }
 
@@ -92,8 +90,8 @@ public class PositionManager {
         // |  |  <- here
         // ---
         else {
-            i = random.nextInt(0, maxLines-1);
-            j = maxColumns-1;
+            i = random.nextInt(0, Main.lines-1);
+            j = Main.columns-1;
         }
 
         return new Position(i, j);

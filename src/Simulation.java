@@ -7,11 +7,9 @@ public class Simulation {
     public Grid grid;
     public PositionManager positionManager;
     public Display display;
-    static long startTime = System.nanoTime();
-    static long sleepTime;
+    long sleepTime;
 
-
-    public Simulation(int sleepTime, Grid grid, Display display, PositionManager positionManager) {
+    public Simulation(Grid grid, PositionManager positionManager, Display display, int sleepTime) {
         this.sleepTime = sleepTime;
         this.grid = grid;
         this.display = display;
@@ -31,11 +29,6 @@ public class Simulation {
             entitiesList = grid.getEntitiesList();
         }
         display.close();
-
-        long endTime = System.nanoTime();
-        long totalTime = endTime - startTime;
-        System.out.println("Program ran for " + totalTime / (Math.pow(10, 9)) + " seconds with a time sleep of " + sleepTime + " milliseconds.");
-        System.out.println("Program ran for " + totalTime / (6 * Math.pow(10, 10)) + " minutes with a time sleep of " + sleepTime + " milliseconds.");
     }
 
     public void playRound(Entity entity) throws InterruptedException {
@@ -54,5 +47,25 @@ public class Simulation {
 
         display.updateGrid(entity, potentialVictim, victimRevived);
         sleep(sleepTime);
+    }
+
+    public void initialize() {
+        //create the entities
+        for(int i = 0; i < Main.entitiesNumber; i++){
+            Position startPosition = positionManager.getRandomPosition();
+            while(positionManager.isPositionTaken(startPosition))
+                startPosition = positionManager.getRandomPosition();
+
+            Position arrivalPosition = positionManager.defineArrivalPosition();
+            Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
+            grid.addEntity(entity);
+        }
+    }
+
+    public void time(long startTime) {
+        long endTime = System.nanoTime();
+        long totalTime = endTime - startTime;
+        System.out.println("Program ran for " + totalTime / (Math.pow(10, 9)) + " seconds with a time sleep of " + sleepTime + " milliseconds.");
+        System.out.println("Program ran for " + totalTime / (6 * Math.pow(10, 10)) + " minutes with a time sleep of " + sleepTime + " milliseconds.");
     }
 }
