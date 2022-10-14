@@ -14,11 +14,11 @@ public class Main {
     static long startTime = System.nanoTime();
 
     //grid of size length*height
-    static int lines = 100;
-    static int columns = 120;
+    static int lines = 10;
+    static int columns = 10;
 
     //number of entities on the grid
-    static int entitiesNumber = 1024;
+    static int entitiesNumber = 10;
 
     //sleep time in ms
     static int time = 0;
@@ -39,9 +39,11 @@ public class Main {
             while(positionManager.isPositionTaken(startPosition))
                 startPosition = positionManager.getRandomPosition(lines, columns);
 
-            Position arrivalPosition = positionManager.getRandomPosition(lines, columns);
+            Position arrivalPosition = positionManager.defineArrivalPosition(lines, columns);
             Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
             grid.addEntity(entity);
+
+            System.out.println("arrival position:\ni:"+arrivalPosition.getI()+"\nj:"+arrivalPosition.getJ()+"\n\n");
         }
 
         /*

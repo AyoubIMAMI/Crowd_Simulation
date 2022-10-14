@@ -61,6 +61,49 @@ public class PositionManager {
         return new Position(random.nextInt(0, maxLength), random.nextInt(0, maxHeight));
     }
 
+    public Position defineArrivalPosition(int maxLines, int maxColumns) {
+        int i;
+        int j;
+
+        Random random = new Random();
+        int setLineOrColumn = random.nextInt(0, 2);
+        int setZeroOrMax = random.nextInt(0, 2);
+
+        //  ___  <- here
+        // |  |
+        // ---
+        if(setLineOrColumn == 0 && setZeroOrMax == 0) {
+            i = 0;
+            j = random.nextInt(0, maxColumns-1);
+        }
+
+        //  ___
+        // |  |
+        // ---  <- here
+        else if(setLineOrColumn == 0 && setZeroOrMax == 1) {
+            i = maxLines-1;
+            j = random.nextInt(0, maxColumns-1);
+        }
+
+        //           ___
+        // here ->  |  |
+        //          ---
+        else if(setLineOrColumn == 1 && setZeroOrMax == 0) {
+            i = random.nextInt(0, maxLines-1);
+            j = 0;
+        }
+
+        //  ___
+        // |  |  <- here
+        // ---
+        else {
+            i = random.nextInt(0, maxLines-1);
+            j = maxColumns-1;
+        }
+
+        return new Position(i, j);
+    }
+
     public void updatePositionOfEntity(Position currentPosition, Position newPosition){
         grid.removeCurrentPosition(currentPosition);
         grid.addCurrentPosition(newPosition);
