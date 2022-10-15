@@ -1,18 +1,20 @@
 import java.awt.*;
 import java.util.*;
 
+/**
+ * Entity which move on the grid
+ */
 public class Entity {
-
-    //entity starting position
+    //starting position
     private final Position startPosition;
 
     //arrival position
     private final Position arrivalPosition;
 
-    //entity current position
+    //current position
     private Position currentPosition;
 
-    //entity previous position
+    //optional previous position
     private Optional<Position> previousPosition;
 
     //unique ID
@@ -21,7 +23,7 @@ public class Entity {
     //entity color
     private Color entityColor;
 
-    //positionManager which decides to move, die, revive or exit
+    //positionManager which decides of the entity next move: move, die, revive or exit
     private final PositionManager positionManager;
 
     //has been killed
@@ -32,7 +34,6 @@ public class Entity {
 
     //when an entity arrived to its arrival position, it is destroyed
     private boolean destroyed;
-
 
     public Entity(Position startPosition, Position arrivalPosition, PositionManager positionManager, int id) {
         this.startPosition = startPosition;
@@ -48,11 +49,12 @@ public class Entity {
 
     /**
      * Change the entity previous position with the current one, and the current one with the new one
+     * @return an optional entity which might have been killed during the round
      */
     public Optional<Entity> move(){
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         if(!positionManager.isPositionTaken(position)) {
-            positionManager.updatePositionOfEntity(this.currentPosition, position);
+            positionManager.updateCurrentPositionList(this.currentPosition, position);
             this.previousPosition = Optional.of(currentPosition);
             this.currentPosition = position;
         }
@@ -64,7 +66,7 @@ public class Entity {
 
     /**
      * Check if an entity has moved
-     * @return true if the entity has moved
+     * @return true if the entity has moved, false otherwise
      */
     public boolean hasMoved() {
         return this.previousPosition.isPresent();
@@ -86,6 +88,10 @@ public class Entity {
         return !destroyed;
     }
 
+    /**
+     * Check if an entity is killed
+     * @return kill attribute boolean
+     */
     public boolean isKilled(){
         return this.kill;
     }
@@ -105,10 +111,6 @@ public class Entity {
 
     public Color getEntityColor() {
         return entityColor;
-    }
-
-    public PositionManager getPositionManager() {
-        return positionManager;
     }
 
     public int getId() {
@@ -141,7 +143,8 @@ public class Entity {
         this.currentPosition = this.startPosition;
     }
 
-    public void resetPreviousPosition() {this.previousPosition = Optional.empty();
+    public void resetPreviousPosition() {
+        this.previousPosition = Optional.empty();
     }
 
     public void incrementKillTime() {

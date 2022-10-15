@@ -1,16 +1,13 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
+/**
+ * Positions of the moving entities
+ */
 public class Position {
 
     //(i, j) position coordinates
     private int i;
     private int j;
-
-    //current position of the entities - need to avoid entities overlay
-    static List<Position> allCurrentPositions = new ArrayList<>();
 
     public Position(int i, int j) {
         this.i = i;

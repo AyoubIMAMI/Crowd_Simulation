@@ -1,8 +1,4 @@
-import java.util.List;
-import java.util.Optional;
 import java.lang.System;
-
-import static java.lang.Thread.sleep;
 
 /**
  * @author LE BIHAN Léo
@@ -11,52 +7,32 @@ import static java.lang.Thread.sleep;
  * Main class
  */
 public class Main {
+    //time at which the program start running - needed to compute how much time the program ran
     static long startTime = System.nanoTime();
 
-    //grid of size length*height
+    //grid of size lines*columns
     static int lines = 10;
-    static int columns = 12;
+    static int columns = 10;
 
-    //number of entities on the grid
+    //number of entities on the grid - this number must be smaller than the grid of size lines*columns
+    //entities cannot spawn on each other
     static int entitiesNumber = 10;
 
-    //sleep time in ms
+    //sleep time in ms - needed to simulate movements on the display
     static int time = 200;
 
-    //Display the grid where the crowd move
     public static void main(String[] args) throws InterruptedException {
-
-        //create an instance to display the grid
-        Display display = new Display(lines, columns);
         //create the grid
         Grid grid = new Grid(lines, columns, entitiesNumber);
         //create the position manager
         PositionManager positionManager = new PositionManager(grid);
+        //create an instance to display the grid
+        Display display = new Display(lines, columns);
 
-        //create the entities
-        for (int i = 0; i < entitiesNumber; i++) {
-            Position startPosition = positionManager.getRandomPosition(lines, columns);
-            while (positionManager.isPositionTaken(startPosition))
-                startPosition = positionManager.getRandomPosition(lines, columns);
-
-            Position arrivalPosition = positionManager.getRandomPosition(lines, columns);
-            Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
-            grid.addEntity(entity);
-        }
-
-        /*
-        Position startPosition = new Position(0, 0);
-        Position arrivalPosition = new Position(0, 2);
-        Entity entit = new Entity(startPosition, arrivalPosition, positionManager, 0);
-        grid.addEntity(entit);
-        startPosition = new Position(0, 2);
-        arrivalPosition = new Position(0, 0);
-        entit = new Entity(startPosition, arrivalPosition, positionManager, 1);
-        grid.addEntity(entit);*/
-
-
-        //create the grid appearance and display it
-        Simulation simulation = new Simulation(time, grid, display, positionManager);
+        //initialize and run the simulation - compute execution time
+        Simulation simulation = new Simulation(grid, positionManager, display, time);
+        simulation.initialize();
         simulation.run();
+        simulation.time(startTime);
     }
 }
