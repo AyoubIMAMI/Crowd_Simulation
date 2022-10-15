@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.lang.System;
 
 /**
@@ -21,16 +22,18 @@ public class Main {
     //sleep time in ms - needed to simulate movements on the display
     static int time = 200;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         //create the grid
         Grid grid = new Grid(lines, columns, entitiesNumber);
         //create the position manager
         PositionManager positionManager = new PositionManager(grid);
         //create an instance to display the grid
         Display display = new Display(lines, columns);
+        //create the csvManager
+        CsvManager csvManager = new CsvManager("input.csv");
 
         //initialize and run the simulation - compute execution time
-        Simulation simulation = new Simulation(grid, positionManager, display, time);
+        Simulation simulation = new Simulation(grid, positionManager, display, time, csvManager, true);
         simulation.initialize();
         simulation.run();
         simulation.time(startTime);

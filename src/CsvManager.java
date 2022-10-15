@@ -25,6 +25,7 @@ public class CsvManager {
         int i = 0;
         while ((row = csvReader.readLine()) != null) {
             String[] data = row.split(" ");
+            if(data[0].equals("#"))continue;
             if(i==0){
                 lines = Integer.valueOf(data[0]);
                 columns = Integer.valueOf(data[1]);
