@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import static java.lang.Thread.sleep;
@@ -9,29 +10,39 @@ public class Simulation {
     public Grid grid;
     public PositionManager positionManager;
     public Display display;
+    public CsvManager csvManager;
+
     long sleepTime;
 
-    public Simulation(Grid grid, PositionManager positionManager, Display display, int sleepTime) {
+    boolean csvMode = false;
+
+    public Simulation(Grid grid, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
         this.sleepTime = sleepTime;
         this.grid = grid;
         this.display = display;
         this.positionManager = positionManager;
+        this.csvManager = csvManager;
+        this.csvMode = csvMode;
     }
 
     /**
      * Initialize the simulation: grid appearance and entities creation
      */
-    public void initialize() {
-        for(int i = 0; i < Main.entitiesNumber; i++){
-            Position startPosition = positionManager.getRandomPosition();
-            while(positionManager.isPositionTaken(startPosition))
-                startPosition = positionManager.getRandomPosition();
-
-            Position arrivalPosition = positionManager.defineArrivalPosition();
-            Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
-            grid.addEntity(entity);
+    public void initialize() throws IOException {
+        if(csvMode){
+            grid = csvManager.getConfigurationGrid(positionManager);
         }
+        else{
+            for(int i = 0; i < Main.entitiesNumber; i++){
+                Position startPosition = positionManager.getRandomPosition();
+                while(positionManager.isPositionTaken(startPosition))
+                    startPosition = positionManager.getRandomPosition();
 
+                Position arrivalPosition = positionManager.defineArrivalPosition();
+                Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
+                grid.addEntity(entity);
+            }
+        }
         display.displayGrid(grid);
     }
 
