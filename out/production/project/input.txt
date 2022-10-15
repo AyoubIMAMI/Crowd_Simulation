@@ -1,6 +1,0 @@
-120 100 #1 taille de la grille
-# position initiale des personnes (X, Y) et case de sortie (X, Y)
-2 2 0 0
-3 3 0 9
-6 6 9 0
-7 7 9 9
