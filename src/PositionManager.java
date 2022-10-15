@@ -18,7 +18,7 @@ public class PositionManager {
      */
     public Position getRandomPosition() {
         Random random = new Random();
-        return new Position(random.nextInt(0, Main.lines), random.nextInt(0, Main.columns));
+        return new Position(random.nextInt(0, grid.lines), random.nextInt(0, grid.columns));
     }
 
     /**
@@ -40,22 +40,22 @@ public class PositionManager {
         // ---
         if(setLineOrColumn == 0 && setZeroOrMax == 0) {
             i = 0;
-            j = random.nextInt(0, Main.columns-1);
+            j = random.nextInt(0, grid.columns-1);
         }
 
         //  ___
         // |  |
         // ---  <- here
         else if(setLineOrColumn == 0 && setZeroOrMax == 1) {
-            i = Main.lines-1;
-            j = random.nextInt(0, Main.columns-1);
+            i = grid.lines-1;
+            j = random.nextInt(0, grid.columns-1);
         }
 
         //           ___
         // here ->  |  |
         //          ---
         else if(setLineOrColumn == 1 && setZeroOrMax == 0) {
-            i = random.nextInt(0, Main.lines-1);
+            i = random.nextInt(0, grid.lines-1);
             j = 0;
         }
 
@@ -63,8 +63,8 @@ public class PositionManager {
         // |  |  <- here
         // ---
         else {
-            i = random.nextInt(0, Main.lines-1);
-            j = Main.columns-1;
+            i = random.nextInt(0, grid.lines-1);
+            j = grid.columns-1;
         }
 
         return new Position(i, j);
@@ -159,5 +159,9 @@ public class PositionManager {
         boolean isStartingPositionTaken = isPositionTaken(entity.getStartPosition());
         boolean ImKilled = entity.isKilled();
         return !isStartingPositionTaken && ImKilled && killTimeEnd;
+    }
+
+    public void setGrid(Grid grid) {
+        this.grid = grid;
     }
 }

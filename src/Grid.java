@@ -45,8 +45,8 @@ public class Grid {
         this.columns = columns;
         this.entitiesNumber = entities.size();
         grid = (Optional<Entity>[][]) new Optional<?>[lines][columns];
-        fillGrid(entities);
         createGrid();
+        fillGrid(entities);
     }
 
     private void fillGrid(ArrayList<Entity> entities) {

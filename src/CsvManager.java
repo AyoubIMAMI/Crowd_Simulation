@@ -2,7 +2,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manage the csv file to set up the grid: lines and columns, and the entities: positions
+ */
 public class CsvManager {
+    //csv path
     String csvPath;
 
     public CsvManager(String csvPath) {
@@ -10,10 +14,10 @@ public class CsvManager {
     }
 
     /**
-     * Create a Grid using the csv file
-     * @param positionManager
-     * @return
-     * @throws IOException
+     * Create the grid using the csv file
+     * @param positionManager which decides of the entity next move: move, die, revive or exit
+     * @return the grid set up thanks to the csv file
+     * @throws IOException file exception
      */
     public Grid getConfigurationGrid(PositionManager positionManager) throws IOException {
         ArrayList<Entity> allEntities = new ArrayList<>();
@@ -22,21 +26,21 @@ public class CsvManager {
         int lines = 0;
         int columns = 0;
 
-        int i = 0;
+        int csvLineCounter = 0;
         while ((row = csvReader.readLine()) != null) {
             String[] data = row.split(" ");
             if(data[0].equals("#"))continue;
-            if(i==0){
-                lines = Integer.valueOf(data[0]);
-                columns = Integer.valueOf(data[1]);
+            if(csvLineCounter == 0){
+                lines = Integer.parseInt(data[0]);
+                columns = Integer.parseInt(data[1]);
             }
             else{
-                Position departure = new Position(Integer.valueOf(data[0]), Integer.valueOf(data[1]));
-                Position arrival = new Position(Integer.valueOf(data[2]), Integer.valueOf(data[3]));
-                Entity e = new Entity(departure, arrival,positionManager,i);
-                allEntities.add(e);
+                Position departure = new Position(Integer.parseInt(data[0]), Integer.parseInt(data[1]));
+                Position arrival = new Position(Integer.parseInt(data[2]), Integer.parseInt(data[3]));
+                Entity entity = new Entity(departure, arrival, positionManager,csvLineCounter);
+                allEntities.add(entity);
             }
-            i++;
+            csvLineCounter++;
         }
         csvReader.close();
         return new Grid(lines, columns, allEntities);
@@ -44,8 +48,8 @@ public class CsvManager {
 
     /**
      * Write in the csv file the configuration of the grid
-     * @param grid
-     * @throws IOException
+     * @param grid the grid to set up in the csv file
+     * @throws IOException file exception
      */
     public void createConfigurationGrid(Grid grid) throws IOException {
         FileWriter csvWriter = new FileWriter(csvPath,  false);
@@ -61,5 +65,4 @@ public class CsvManager {
         }
         csvWriter.close();
     }
-
 }

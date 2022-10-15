@@ -7,14 +7,19 @@ import static java.lang.Thread.sleep;
  * Initialize and run the simulation
  */
 public class Simulation {
+    //grid on which entities move
     public Grid grid;
+    //positionManager which decides of the entity next move: move, die, revive or exit
     public PositionManager positionManager;
+    //display the grid
     public Display display;
+    //manage csv file
     public CsvManager csvManager;
 
+    //sleep time in ms - needed to simulate movements on the display
     long sleepTime;
-
-    boolean csvMode = false;
+    //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
+    boolean csvMode;
 
     public Simulation(Grid grid, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
         this.sleepTime = sleepTime;
@@ -31,9 +36,11 @@ public class Simulation {
     public void initialize() throws IOException {
         if(csvMode){
             grid = csvManager.getConfigurationGrid(positionManager);
+            positionManager.setGrid(grid);
+            display.setGrid(grid);
         }
         else{
-            for(int i = 0; i < Main.entitiesNumber; i++){
+            for(int i = 0; i < grid.entitiesNumber; i++){
                 Position startPosition = positionManager.getRandomPosition();
                 while(positionManager.isPositionTaken(startPosition))
                     startPosition = positionManager.getRandomPosition();
@@ -43,7 +50,6 @@ public class Simulation {
                 grid.addEntity(entity);
             }
         }
-        display.displayGrid(grid);
     }
 
     /**
@@ -51,6 +57,7 @@ public class Simulation {
      * @throws InterruptedException sleepTime
      */
     public void run() throws InterruptedException {
+        display.displayGrid(grid);
         //let the display appears
         sleep(sleepTime);
 

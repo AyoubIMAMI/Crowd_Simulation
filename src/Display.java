@@ -9,22 +9,22 @@ import java.util.Optional;
  */
 public class Display {
     //lines*columns of the grid
-    private final int lines;
-    private final int columns;
+    private int lines;
+    private int columns;
 
     //window manager
     private final JFrame frame;
     //window content manager
-    private final JPanel[][] jPanelList;
+    private JPanel[][] jPanelList;
 
     //colors associated to entities
     private final List<Color> colorList;
     //number of different colors
     private final int colorsNumber;
 
-    public Display(int lines, int columns) {
-        this.lines = lines;
-        this.columns = columns;
+    public Display(Grid grid) {
+        this.lines = grid.lines;
+        this.columns = grid.columns;
         this.colorList = new ArrayList<>();
         this.colorsNumber = colorListCreation();
         this.jPanelList = new JPanel[lines][columns];
@@ -133,5 +133,11 @@ public class Display {
      */
     public void close() {
         this.frame.dispose();
+    }
+
+    public void setGrid(Grid grid) {
+        this.lines = grid.lines;
+        this.columns = grid.columns;
+        this.jPanelList = new JPanel[lines][columns];
     }
 }

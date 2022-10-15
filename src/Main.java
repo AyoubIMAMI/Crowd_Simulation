@@ -20,20 +20,23 @@ public class Main {
     static int entitiesNumber = 10;
 
     //sleep time in ms - needed to simulate movements on the display
-    static int time = 200;
+    static int sleepTime = 200;
+
+    //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
+    static boolean csvMode = false;
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        //create the grid
+        //create the grid on which entities move
         Grid grid = new Grid(lines, columns, entitiesNumber);
-        //create the position manager
+        //create the position manager which decides of the entity next move: move, die, revive or exit
         PositionManager positionManager = new PositionManager(grid);
         //create an instance to display the grid
-        Display display = new Display(lines, columns);
+        Display display = new Display(grid);
         //create the csvManager
         CsvManager csvManager = new CsvManager("input.csv");
 
         //initialize and run the simulation - compute execution time
-        Simulation simulation = new Simulation(grid, positionManager, display, time, csvManager, true);
+        Simulation simulation = new Simulation(grid, positionManager, display, sleepTime, csvManager, csvMode);
         simulation.initialize();
         simulation.run();
         simulation.time(startTime);
