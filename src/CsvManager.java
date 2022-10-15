@@ -33,7 +33,8 @@ public class CsvManager {
             else{
                 Position departure = new Position(Integer.valueOf(data[0]), Integer.valueOf(data[1]));
                 Position arrival = new Position(Integer.valueOf(data[2]), Integer.valueOf(data[3]));
-                allEntities.add(new Entity(departure, arrival,positionManager,i));
+                Entity e = new Entity(departure, arrival,positionManager,i);
+                allEntities.add(e);
             }
             i++;
         }
