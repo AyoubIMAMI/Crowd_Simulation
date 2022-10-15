@@ -34,6 +34,23 @@ public class Grid {
         createGrid();
     }
 
+    public Grid(int lines, int columns, ArrayList<Entity> entities) {
+        this.entitiesList = new ArrayList<>();
+        this.entitiesOut = new ArrayList<>();
+        this.currentPositions = new ArrayList<>();
+        this.lines = lines;
+        this.columns = columns;
+        this.entitiesNumber = entities.size();
+        grid = (Optional<Entity>[][]) new Optional<?>[lines][columns];
+        fillGrid(entities);
+        createGrid();
+    }
+
+    private void fillGrid(ArrayList<Entity> entities) {
+        for(Entity entity : entities)
+            addEntity(entity);
+    }
+
     /**
      * Create the length*height size grid where the crowd move
      */
@@ -112,5 +129,13 @@ public class Grid {
 
     public boolean allEntitiesExited(int entitiesNumber) {
         return this.entitiesOut.size() == entitiesNumber;
+    }
+
+    public int getLines() {
+        return lines;
+    }
+
+    public int getColumns() {
+        return columns;
     }
 }
