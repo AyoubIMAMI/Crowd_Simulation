@@ -84,7 +84,8 @@ public class Simulation {
             if (positionManager.canEntityBeRevive(entity)) {
                 grid.revive(entity);
                 victimRevived = true;
-            } else if (entity.isKilled())
+            }
+            else if (entity.isKilled())
                 entity.incrementKillTime();
             else
                 potentialVictim = entity.move();
