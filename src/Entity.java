@@ -1,39 +1,33 @@
 import java.awt.*;
 import java.util.*;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Entity which move on the grid
  */
-public class Entity {
+public class Entity implements Runnable {
     //starting position
     private final Position startPosition;
-
     //arrival position
     private final Position arrivalPosition;
-
     //current position
     private Position currentPosition;
-
     //optional previous position
     private Optional<Position> previousPosition;
-
     //unique ID
     private final int id;
-
     //entity color
     private Color entityColor;
-
     //positionManager which decides of the entity next move: move, die, revive or exit
     private final PositionManager positionManager;
-
     //has been killed
     private boolean kill;
-
     //once killed, dead for at least 2 rounds
     private int killTime;
-
     //when an entity arrived to its arrival position, it is destroyed
     private boolean destroyed;
+    private Grid grid;
 
     public Entity(Position startPosition, Position arrivalPosition, PositionManager positionManager, int id) {
         this.startPosition = startPosition;
@@ -173,5 +167,34 @@ public class Entity {
         return Objects.hash(startPosition, arrivalPosition, currentPosition, previousPosition, id, entityColor,
                 positionManager, kill, killTime, destroyed);
     }
+
+    @Override
+    public void run() {
+        Optional<Entity> potentialVictim = Optional.empty();
+        boolean victimRevived = false;
+        if (!isArrived()) {
+            if (iCanRevive()) {
+                grid.revive(this);
+                victimRevived = true;
+            } else if (this.kill)
+                incrementKillTime();
+            else
+                potentialVictim = move();
+        } else
+            grid.destroy(this);
+
+        //display.updateGrid(entity, potentialVictim, victimRevived);
+        try {
+            sleep(Simulation.sleepTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public boolean iCanRevive() {
+        boolean killTimeEnd = (this.killTime == 2);
+        boolean isStartingPositionTaken = grid.isPositionTaken(this.startPosition);
+        return !isStartingPositionTaken && this.kill && killTimeEnd;
+    }
+
 
 }

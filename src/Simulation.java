@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static java.lang.Thread.sleep;
@@ -17,7 +18,7 @@ public class Simulation {
     public CsvManager csvManager;
 
     //sleep time in ms - needed to simulate movements on the display
-    long sleepTime;
+    public static long sleepTime = 200;
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     boolean csvMode;
 
@@ -61,13 +62,17 @@ public class Simulation {
         //let the display appears
         sleep(sleepTime);
 
-        List<Entity> entitiesList = grid.getEntitiesList();
-        while (entitiesList.size() != 0) {
-            for (Entity entity : entitiesList) {
-                playRound(entity);
-            }
-            grid.cleanUp();
-            entitiesList = grid.getEntitiesList();
+        List<Thread> allThreads = new ArrayList<>();
+        for (Entity entity : grid.getEntitiesList()) {
+            Thread t = new Thread(entity);
+            allThreads.add(t);
+            t.start();
+        }
+        grid.cleanUp();
+        //entitiesList = grid.getEntitiesList();
+
+        for (Thread t : allThreads) {
+            t.join();
         }
         display.close();
     }
