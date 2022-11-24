@@ -9,7 +9,7 @@ import static java.lang.Thread.sleep;
  */
 public class Simulation {
     //grid on which entities move
-    public Grid grid;
+    public static Grid grid;
     //positionManager which decides of the entity next move: move, die, revive or exit
     public PositionManager positionManager;
     //display the grid
@@ -18,13 +18,13 @@ public class Simulation {
     public CsvManager csvManager;
 
     //sleep time in ms - needed to simulate movements on the display
-    public static long sleepTime = 200;
+    static long sleepTime;
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     boolean csvMode;
 
     public Simulation(Grid grid, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
-        this.sleepTime = sleepTime;
-        this.grid = grid;
+        Simulation.sleepTime = sleepTime;
+        Simulation.grid = grid;
         this.display = display;
         this.positionManager = positionManager;
         this.csvManager = csvManager;
@@ -57,7 +57,7 @@ public class Simulation {
      * Run the simulation - round by round
      * @throws InterruptedException sleepTime
      */
-    public void run() throws InterruptedException {
+    public void launch() throws InterruptedException {
         display.displayGrid(grid);
         //let the display appears
         sleep(sleepTime);
@@ -83,7 +83,7 @@ public class Simulation {
      * @throws InterruptedException sleepTime
      */
     public void playRound(Entity entity) throws InterruptedException {
-        Optional<Entity> potentialVictim = Optional.empty();
+        boolean potentialVictim = false;
         boolean victimRevived = false;
         if (!entity.isArrived()) {
             if (positionManager.canEntityBeRevive(entity)) {

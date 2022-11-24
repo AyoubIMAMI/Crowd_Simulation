@@ -40,7 +40,7 @@ public class PositionManager {
         // ---
         if(setLineOrColumn == 0 && setZeroOrMax == 0) {
             i = 0;
-            j = random.nextInt(0, grid.columns-1);
+            j = random.nextInt(0, grid.columns);
         }
 
         //  ___
@@ -48,14 +48,14 @@ public class PositionManager {
         // ---  <- here
         else if(setLineOrColumn == 0 && setZeroOrMax == 1) {
             i = grid.lines-1;
-            j = random.nextInt(0, grid.columns-1);
+            j = random.nextInt(0, grid.columns);
         }
 
         //           ___
         // here ->  |  |
         //          ---
         else if(setLineOrColumn == 1 && setZeroOrMax == 0) {
-            i = random.nextInt(0, grid.lines-1);
+            i = random.nextInt(0, grid.lines);
             j = 0;
         }
 
@@ -63,7 +63,7 @@ public class PositionManager {
         // |  |  <- here
         // ---
         else {
-            i = random.nextInt(0, grid.lines-1);
+            i = random.nextInt(0, grid.lines);
             j = grid.columns-1;
         }
 
@@ -136,17 +136,9 @@ public class PositionManager {
      * @param conflictPosition conflict position
      * @return the entity to kill
      */
-    public Entity manageConflict(Entity entity, Position conflictPosition){
-        Optional<Entity> optionalEntity = findEntityByPosition(conflictPosition);
-        Entity conflictEntity = optionalEntity.get();
-        Entity entityToKill;
-        if(entity.getId() < conflictEntity.getId())
-            entityToKill = entity;
-        else
-            entityToKill = conflictEntity;
-        grid.kill(entityToKill);
-
-        return entityToKill;
+    public boolean manageConflict(Entity entity, Position conflictPosition){
+        Entity conflictEntity = findEntityByPosition(conflictPosition).get();
+        return entity.getId() < conflictEntity.getId();
     }
 
     /**

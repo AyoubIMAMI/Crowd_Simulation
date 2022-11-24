@@ -39,13 +39,14 @@ public class Entity implements Runnable {
         this.kill = false;
         this.destroyed = false;
         this.killTime = 0;
+        this.grid = Simulation.grid;
     }
 
     /**
-     * Change the entity previous position with the current one, and the current one with the new one
-     * @return an optional entity which might have been killed during the round
+     * If possible, change the entity previous position with the current one, and the current one with the new one
+     * @return true if the entity has been killed during the round
      */
-    public Optional<Entity> move(){
+    public boolean move(){
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         if(!positionManager.isPositionTaken(position)) {
             positionManager.updateCurrentPositionList(this.currentPosition, position);
@@ -53,9 +54,9 @@ public class Entity implements Runnable {
             this.currentPosition = position;
         }
         else
-            return Optional.of(positionManager.manageConflict(this, position));
+            return positionManager.manageConflict(this, position);
 
-        return Optional.empty();
+        return false;
     }
 
     /**
@@ -79,7 +80,7 @@ public class Entity implements Runnable {
      * @return destroyed attribute boolean
      */
     public boolean isDestroyed() {
-        return !destroyed;
+        return destroyed;
     }
 
     /**
@@ -170,27 +171,29 @@ public class Entity implements Runnable {
 
     @Override
     public void run() {
-        Optional<Entity> potentialVictim = Optional.empty();
-        boolean victimRevived = false;
-        if (!isArrived()) {
-            if (iCanRevive()) {
-                grid.revive(this);
-                victimRevived = true;
-            } else if (this.kill)
-                incrementKillTime();
-            else
-                potentialVictim = move();
-        } else
-            grid.destroy(this);
+        while(!isDestroyed()) {
+            boolean victim = false;
+            boolean revived = false;
+            if (!isArrived()) {
+                if (canRevive()) {
+                    grid.revive(this);
+                    revived = true;
+                } else if (this.kill)
+                    incrementKillTime();
+                else
+                    victim = move();
+            } else
+                grid.destroy(this);
 
-        //display.updateGrid(entity, potentialVictim, victimRevived);
-        try {
-            sleep(Simulation.sleepTime);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Display.updateGrid(this, victim, revived);
+            try {
+                sleep(Simulation.sleepTime);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-    public boolean iCanRevive() {
+    public boolean canRevive() {
         boolean killTimeEnd = (this.killTime == 2);
         boolean isStartingPositionTaken = grid.isPositionTaken(this.startPosition);
         return !isStartingPositionTaken && this.kill && killTimeEnd;

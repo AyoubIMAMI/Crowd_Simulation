@@ -20,7 +20,7 @@ public class Main {
     static int entitiesNumber = 10;
 
     //sleep time in ms - needed to simulate movements on the display
-    static int sleepTime = 200;
+    static int sleepTime = 750;
 
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     static boolean csvMode = false;
@@ -38,7 +38,7 @@ public class Main {
         //initialize and run the simulation - compute execution time
         Simulation simulation = new Simulation(grid, positionManager, display, sleepTime, csvManager, csvMode);
         simulation.initialize();
-        simulation.run();
+        simulation.launch();
         simulation.time(startTime);
     }
 }
