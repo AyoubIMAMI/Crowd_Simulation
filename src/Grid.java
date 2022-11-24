@@ -150,4 +150,9 @@ public class Grid {
     public int getColumns() {
         return columns;
     }
+
+    boolean isPositionTaken(Position position) {
+        return this.currentPositions.contains(position);
+    }
+
 }
