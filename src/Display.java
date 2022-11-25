@@ -47,7 +47,7 @@ public class Display {
      * @param grid in which entities move
      */
     public void createGridAppearance(Grid grid){
-        Optional<Entity>[][] matrix = grid.getGrid();
+        Box[][] matrix = grid.getGrid();
 
         //needed to browse the list since there can be more entities than colors
         int colorIndex = 0;
@@ -58,10 +58,10 @@ public class Display {
                 JPanel panel = new JPanel();
                 panel.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 
-                if(matrix[i][j].isPresent()) {
+                if(matrix[i][j].getEntity().isPresent()) {
                     Color colorToSet = colorList.get(colorIndex % colorsNumber);
                     panel.setBackground(colorToSet);
-                    matrix[i][j].get().setEntityColor(colorToSet);
+                    matrix[i][j].getEntity().get().setEntityColor(colorToSet);
                     colorIndex++;
                 }
                 else

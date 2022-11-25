@@ -1,7 +1,7 @@
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
+/*
 public class EntityCollisionTest {
     static int lines = 1;
     static int columns = 10;
@@ -10,11 +10,10 @@ public class EntityCollisionTest {
 
     static int time = 1000;
 
-
-    //create an instance to display the grid
-    Display display = new Display(lines, columns);
     //create the grid
-    Grid grid = new Grid(lines, columns, entitiesNumber);
+    Grid grid = new Grid(lines, columns);
+    //create an instance to display the grid
+    Display display = new Display(grid);
     //create the position manager
     PositionManager positionManager = new PositionManager(grid);
 
@@ -69,4 +68,4 @@ public class EntityCollisionTest {
         display.close();
         System.out.println("END");
     }
-}
+}*/

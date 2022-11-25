@@ -27,7 +27,7 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException, IOException {
         //create the grid on which entities move
-        Grid grid = new Grid(lines, columns, entitiesNumber);
+        Grid grid = new Grid(lines, columns);
         //create the position manager which decides of the entity next move: move, die, revive or exit
         PositionManager positionManager = new PositionManager(grid);
         //create an instance to display the grid
@@ -36,7 +36,7 @@ public class Main {
         CsvManager csvManager = new CsvManager("input.csv");
 
         //initialize and run the simulation - compute execution time
-        Simulation simulation = new Simulation(grid, positionManager, display, sleepTime, csvManager, csvMode);
+        Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
         simulation.initialize();
         simulation.launch();
         simulation.time(startTime);

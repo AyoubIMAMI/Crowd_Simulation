@@ -11,9 +11,6 @@ public class Grid {
     int lines;
     int columns;
 
-    //number of entities on the grid
-    double entitiesNumber;
-
     //list of the entities on the grid
     List<Entity> entitiesList;
 
@@ -24,16 +21,15 @@ public class Grid {
     List<Position> currentPositions;
 
     //grid where the entities move
-    Optional<Entity>[][] grid;
+    Box[][] grid;
 
-    public Grid(int lines, int columns, double entitiesNumber) {
+    public Grid(int lines, int columns) {
         this.entitiesList = new ArrayList<>();
         this.entitiesOut = new ArrayList<>();
         this.currentPositions = new ArrayList<>();
         this.lines = lines;
         this.columns = columns;
-        this.entitiesNumber = entitiesNumber;
-        grid = (Optional<Entity>[][]) new Optional<?>[lines][columns];
+        grid = new Box[lines][columns];
         createGrid();
     }
 
@@ -43,8 +39,7 @@ public class Grid {
         this.currentPositions = new ArrayList<>();
         this.lines = lines;
         this.columns = columns;
-        this.entitiesNumber = entities.size();
-        grid = (Optional<Entity>[][]) new Optional<?>[lines][columns];
+        grid = new Box[lines][columns];
         createGrid();
         fillGrid(entities);
     }
@@ -60,7 +55,7 @@ public class Grid {
     private void createGrid() {
         for (int i = 0; i < lines; i++) {
             for (int j = 0; j < columns; j++) {
-                grid[i][j] = Optional.empty();
+                grid[i][j] = new Box(new Position(i, j));
             }
         }
     }
@@ -73,7 +68,7 @@ public class Grid {
         Position position = entity.getCurrentPosition();
         this.entitiesList.add(entity);
         this.currentPositions.add(position);
-        grid[position.getI()][position.getJ()] = Optional.of(entity);
+        grid[position.getI()][position.getJ()].setEntity(Optional.of(entity));
     }
 
     /**
@@ -131,7 +126,7 @@ public class Grid {
         entitiesOut.clear();
     }
 
-    public Optional<Entity>[][] getGrid() {
+    public Box[][] getGrid() {
         return grid;
     }
 
@@ -155,4 +150,7 @@ public class Grid {
         return this.currentPositions.contains(position);
     }
 
+    public Box getBox(int i, int j) {
+        return grid[i][j];
+    }
 }

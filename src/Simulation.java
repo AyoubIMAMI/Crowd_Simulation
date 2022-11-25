@@ -10,21 +10,23 @@ import static java.lang.Thread.sleep;
 public class Simulation {
     //grid on which entities move
     public static Grid grid;
+    //number of entities in the crowd
+    int entitiesNumber;
     //positionManager which decides of the entity next move: move, die, revive or exit
     public PositionManager positionManager;
     //display the grid
     public Display display;
     //manage csv file
     public CsvManager csvManager;
-
     //sleep time in ms - needed to simulate movements on the display
     static long sleepTime;
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     boolean csvMode;
 
-    public Simulation(Grid grid, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
+    public Simulation(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
         Simulation.sleepTime = sleepTime;
         Simulation.grid = grid;
+        this.entitiesNumber = entitiesNumber;
         this.display = display;
         this.positionManager = positionManager;
         this.csvManager = csvManager;
@@ -41,7 +43,7 @@ public class Simulation {
             display.setGrid(grid);
         }
         else{
-            for(int i = 0; i < grid.entitiesNumber; i++){
+            for(int i = 0; i < entitiesNumber; i++){
                 Position startPosition = positionManager.getRandomPosition();
                 while(positionManager.isPositionTaken(startPosition))
                     startPosition = positionManager.getRandomPosition();
