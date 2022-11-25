@@ -25,3 +25,4 @@ hs_err_pid*
 *.iml
 *.xml
 /.idea/shelf/Uncommitted_changes_before_Update_at_24_11_2022_18_03_[Changes]/shelved.patch
+.idea
