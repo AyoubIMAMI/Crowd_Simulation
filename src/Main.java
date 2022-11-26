@@ -12,15 +12,19 @@ public class Main {
     static long startTime = System.nanoTime();
 
     //grid of size lines*columns
-    static int lines = 10;
+    static int lines = 1;
     static int columns = 10;
 
     //number of entities on the grid - this number must be smaller than the grid of size lines*columns
     //entities cannot spawn on each other
-    static int entitiesNumber = 10;
+    static int entitiesNumber = 2;
 
     //sleep time in ms - needed to simulate movements on the display
     static int sleepTime = 750;
+
+    //true: creates as many threads as entities
+    //false: one thread deals with all the entities
+    static boolean threadsMode = false;
 
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     static boolean csvMode = false;
@@ -36,7 +40,7 @@ public class Main {
         CsvManager csvManager = new CsvManager("input.csv");
 
         //initialize and run the simulation - compute execution time
-        Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
+        Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode, threadsMode);
         simulation.initialize();
         simulation.launch();
         simulation.time(startTime);

@@ -22,8 +22,11 @@ public class Simulation {
     static long sleepTime;
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     boolean csvMode;
+    //true: creates as many threads as entities
+    //false: one thread deals with all the entities
+    boolean threadsMode;
 
-    public Simulation(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
+    public Simulation(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode, boolean threadsMode) {
         Simulation.sleepTime = sleepTime;
         Simulation.grid = grid;
         this.entitiesNumber = entitiesNumber;
@@ -31,6 +34,7 @@ public class Simulation {
         this.positionManager = positionManager;
         this.csvManager = csvManager;
         this.csvMode = csvMode;
+        this.threadsMode = threadsMode;
     }
 
     /**
@@ -55,11 +59,16 @@ public class Simulation {
         }
     }
 
+    public void launch() throws InterruptedException {
+        if (threadsMode) launchThreads();
+        else launchOneThread();
+    }
+
     /**
      * Run the simulation - round by round
      * @throws InterruptedException sleepTime
      */
-    public void launch() throws InterruptedException {
+    private void launchThreads() throws InterruptedException {
         display.displayGrid(grid);
         //let the display appears
         sleep(sleepTime);
@@ -70,12 +79,30 @@ public class Simulation {
             allThreads.add(t);
             t.start();
         }
-        grid.cleanUp();
+
         //entitiesList = grid.getEntitiesList();
 
         for (Thread t : allThreads) {
             t.join();
         }
+        display.close();
+    }
+
+    /**
+     * Run the simulation - round by round
+     * @throws InterruptedException sleepTime
+     */
+    private void launchOneThread() throws InterruptedException {
+        display.displayGrid(grid);
+        //let the display appears
+        sleep(sleepTime);
+
+        //TODO CONTINUER LA SIMULATION TANT QU4IL IL A DES ENTITES while()
+        for (Entity entity : grid.getEntitiesList()) {
+            playRound(entity);
+        }
+        //entitiesList = grid.getEntitiesList();
+
         display.close();
     }
 

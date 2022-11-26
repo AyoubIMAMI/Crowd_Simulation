@@ -119,10 +119,8 @@ public class Grid {
     /**
      * Remove entities which got out from the entities list
      */
-    public void cleanUp() {
-        for(Entity entity : entitiesOut)
-            entitiesList.remove(entity);
-
+    public void cleanUp(Entity entity) {
+        entitiesList.remove(entity);
         entitiesOut.clear();
     }
 

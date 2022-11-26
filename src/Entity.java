@@ -186,6 +186,7 @@ public class Entity implements Runnable {
                 grid.destroy(this);
 
             Display.updateGrid(this, victim, revived);
+            grid.cleanUp(this);
             try {
                 sleep(Simulation.sleepTime);
             } catch (InterruptedException e) {
@@ -198,6 +199,8 @@ public class Entity implements Runnable {
         boolean isStartingPositionTaken = grid.isPositionTaken(this.startPosition);
         return !isStartingPositionTaken && this.kill && killTimeEnd;
     }
+
+
 
 
 }
