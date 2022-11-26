@@ -14,9 +14,6 @@ public class Grid {
     //list of the entities on the grid
     List<Entity> entitiesList;
 
-    //entities which reached their exit
-    List<Entity> entitiesOut;
-
     //list of the entities current position
     List<Position> currentPositions;
 
@@ -25,7 +22,6 @@ public class Grid {
 
     public Grid(int lines, int columns) {
         this.entitiesList = new ArrayList<>();
-        this.entitiesOut = new ArrayList<>();
         this.currentPositions = new ArrayList<>();
         this.lines = lines;
         this.columns = columns;
@@ -35,7 +31,6 @@ public class Grid {
 
     public Grid(int lines, int columns, ArrayList<Entity> entities) throws InterruptedException {
         this.entitiesList = new ArrayList<>();
-        this.entitiesOut = new ArrayList<>();
         this.currentPositions = new ArrayList<>();
         this.lines = lines;
         this.columns = columns;
@@ -85,14 +80,6 @@ public class Grid {
      */
     public void removeCurrentPosition(Position position) {
         this.currentPositions.remove(position);
-    }
-
-    /**
-     * Remove entities which got out from the entities list
-     */
-    public synchronized void cleanUp(Entity entity) {
-        entitiesList.remove(entity);
-        entitiesOut.clear();
     }
 
     public Box[][] getGrid() {

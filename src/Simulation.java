@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 import static java.lang.Thread.sleep;
 
 /**
@@ -22,11 +22,8 @@ public class Simulation {
     static long sleepTime;
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     boolean csvMode;
-    //true: creates as many threads as entities
-    //false: one thread deals with all the entities
-    boolean threadsMode;
 
-    public Simulation(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode, boolean threadsMode) {
+    public Simulation(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
         Simulation.sleepTime = sleepTime;
         Simulation.grid = grid;
         this.entitiesNumber = entitiesNumber;
@@ -34,7 +31,6 @@ public class Simulation {
         this.positionManager = positionManager;
         this.csvManager = csvManager;
         this.csvMode = csvMode;
-        this.threadsMode = threadsMode;
     }
 
     /**
@@ -65,7 +61,7 @@ public class Simulation {
      * Run the simulation - round by round
      * @throws InterruptedException sleepTime
      */
-    public void launchThreads() throws InterruptedException {
+    public void launch() throws InterruptedException {
         display.displayGrid(grid);
         //let the display appears
         sleep(sleepTime);

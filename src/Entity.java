@@ -22,7 +22,7 @@ public class Entity implements Runnable {
     //positionManager which decides of the entity next move: move, die, revive or exit
     private final PositionManager positionManager;
     //has been killed
-    private boolean kill;
+    private boolean dead;
     //once killed, dead for at least 2 rounds
     private int killTime;
     //when an entity arrived to its arrival position, it is destroyed
@@ -36,7 +36,7 @@ public class Entity implements Runnable {
         this.arrivalPosition = arrivalPosition;
         this.id = id;
         this.positionManager = new PositionManager(Simulation.grid);
-        this.kill = false;
+        this.dead = false;
         this.destroyed = false;
         this.killTime = 0;
         this.grid = Simulation.grid;
@@ -52,6 +52,7 @@ public class Entity implements Runnable {
             grid.getBox(currentPosition.getI(), currentPosition.getJ()).depart();
             moveTo(position);
             grid.getBox(currentPosition.getI(), currentPosition.getJ()).arrive(this);
+            //TODO IMAGINE ON DEPART ET AVANT QUON ARRIVE QUELQUN PREND NOTRE PLACE ? IL FAUT FAIRE ARRIVER AVANT DE DEPART JE PENSE
         }
         else
             return positionManager.manageConflict(this, position);
@@ -94,7 +95,7 @@ public class Entity implements Runnable {
      * @return kill attribute boolean
      */
     public boolean isKilled(){
-        return this.kill;
+        return this.dead;
     }
 
 
@@ -132,8 +133,8 @@ public class Entity implements Runnable {
 
     public void setDestroyed(boolean destroyed) {this.destroyed = destroyed;}
 
-    public void setKill(boolean kill) {
-        this.kill = kill;
+    public void setDead(boolean dead) {
+        this.dead = dead;
     }
 
     public void resetKillTime() {
@@ -160,7 +161,7 @@ public class Entity implements Runnable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity entity = (Entity) o;
-        return id == entity.id && kill == entity.kill && killTime == entity.killTime && destroyed == entity.destroyed
+        return id == entity.id && dead == entity.dead && killTime == entity.killTime && destroyed == entity.destroyed
                 && Objects.equals(startPosition, entity.startPosition)
                 && Objects.equals(arrivalPosition, entity.arrivalPosition)
                 && Objects.equals(currentPosition, entity.currentPosition)
@@ -172,7 +173,7 @@ public class Entity implements Runnable {
     @Override
     public int hashCode() {
         return Objects.hash(startPosition, arrivalPosition, currentPosition, previousPosition, id, entityColor,
-                positionManager, kill, killTime, destroyed);
+                positionManager, dead, killTime, destroyed);
     }
 
     @Override
@@ -184,11 +185,12 @@ public class Entity implements Runnable {
                 if (canRevive()) {
                     revive();
                     revived = true;
-                } else if (this.kill)
+                } else if (this.dead)
                     incrementKillTime();
                 else {
                     try {
-                        if(move())kill();
+                        if(move())
+                            kill();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -196,7 +198,6 @@ public class Entity implements Runnable {
             } else
                 destroy();
             Display.updateGrid(this, victim, revived);
-            grid.cleanUp(this);
             try {
                 sleep(Simulation.sleepTime);
             } catch (InterruptedException e) {
@@ -207,13 +208,13 @@ public class Entity implements Runnable {
     public boolean canRevive() {
         boolean killTimeEnd = (this.killTime == 2);
         boolean isStartingPositionTaken = grid.isPositionTaken(this.startPosition);
-        return !isStartingPositionTaken && this.kill && killTimeEnd;
+        return !isStartingPositionTaken && this.dead && killTimeEnd;
     }
     /**
      * Kill this entity - set its kill attribute to true
      */
     public void kill() {
-        this.kill = true;
+        this.dead = true;
         grid.currentPositions.remove(currentPosition);
     }
 
@@ -221,7 +222,7 @@ public class Entity implements Runnable {
      * Revive entity - set its kill attribute to false and reset its kill time
      */
     public void revive() {
-        this.kill = false;
+        this.dead = false;
         resetKillTime();
         grid.currentPositions.add(this.currentPosition);
     }
@@ -233,11 +234,5 @@ public class Entity implements Runnable {
     public void destroy() {
         grid.currentPositions.remove(currentPosition);
         this.destroyed = true;
-        grid.entitiesOut.add(this);
     }
-
-
-
-
-
 }
