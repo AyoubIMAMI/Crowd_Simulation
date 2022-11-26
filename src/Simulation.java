@@ -97,9 +97,10 @@ public class Simulation {
         //let the display appears
         sleep(sleepTime);
 
-        //TODO CONTINUER LA SIMULATION TANT QU4IL IL A DES ENTITES while()
-        for (Entity entity : grid.getEntitiesList()) {
-            playRound(entity);
+        while(!grid.entitiesList.isEmpty()) {
+            for (Entity entity : grid.getEntitiesList()) {
+                playRound(entity);
+            }
         }
         //entitiesList = grid.getEntitiesList();
 

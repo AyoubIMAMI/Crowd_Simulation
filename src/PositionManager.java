@@ -123,23 +123,22 @@ public class PositionManager {
      * @return the entity found
      */
     public Optional<Entity> findEntityByPosition(Position position){
-        for(Entity entity: grid.getEntitiesList()){
-            if(entity.getCurrentPosition().equals(position))
-                return Optional.of(entity);
-        }
-        return Optional.empty();
+        return grid.getBox(position.getI(), position.getJ()).getEntity();
     }
 
     /**
      * Define the entity to kill between two entities - the one with the lowest id
      * @param entity which enter in conflict
      * @param conflictPosition conflict position
-     * @return the entity to kill
+     * @return the entity to kill //TODO
      */
     public boolean manageConflict(Entity entity, Position conflictPosition){
         Entity conflictEntity = findEntityByPosition(conflictPosition).get();
         return entity.getId() < conflictEntity.getId();
     }
+
+    //verouiller la case, rehcercher et s'il n'y a personne alors on prend la case et on libère le verrou
+    //enter et exit synchrnized
 
     /**
      * Check if an entity can be revived
