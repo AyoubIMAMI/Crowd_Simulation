@@ -68,7 +68,7 @@ public class Grid {
         Position position = entity.getCurrentPosition();
         this.entitiesList.add(entity);
         this.currentPositions.add(position);
-        grid[position.getI()][position.getJ()].setEntity(Optional.of(entity));
+        grid[position.getI()][position.getJ()].setEntity(entity);
     }
 
     /**

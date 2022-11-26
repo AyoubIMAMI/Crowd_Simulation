@@ -16,7 +16,10 @@ public class Box {
         return entity;
     }
 
-    public void setEntity(Optional<Entity> entity) {
-        this.entity = entity;
+    public synchronized boolean setEntity(Entity entity) {
+        if(this.entity.isPresent())return false;
+        this.entity = Optional.of(entity);
+        return true;
     }
+
 }
