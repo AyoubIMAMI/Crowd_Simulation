@@ -33,7 +33,7 @@ public class Grid {
         createGrid();
     }
 
-    public Grid(int lines, int columns, ArrayList<Entity> entities) {
+    public Grid(int lines, int columns, ArrayList<Entity> entities) throws InterruptedException {
         this.entitiesList = new ArrayList<>();
         this.entitiesOut = new ArrayList<>();
         this.currentPositions = new ArrayList<>();
@@ -44,7 +44,7 @@ public class Grid {
         fillGrid(entities);
     }
 
-    private void fillGrid(ArrayList<Entity> entities) {
+    private void fillGrid(ArrayList<Entity> entities) throws InterruptedException {
         for(Entity entity : entities)
             addEntity(entity);
     }
@@ -64,11 +64,11 @@ public class Grid {
      * Add an entity on the grid
      * @param entity entity to add to the grid
      */
-    public void addEntity(Entity entity){
+    public void addEntity(Entity entity) throws InterruptedException {
         Position position = entity.getCurrentPosition();
         this.entitiesList.add(entity);
         this.currentPositions.add(position);
-        grid[position.getI()][position.getJ()].setEntity(entity);
+        getBox(position.getI(), position.getJ()).arrive(entity);
     }
 
     /**
@@ -88,38 +88,9 @@ public class Grid {
     }
 
     /**
-     * Kill an entity - set its kill attribute to true
-     * @param entity to kill
-     */
-    public void kill(Entity entity) {
-        entity.setKill(true);
-        this.currentPositions.remove(entity.getCurrentPosition());
-    }
-
-    /**
-     * Revive entity - set its kill attribute to false and reset its kill time
-     * @param entity to revive
-     */
-    public void revive(Entity entity) {
-        entity.setKill(false);
-        entity.resetKillTime();
-        this.currentPositions.add(entity.getCurrentPosition());
-    }
-
-    /**
-     * When an entity arrived to its arrival position, it is destroyed
-     * @param entity to destroy
-     */
-    public void destroy(Entity entity) {
-        removeCurrentPosition(entity.getCurrentPosition());
-        entity.setDestroyed(true);
-        entitiesOut.add(entity);
-    }
-
-    /**
      * Remove entities which got out from the entities list
      */
-    public void cleanUp(Entity entity) {
+    public synchronized void cleanUp(Entity entity) {
         entitiesList.remove(entity);
         entitiesOut.clear();
     }

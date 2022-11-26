@@ -19,7 +19,7 @@ public class CsvManager {
      * @return the grid set up thanks to the csv file
      * @throws IOException file exception
      */
-    public Grid getConfigurationGrid(PositionManager positionManager) throws IOException {
+    public Grid getConfigurationGrid(PositionManager positionManager) throws IOException, InterruptedException {
         ArrayList<Entity> allEntities = new ArrayList<>();
         BufferedReader csvReader = new BufferedReader(new FileReader(csvPath));
         String row;
@@ -37,7 +37,7 @@ public class CsvManager {
             else{
                 Position departure = new Position(Integer.parseInt(data[0]), Integer.parseInt(data[1]));
                 Position arrival = new Position(Integer.parseInt(data[2]), Integer.parseInt(data[3]));
-                Entity entity = new Entity(departure, arrival, positionManager,csvLineCounter);
+                Entity entity = new Entity(departure, arrival,csvLineCounter);
                 allEntities.add(entity);
             }
             csvLineCounter++;

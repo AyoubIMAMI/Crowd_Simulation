@@ -103,8 +103,17 @@ public class PositionManager {
      * @param position position to check
      * @return true if the position is already taken, false otherwise
      */
-    boolean isPositionTaken(Position position) {
+    boolean isPositionTakenV1(Position position) {
         return grid.getCurrentPositions().contains(position);
+    }
+
+    /**
+     * Check if a position is taken or not to avoid overlay entities
+     * @param position position to check
+     * @return true if the position is already taken, false otherwise
+     */
+    boolean isPositionTaken(Position position) {
+        return grid.getBox(position.getI(), position.getJ()).entity.isPresent();
     }
 
     /**
@@ -122,12 +131,21 @@ public class PositionManager {
      * @param position entity researched position
      * @return the entity found
      */
-    public Optional<Entity> findEntityByPosition(Position position){
+    public Optional<Entity> findEntityByPositionV1(Position position){
         for(Entity entity: grid.getEntitiesList()){
             if(entity.getCurrentPosition().equals(position))
                 return Optional.of(entity);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Find an entity knowing its position
+     * @param position entity researched position
+     * @return the entity found
+     */
+    public Optional<Entity> findEntityByPosition(Position position){
+        return grid.getBox(position.getI(), position.getJ()).getEntity();
     }
 
     /**
@@ -137,6 +155,7 @@ public class PositionManager {
      * @return the entity to kill
      */
     public boolean manageConflict(Entity entity, Position conflictPosition){
+        System.out.println("manage conflict");
         Entity conflictEntity = findEntityByPosition(conflictPosition).get();
         return entity.getId() < conflictEntity.getId();
     }

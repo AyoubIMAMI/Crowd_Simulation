@@ -42,7 +42,7 @@ public class Main {
         //initialize and run the simulation - compute execution time
         Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode, threadsMode);
         simulation.initialize();
-        simulation.launch();
+        simulation.launchThreads();
         simulation.time(startTime);
     }
 }

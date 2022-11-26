@@ -40,7 +40,7 @@ public class Simulation {
     /**
      * Initialize the simulation: grid appearance and entities creation
      */
-    public void initialize() throws IOException {
+    public void initialize() throws IOException, InterruptedException {
         if(csvMode){
             grid = csvManager.getConfigurationGrid(positionManager);
             positionManager.setGrid(grid);
@@ -53,22 +53,19 @@ public class Simulation {
                     startPosition = positionManager.getRandomPosition();
 
                 Position arrivalPosition = positionManager.defineArrivalPosition();
-                Entity entity = new Entity(startPosition, arrivalPosition, positionManager, i);
+                Entity entity = new Entity(startPosition, arrivalPosition, i);
                 grid.addEntity(entity);
             }
         }
     }
 
-    public void launch() throws InterruptedException {
-        if (threadsMode) launchThreads();
-        else launchOneThread();
-    }
+
 
     /**
      * Run the simulation - round by round
      * @throws InterruptedException sleepTime
      */
-    private void launchThreads() throws InterruptedException {
+    public void launchThreads() throws InterruptedException {
         display.displayGrid(grid);
         //let the display appears
         sleep(sleepTime);
@@ -88,47 +85,6 @@ public class Simulation {
         display.close();
     }
 
-    /**
-     * Run the simulation - round by round
-     * @throws InterruptedException sleepTime
-     */
-    private void launchOneThread() throws InterruptedException {
-        display.displayGrid(grid);
-        //let the display appears
-        sleep(sleepTime);
-
-        //TODO CONTINUER LA SIMULATION TANT QU4IL IL A DES ENTITES while()
-        for (Entity entity : grid.getEntitiesList()) {
-            playRound(entity);
-        }
-        //entitiesList = grid.getEntitiesList();
-
-        display.close();
-    }
-
-    /**
-     * Make a move on an entity: move, revive or destroy. And update the display
-     * @param entity entity to move on this round
-     * @throws InterruptedException sleepTime
-     */
-    public void playRound(Entity entity) throws InterruptedException {
-        boolean potentialVictim = false;
-        boolean victimRevived = false;
-        if (!entity.isArrived()) {
-            if (positionManager.canEntityBeRevive(entity)) {
-                grid.revive(entity);
-                victimRevived = true;
-            }
-            else if (entity.isKilled())
-                entity.incrementKillTime();
-            else
-                potentialVictim = entity.move();
-        } else
-            grid.destroy(entity);
-
-        display.updateGrid(entity, potentialVictim, victimRevived);
-        sleep(sleepTime);
-    }
 
     /**
      * Compute the execution time

@@ -29,13 +29,13 @@ public class Entity implements Runnable {
     private boolean destroyed;
     private Grid grid;
 
-    public Entity(Position startPosition, Position arrivalPosition, PositionManager positionManager, int id) {
+    public Entity(Position startPosition, Position arrivalPosition, int id) {
         this.startPosition = startPosition;
         this.previousPosition = Optional.empty();
         this.currentPosition = startPosition;
         this.arrivalPosition = arrivalPosition;
         this.id = id;
-        this.positionManager = positionManager;
+        this.positionManager = new PositionManager(Simulation.grid);
         this.kill = false;
         this.destroyed = false;
         this.killTime = 0;
@@ -46,17 +46,23 @@ public class Entity implements Runnable {
      * If possible, change the entity previous position with the current one, and the current one with the new one
      * @return true if the entity has been killed during the round
      */
-    public boolean move(){
+    public boolean move() throws InterruptedException {
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         if(!positionManager.isPositionTaken(position)) {
-            positionManager.updateCurrentPositionList(this.currentPosition, position);
-            this.previousPosition = Optional.of(currentPosition);
-            this.currentPosition = position;
+            grid.getBox(currentPosition.getI(), currentPosition.getJ()).depart();
+            moveTo(position);
+            grid.getBox(currentPosition.getI(), currentPosition.getJ()).arrive(this);
         }
         else
             return positionManager.manageConflict(this, position);
 
         return false;
+    }
+
+    private void moveTo(Position position) {
+        positionManager.updateCurrentPositionList(this.currentPosition, position);
+        this.previousPosition = Optional.of(currentPosition);
+        this.currentPosition = position;
     }
 
     /**
@@ -176,15 +182,19 @@ public class Entity implements Runnable {
             boolean revived = false;
             if (!isArrived()) {
                 if (canRevive()) {
-                    grid.revive(this);
+                    revive();
                     revived = true;
                 } else if (this.kill)
                     incrementKillTime();
-                else
-                    victim = move();
+                else {
+                    try {
+                        if(move())kill();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             } else
-                grid.destroy(this);
-
+                destroy();
             Display.updateGrid(this, victim, revived);
             grid.cleanUp(this);
             try {
@@ -199,6 +209,33 @@ public class Entity implements Runnable {
         boolean isStartingPositionTaken = grid.isPositionTaken(this.startPosition);
         return !isStartingPositionTaken && this.kill && killTimeEnd;
     }
+    /**
+     * Kill this entity - set its kill attribute to true
+     */
+    public void kill() {
+        this.kill = true;
+        grid.currentPositions.remove(currentPosition);
+    }
+
+    /**
+     * Revive entity - set its kill attribute to false and reset its kill time
+     */
+    public void revive() {
+        this.kill = false;
+        resetKillTime();
+        grid.currentPositions.add(this.currentPosition);
+    }
+
+
+    /**
+     * When an entity arrived to its arrival position, it is destroyed
+     */
+    public void destroy() {
+        grid.currentPositions.remove(currentPosition);
+        this.destroyed = true;
+        grid.entitiesOut.add(this);
+    }
+
 
 
 

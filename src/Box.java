@@ -22,4 +22,15 @@ public class Box {
         return true;
     }
 
+    synchronized void arrive(Entity entity) throws InterruptedException {
+        while (this.entity.isPresent()) wait();
+        this.entity = Optional.of(entity);
+    }
+
+    // TO DO: modify arrive
+    synchronized void depart() throws InterruptedException {
+        this.entity = Optional.empty();
+        notifyAll();
+    }
+
 }

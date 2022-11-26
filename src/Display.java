@@ -81,7 +81,7 @@ public class Display {
      * @param victim true if the entity involved in this round got killed (conflict)
      * @param revived true if the entity involved in this round got revived
      */
-    static void updateGrid(Entity entity, boolean victim, boolean revived){
+    static synchronized void updateGrid(Entity entity, boolean victim, boolean revived){
         if (victim) {
             Position currentPosition = entity.getCurrentPosition();
             jPanelList[currentPosition.getI()][currentPosition.getJ()].setBackground(Color.white);
