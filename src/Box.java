@@ -16,18 +16,15 @@ public class Box {
         return entity;
     }
 
-    public synchronized boolean setEntity(Entity entity) {
-        if(this.entity.isPresent())return false;
+    synchronized boolean arrive(Entity entity) throws InterruptedException {
+        if (this.entity.isPresent()) {
+            return entity.getId() < this.entity.get().getId();
+        }
         this.entity = Optional.of(entity);
         return true;
     }
 
-    synchronized void arrive(Entity entity) throws InterruptedException {
-        while (this.entity.isPresent()) wait();
-        this.entity = Optional.of(entity);
-    }
-
-    synchronized void depart() throws InterruptedException {
+    synchronized void depart() {
         this.entity = Optional.empty();
         notifyAll();
     }

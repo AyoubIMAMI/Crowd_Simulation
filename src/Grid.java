@@ -11,18 +11,10 @@ public class Grid {
     int lines;
     int columns;
 
-    //list of the entities on the grid
-    List<Entity> entitiesList;
-
-    //list of the entities current position
-    List<Position> currentPositions;
-
     //grid where the entities move
     Box[][] grid;
 
     public Grid(int lines, int columns) {
-        this.entitiesList = new ArrayList<>();
-        this.currentPositions = new ArrayList<>();
         this.lines = lines;
         this.columns = columns;
         grid = new Box[lines][columns];
@@ -30,8 +22,6 @@ public class Grid {
     }
 
     public Grid(int lines, int columns, ArrayList<Entity> entities) throws InterruptedException {
-        this.entitiesList = new ArrayList<>();
-        this.currentPositions = new ArrayList<>();
         this.lines = lines;
         this.columns = columns;
         grid = new Box[lines][columns];
@@ -56,42 +46,16 @@ public class Grid {
     }
 
     /**
-     * Add an entity on the grid
-     * @param entity entity to add to the grid
+     * Add an entity to a box of the grid
+     * @param entity entity to add
      */
     public void addEntity(Entity entity) throws InterruptedException {
         Position position = entity.getCurrentPosition();
-        this.entitiesList.add(entity);
-        this.currentPositions.add(position);
         getBox(position.getI(), position.getJ()).arrive(entity);
-    }
-
-    /**
-     * Add the position to the list of current position
-     * @param position to add
-     */
-    public void addCurrentPosition(Position position) {
-        this.currentPositions.add(position);
-    }
-
-    /**
-     * Remove the position from the list of current position
-     * @param position to remove
-     */
-    public void removeCurrentPosition(Position position) {
-        this.currentPositions.remove(position);
     }
 
     public Box[][] getGrid() {
         return grid;
-    }
-
-    public List<Entity> getEntitiesList() {
-        return entitiesList;
-    }
-
-    public List<Position> getCurrentPositions() {
-        return currentPositions;
     }
 
     public int getLines() {
@@ -100,10 +64,6 @@ public class Grid {
 
     public int getColumns() {
         return columns;
-    }
-
-    boolean isPositionTaken(Position position) {
-        return this.currentPositions.contains(position);
     }
 
     public Box getBox(int i, int j) {

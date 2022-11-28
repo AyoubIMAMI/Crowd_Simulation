@@ -27,7 +27,8 @@ public class Entity implements Runnable {
     private int killTime;
     //when an entity arrived to its arrival position, it is destroyed
     private boolean destroyed;
-    private Grid grid;
+    //grid
+    private final Grid grid;
 
     public Entity(Position startPosition, Position arrivalPosition, int id) {
         this.startPosition = startPosition;
@@ -48,6 +49,7 @@ public class Entity implements Runnable {
      */
     public boolean move() throws InterruptedException {
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
+        grid.getBox(position.getI(), position.getJ()).arrive(this);
         if(!positionManager.isPositionTaken(position)) {
             grid.getBox(currentPosition.getI(), currentPosition.getJ()).depart();
             moveTo(position);
@@ -61,9 +63,66 @@ public class Entity implements Runnable {
     }
 
     private void moveTo(Position position) {
-        positionManager.updateCurrentPositionList(this.currentPosition, position);
         this.previousPosition = Optional.of(currentPosition);
         this.currentPosition = position;
+    }
+
+    @Override
+    public void run() {
+        while(!isDestroyed()) {
+            boolean victim = false;
+            boolean revived = false;
+            if (!isArrived()) {
+                if (canRevive()) {
+                    revive();
+                    revived = true;
+                } else if (this.dead)
+                    incrementKillTime();
+                else {
+                    try {
+                        if(move()) {
+                            kill();
+                            victim = true;
+                        }
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            else
+                destroy();
+
+            Display.updateGrid(this, victim, revived);
+            try {
+                sleep(Simulation.sleepTime);
+            } catch (InterruptedException ignored) {}
+        }
+    }
+    public boolean canRevive() {
+        boolean killTimeEnd = (this.killTime == 2);
+        boolean isStartingPositionTaken = positionManager.isPositionTaken(this.startPosition);
+        return !isStartingPositionTaken && this.dead && killTimeEnd;
+    }
+    /**
+     * Kill this entity - set its kill attribute to true
+     */
+    public void kill() {
+        this.dead = true;
+    }
+
+    /**
+     * Revive entity - set its kill attribute to false and reset its kill time
+     */
+    public void revive() {
+        this.dead = false;
+        resetKillTime();
+    }
+
+    /**
+     * When an entity arrived to its arrival position, it is destroyed
+     */
+    public void destroy() {
+        this.destroyed = true;
     }
 
     /**
@@ -131,12 +190,6 @@ public class Entity implements Runnable {
         this.entityColor = color;
     }
 
-    public void setDestroyed(boolean destroyed) {this.destroyed = destroyed;}
-
-    public void setDead(boolean dead) {
-        this.dead = dead;
-    }
-
     public void resetKillTime() {
         this.killTime = 0;
     }
@@ -174,65 +227,5 @@ public class Entity implements Runnable {
     public int hashCode() {
         return Objects.hash(startPosition, arrivalPosition, currentPosition, previousPosition, id, entityColor,
                 positionManager, dead, killTime, destroyed);
-    }
-
-    @Override
-    public void run() {
-        while(!isDestroyed()) {
-            boolean victim = false;
-            boolean revived = false;
-            if (!isArrived()) {
-                if (canRevive()) {
-                    revive();
-                    revived = true;
-                } else if (this.dead)
-                    incrementKillTime();
-                else {
-                    try {
-                        if(move())
-                            kill();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            } else
-                destroy();
-            Display.updateGrid(this, victim, revived);
-            try {
-                sleep(Simulation.sleepTime);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-    public boolean canRevive() {
-        boolean killTimeEnd = (this.killTime == 2);
-        boolean isStartingPositionTaken = grid.isPositionTaken(this.startPosition);
-        return !isStartingPositionTaken && this.dead && killTimeEnd;
-    }
-    /**
-     * Kill this entity - set its kill attribute to true
-     */
-    public void kill() {
-        this.dead = true;
-        grid.currentPositions.remove(currentPosition);
-    }
-
-    /**
-     * Revive entity - set its kill attribute to false and reset its kill time
-     */
-    public void revive() {
-        this.dead = false;
-        resetKillTime();
-        grid.currentPositions.add(this.currentPosition);
-    }
-
-
-    /**
-     * When an entity arrived to its arrival position, it is destroyed
-     */
-    public void destroy() {
-        grid.currentPositions.remove(currentPosition);
-        this.destroyed = true;
     }
 }

@@ -55,7 +55,7 @@ public class CsvManager {
         FileWriter csvWriter = new FileWriter(csvPath,  false);
         csvWriter.append(grid.getGrid()+" "+ grid.getColumns());
         csvWriter.append("\n");
-        List<Entity> allEntities = grid.getEntitiesList();
+        List<Entity> allEntities = Simulation.entitiesList;
         for(Entity entity : allEntities){
             Position departure = entity.getCurrentPosition();
             Position arrival = entity.getCurrentPosition();

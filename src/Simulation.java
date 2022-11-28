@@ -12,6 +12,8 @@ public class Simulation {
     public static Grid grid;
     //number of entities in the crowd
     int entitiesNumber;
+    //entities list
+    static List<Entity> entitiesList;
     //positionManager which decides of the entity next move: move, die, revive or exit
     public PositionManager positionManager;
     //display the grid
@@ -31,13 +33,14 @@ public class Simulation {
         this.positionManager = positionManager;
         this.csvManager = csvManager;
         this.csvMode = csvMode;
+        entitiesList = new ArrayList<>();
     }
 
     /**
      * Initialize the simulation: grid appearance and entities creation
      */
     public void initialize() throws IOException, InterruptedException {
-        if(csvMode){
+        if(csvMode){//TODO GET ENTITIES LIST FROM THE CSV CONFIGURATION
             grid = csvManager.getConfigurationGrid(positionManager);
             positionManager.setGrid(grid);
             display.setGrid(grid);
@@ -51,11 +54,10 @@ public class Simulation {
                 Position arrivalPosition = positionManager.defineArrivalPosition();
                 Entity entity = new Entity(startPosition, arrivalPosition, i);
                 grid.addEntity(entity);
+                entitiesList.add(entity);
             }
         }
     }
-
-
 
     /**
      * Run the simulation - round by round
@@ -67,20 +69,17 @@ public class Simulation {
         sleep(sleepTime);
 
         List<Thread> allThreads = new ArrayList<>();
-        for (Entity entity : grid.getEntitiesList()) {
+        for (Entity entity : entitiesList) {
             Thread t = new Thread(entity);
             allThreads.add(t);
             t.start();
         }
-
-        //entitiesList = grid.getEntitiesList();
 
         for (Thread t : allThreads) {
             t.join();
         }
         display.close();
     }
-
 
     /**
      * Compute the execution time

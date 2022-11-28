@@ -18,7 +18,7 @@ public class PositionManager {
      */
     public Position getRandomPosition() {
         Random random = new Random();
-        return new Position(random.nextInt(0, grid.lines), random.nextInt(0, grid.columns));
+        return new Position(random.nextInt(grid.lines), random.nextInt(grid.columns));
     }
 
     /**
@@ -31,31 +31,31 @@ public class PositionManager {
 
         Random random = new Random();
         //define if the position will be on the first/last line or the first/last column
-        int setLineOrColumn = random.nextInt(0, 2);
+        int setLineOrColumn = random.nextInt(2);
         //define if the position will be on the first line/column or the last line/column
-        int setZeroOrMax = random.nextInt(0, 2);
+        int setZeroOrMax = random.nextInt(2);
 
         //  ___  <- here
         // |  |
         // ---
         if(setLineOrColumn == 0 && setZeroOrMax == 0) {
             i = 0;
-            j = random.nextInt(0, grid.columns);
+            j = random.nextInt(grid.columns);
         }
 
         //  ___
         // |  |
         // ---  <- here
-        else if(setLineOrColumn == 0 && setZeroOrMax == 1) {
+        else if(setLineOrColumn == 0) {
             i = grid.lines-1;
-            j = random.nextInt(0, grid.columns);
+            j = random.nextInt(grid.columns);
         }
 
         //           ___
         // here ->  |  |
         //          ---
-        else if(setLineOrColumn == 1 && setZeroOrMax == 0) {
-            i = random.nextInt(0, grid.lines);
+        else if(setZeroOrMax == 0) {
+            i = random.nextInt(grid.lines);
             j = 0;
         }
 
@@ -63,7 +63,7 @@ public class PositionManager {
         // |  |  <- here
         // ---
         else {
-            i = random.nextInt(0, grid.lines);
+            i = random.nextInt(grid.lines);
             j = grid.columns-1;
         }
 
@@ -103,27 +103,8 @@ public class PositionManager {
      * @param position position to check
      * @return true if the position is already taken, false otherwise
      */
-    boolean isPositionTakenV1(Position position) {
-        return grid.getCurrentPositions().contains(position);
-    }
-
-    /**
-     * Check if a position is taken or not to avoid overlay entities
-     * @param position position to check
-     * @return true if the position is already taken, false otherwise
-     */
     boolean isPositionTaken(Position position) {
         return grid.getBox(position.getI(), position.getJ()).entity.isPresent();
-    }
-
-    /**
-     * Update currentPosition list
-     * @param currentPosition current position
-     * @param newPosition new position
-     */
-    public void updateCurrentPositionList(Position currentPosition, Position newPosition){
-        grid.removeCurrentPosition(currentPosition);
-        grid.addCurrentPosition(newPosition);
     }
 
     /**
@@ -149,18 +130,6 @@ public class PositionManager {
 
     //verouiller la case, rehcercher et s'il n'y a personne alors on prend la case et on libère le verrou
     //enter et exit synchrnized
-
-    /**
-     * Check if an entity can be revived
-     * @param entity to revive or not
-     * @return true if the entity can be revived, false otherwise
-     */
-    public boolean canEntityBeRevive(Entity entity) {
-        boolean killTimeEnd = (entity.getKillTime() == 2);
-        boolean isStartingPositionTaken = isPositionTaken(entity.getStartPosition());
-        boolean ImKilled = entity.isKilled();
-        return !isStartingPositionTaken && ImKilled && killTimeEnd;
-    }
 
     public void setGrid(Grid grid) {
         this.grid = grid;
