@@ -21,7 +21,7 @@ public class Grid {
         createGrid();
     }
 
-    public Grid(int lines, int columns, ArrayList<Entity> entities) throws InterruptedException {
+    public Grid(int lines, int columns, ArrayList<Entity> entities) throws Exception {
         this.lines = lines;
         this.columns = columns;
         grid = new Box[lines][columns];
@@ -29,7 +29,7 @@ public class Grid {
         fillGrid(entities);
     }
 
-    private void fillGrid(ArrayList<Entity> entities) throws InterruptedException {
+    private void fillGrid(ArrayList<Entity> entities) throws Exception {
         for(Entity entity : entities)
             addEntity(entity);
     }
@@ -51,7 +51,7 @@ public class Grid {
      */
     public void addEntity(Entity entity) throws InterruptedException {
         Position position = entity.getCurrentPosition();
-        getBox(position.getI(), position.getJ()).arrive(entity);
+        getBox(position.getI(), position.getJ()).setEntity(entity);
     }
 
     public Box[][] getGrid() {

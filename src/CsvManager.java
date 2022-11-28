@@ -19,7 +19,7 @@ public class CsvManager {
      * @return the grid set up thanks to the csv file
      * @throws IOException file exception
      */
-    public Grid getConfigurationGrid(PositionManager positionManager) throws IOException, InterruptedException {
+    public Grid getConfigurationGrid(PositionManager positionManager) throws Exception {
         ArrayList<Entity> allEntities = new ArrayList<>();
         BufferedReader csvReader = new BufferedReader(new FileReader(csvPath));
         String row;

@@ -16,17 +16,32 @@ public class Box {
         return entity;
     }
 
-    synchronized boolean arrive(Entity entity) throws InterruptedException {
-        if (this.entity.isPresent()) {
-            return entity.getId() < this.entity.get().getId();
+    synchronized MovementState arrive(Entity entity) throws Exception {
+        if (this.entity.isEmpty()) {
+            Simulation.grid.getBox(entity.getCurrentPosition().getI(), entity.getCurrentPosition().getJ()).depart(entity);
+            this.entity = Optional.of(entity);
+            return MovementState.MOVE;
         }
-        this.entity = Optional.of(entity);
-        return true;
+        if (entity.getId() < this.entity.get().getId())
+                return MovementState.DIE;
+
+        wait();
+        return MovementState.IS_WAITING;
     }
 
-    synchronized void depart() {
+    synchronized void depart(Entity entity) throws Exception {
+        //TODO PROBLEME AVEC CETTE SECURITE, A REVOIR (PENSER AUX EUALS ET HASHCODE COMME SOURCE DE PROBLEME)
+        //if (!this.entity.get().equals(entity))
+            //throw new Exception("[SECURITY] Not the same entity!");
+
         this.entity = Optional.empty();
         notifyAll();
     }
 
+    synchronized void setEntity(Entity entity) throws InterruptedException {
+        if (this.entity.isPresent())
+            wait();
+
+        this.entity = Optional.of(entity);
+    }
 }

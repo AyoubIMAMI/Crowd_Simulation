@@ -39,7 +39,7 @@ public class Simulation {
     /**
      * Initialize the simulation: grid appearance and entities creation
      */
-    public void initialize() throws IOException, InterruptedException {
+    public void initialize() throws Exception {
         if(csvMode){//TODO GET ENTITIES LIST FROM THE CSV CONFIGURATION
             grid = csvManager.getConfigurationGrid(positionManager);
             positionManager.setGrid(grid);
