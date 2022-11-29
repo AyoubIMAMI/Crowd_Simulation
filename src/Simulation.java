@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class Simulation {
      */
     public void initialize() throws Exception {
         if(csvMode){//TODO GET ENTITIES LIST FROM THE CSV CONFIGURATION
-            grid = csvManager.getConfigurationGrid(positionManager);
+            grid = csvManager.getConfigurationGrid();
             positionManager.setGrid(grid);
             display.setGrid(grid);
         }

@@ -12,15 +12,15 @@ public class Main {
     static long startTime = System.nanoTime();
 
     //grid of size lines*columns
-    static int lines = 1;
+    static int lines = 10;
     static int columns = 10;
 
     //number of entities on the grid - this number must be smaller than the grid of size lines*columns
     //entities cannot spawn on each other
-    static int entitiesNumber = 2;
+    static int entitiesNumber = 50;
 
     //sleep time in ms - needed to simulate movements on the display
-    static int sleepTime = 1000;
+    static int sleepTime = 0;
     //kill time in ms - to simulate the time for which an entity (thread) will be dead
     static int killTime = 0;
 

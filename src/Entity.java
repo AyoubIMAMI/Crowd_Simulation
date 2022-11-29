@@ -20,7 +20,6 @@ public class Entity implements Runnable {
     //entity color
     private Color entityColor;
     //positionManager which decides of the entity next move: move, die, revive or exit
-    private final PositionManager positionManager;
     //once killed, dead for at least 2 rounds
     private final int killTime;
     //when an entity arrived to its arrival position, it is destroyed
@@ -34,12 +33,14 @@ public class Entity implements Runnable {
         this.currentPosition = startPosition;
         this.arrivalPosition = arrivalPosition;
         this.id = id;
-        this.positionManager = new PositionManager(Simulation.grid);
         this.destroyed = false;
         this.killTime = Main.killTime;
         this.grid = Simulation.grid;
     }
 
+    /**
+     * Makes all the decision about the entity movement: move, die, revive and update the grid appearance
+     */
     @Override
     public void run() {
         try {
@@ -70,13 +71,17 @@ public class Entity implements Runnable {
         }
     }
 
+    /**
+     * Update positions
+     * @param position the new position
+     */
     void moveTo(Position position) {
         this.previousPosition = Optional.of(currentPosition);
         this.currentPosition = position;
     }
 
     /**
-     * Kill this entity - set its kill attribute to true
+     * Kill this entity: remove it from the box, update appearance and revive after a killTime
      */
     public void kill() throws Exception {
         grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart(this);
@@ -88,7 +93,7 @@ public class Entity implements Runnable {
     }
 
     /**
-     * Revive entity - set its kill attribute to false and reset its kill time
+     * Revive entity: put it in its start box if it is empty, otherwise wait and update appearance
      */
     public void revive() throws InterruptedException {
         grid.getBox(this.startPosition.getI(), this.startPosition.getJ()).setEntity(this);
@@ -96,7 +101,7 @@ public class Entity implements Runnable {
     }
 
     /**
-     * When an entity arrived to its arrival position, it is destroyed
+     * When an entity arrived to its arrival position, it is destroyed: removed from its box
      */
     public void destroy() throws Exception {
         grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart(this);
@@ -129,10 +134,6 @@ public class Entity implements Runnable {
 
     public Position getCurrentPosition() {
         return currentPosition;
-    }
-
-    public Position getArrivalPosition() {
-        return arrivalPosition;
     }
 
     public Optional<Position> getPreviousPosition() {

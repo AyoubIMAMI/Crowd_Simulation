@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Manage the simulation display
@@ -27,7 +26,7 @@ public class Display {
         this.columns = grid.columns;
         this.colorList = new ArrayList<>();
         this.colorsNumber = colorListCreation();
-        this.jPanelList = new JPanel[lines][columns];
+        jPanelList = new JPanel[lines][columns];
         this.frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500,500);
@@ -77,7 +76,7 @@ public class Display {
 
     /**
      * Update the grid appearance
-     * @param entity involved in this round
+     * @param entity to change appearance
      */
     static synchronized void updateGrid(Entity entity){
         if (entity.isArrived() && entity.isDestroyed()) {
@@ -105,7 +104,7 @@ public class Display {
      * @param entity to make reappeared
      */
     static void reappear(Entity entity) {
-        JPanel jPanel = jPanelList[entity.getArrivalPosition().getI()][entity.getArrivalPosition().getJ()];
+        JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
         jPanel.setBackground(entity.getEntityColor());
     }
 
@@ -134,6 +133,6 @@ public class Display {
     public void setGrid(Grid grid) {
         this.lines = grid.lines;
         this.columns = grid.columns;
-        this.jPanelList = new JPanel[lines][columns];
+        jPanelList = new JPanel[lines][columns];
     }
 }

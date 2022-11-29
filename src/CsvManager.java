@@ -15,11 +15,10 @@ public class CsvManager {
 
     /**
      * Create the grid using the csv file
-     * @param positionManager which decides of the entity next move: move, die, revive or exit
      * @return the grid set up thanks to the csv file
      * @throws IOException file exception
      */
-    public Grid getConfigurationGrid(PositionManager positionManager) throws Exception {
+    public Grid getConfigurationGrid() throws Exception {
         ArrayList<Entity> allEntities = new ArrayList<>();
         BufferedReader csvReader = new BufferedReader(new FileReader(csvPath));
         String row;
@@ -53,14 +52,14 @@ public class CsvManager {
      */
     public void createConfigurationGrid(Grid grid) throws IOException {
         FileWriter csvWriter = new FileWriter(csvPath,  false);
-        csvWriter.append(grid.getGrid()+" "+ grid.getColumns());
+        csvWriter.append(grid.getLines() + " " + grid.getColumns());
         csvWriter.append("\n");
         List<Entity> allEntities = Simulation.entitiesList;
         for(Entity entity : allEntities){
             Position departure = entity.getCurrentPosition();
             Position arrival = entity.getCurrentPosition();
 
-            csvWriter.append(departure.getI()+" "+ departure.getJ()+" "+arrival.getI()+" "+ arrival.getJ());
+            csvWriter.append(departure.getI() + " " + departure.getJ() + " " + arrival.getI() + " " + arrival.getJ());
             csvWriter.append("\n");
         }
         csvWriter.close();
