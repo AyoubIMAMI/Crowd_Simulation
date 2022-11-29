@@ -46,13 +46,13 @@ public class Simulation {
             display.setGrid(grid);
         }
         else{
-            for(int i = 0; i < entitiesNumber; i++){
+            for(int id = 0; id < entitiesNumber; id++){
                 Position startPosition = positionManager.getRandomPosition();
                 while(positionManager.isPositionTaken(startPosition))
                     startPosition = positionManager.getRandomPosition();
 
                 Position arrivalPosition = positionManager.defineArrivalPosition();
-                Entity entity = new Entity(startPosition, arrivalPosition, i);
+                Entity entity = new Entity(startPosition, arrivalPosition, id);
                 grid.addEntity(entity);
                 entitiesList.add(entity);
             }

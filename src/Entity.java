@@ -21,10 +21,8 @@ public class Entity implements Runnable {
     private Color entityColor;
     //positionManager which decides of the entity next move: move, die, revive or exit
     private final PositionManager positionManager;
-    //has been killed
-    private boolean dead;
     //once killed, dead for at least 2 rounds
-    private int killTime;
+    private final int killTime;
     //when an entity arrived to its arrival position, it is destroyed
     private boolean destroyed;
     //grid
@@ -37,17 +35,31 @@ public class Entity implements Runnable {
         this.arrivalPosition = arrivalPosition;
         this.id = id;
         this.positionManager = new PositionManager(Simulation.grid);
-        this.dead = false;
         this.destroyed = false;
-        this.killTime = 0;
+        this.killTime = Main.killTime;
         this.grid = Simulation.grid;
+    }
+
+    @Override
+    public void run() {
+        try {
+            System.out.println(this);
+            while (!isDestroyed()) {
+                if (!isArrived())
+                    move();
+                else
+                    destroy();
+
+                Display.updateGrid(this);
+                sleep(Simulation.sleepTime);
+            }
+        } catch (Exception ignored){ }
     }
 
     /**
      * If possible, change the entity previous position with the current one, and the current one with the new one
-     * @return true if the entity has been killed during the round
      */
-    public boolean move() throws Exception {
+    public void move() throws Exception {
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         MovementState state = grid.getBox(position.getI(), position.getJ()).arrive(this);
 
@@ -56,8 +68,6 @@ public class Entity implements Runnable {
             case IS_WAITING -> { }
             case DIE -> kill();
         }
-
-        return isKilled();
     }
 
     void moveTo(Position position) {
@@ -65,50 +75,15 @@ public class Entity implements Runnable {
         this.currentPosition = position;
     }
 
-    @Override
-    public void run() {
-        System.out.println(this);
-        while(!isDestroyed()) {
-            boolean revived = false;
-            if (!isArrived()) {
-                if (isKilled()) {
-                    try {
-                        revive();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    revived = true;
-                } else if (this.dead)
-                    incrementKillTime();
-                else {
-                    try {
-                        move();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-            else {
-                try {
-                    destroy();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            Display.updateGrid(this, isKilled(), revived);
-            try {
-                sleep(Simulation.sleepTime);
-            } catch (InterruptedException ignored) {}
-        }
-    }
-
     /**
      * Kill this entity - set its kill attribute to true
      */
     public void kill() throws Exception {
         grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart(this);
-        this.dead = true;
+        resetCurrentPosition();
+        resetPreviousPosition();
+        sleep(killTime);
+        revive();
     }
 
     /**
@@ -116,7 +91,7 @@ public class Entity implements Runnable {
      */
     public void revive() throws InterruptedException {
         grid.getBox(this.startPosition.getI(), this.startPosition.getJ()).setEntity(this);
-        this.dead = false;
+        Display.reappear(this);
     }
 
     /**
@@ -151,15 +126,6 @@ public class Entity implements Runnable {
         return destroyed;
     }
 
-    /**
-     * Check if an entity is killed
-     * @return kill attribute boolean
-     */
-    public boolean isKilled(){
-        return this.dead;
-    }
-
-
     public Position getCurrentPosition() {
         return currentPosition;
     }
@@ -180,20 +146,8 @@ public class Entity implements Runnable {
         return id;
     }
 
-    public Position getStartPosition() {
-        return this.startPosition;
-    }
-
-    public int getKillTime() {
-        return this.killTime;
-    }
-
     public void setEntityColor(Color color) {
         this.entityColor = color;
-    }
-
-    public void resetKillTime() {
-        this.killTime = 0;
     }
 
     public void resetCurrentPosition() {
@@ -204,19 +158,12 @@ public class Entity implements Runnable {
         this.previousPosition = Optional.empty();
     }
 
-    public void incrementKillTime() {
-        if(killTime == 2)
-            killTime = 0;
-        else
-            this.killTime++;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity entity = (Entity) o;
-        return id == entity.id && dead == entity.dead && killTime == entity.killTime && destroyed == entity.destroyed
+        return id == entity.id && killTime == entity.killTime && destroyed == entity.destroyed
                 && Objects.equals(startPosition, entity.startPosition)
                 && Objects.equals(arrivalPosition, entity.arrivalPosition)
                 && Objects.equals(currentPosition, entity.currentPosition)
@@ -228,7 +175,7 @@ public class Entity implements Runnable {
     @Override
     public int hashCode() {
         return Objects.hash(startPosition, arrivalPosition, currentPosition, previousPosition, id, entityColor,
-                positionManager, dead, killTime, destroyed);
+                positionManager, killTime, destroyed);
     }
 
     @Override

@@ -107,30 +107,6 @@ public class PositionManager {
         return grid.getBox(position.getI(), position.getJ()).entity.isPresent();
     }
 
-    /**
-     * Find an entity knowing its position
-     * @param position entity researched position
-     * @return the entity found
-     */
-    public Optional<Entity> findEntityByPosition(Position position){
-        return grid.getBox(position.getI(), position.getJ()).getEntity();
-    }
-
-    /**
-     * Define the entity to kill between two entities - the one with the lowest id
-     * @param entity which enter in conflict
-     * @param conflictPosition conflict position
-     * @return the entity to kill //TODO
-     */
-    public boolean manageConflict(Entity entity, Position conflictPosition){
-        System.out.println("manage conflict");
-        Entity conflictEntity = findEntityByPosition(conflictPosition).get();
-        return entity.getId() < conflictEntity.getId();
-    }
-
-    //verouiller la case, rehcercher et s'il n'y a personne alors on prend la case et on libère le verrou
-    //enter et exit synchrnized
-
     public void setGrid(Grid grid) {
         this.grid = grid;
     }
