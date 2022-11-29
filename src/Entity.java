@@ -80,6 +80,7 @@ public class Entity implements Runnable {
      */
     public void kill() throws Exception {
         grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart(this);
+        Display.disappear(this);
         resetCurrentPosition();
         resetPreviousPosition();
         sleep(killTime);
@@ -159,27 +160,20 @@ public class Entity implements Runnable {
     }
 
     @Override
+    public String toString() {
+        return "id: " + this.id + "    color: " + this.entityColor;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity entity = (Entity) o;
-        return id == entity.id && killTime == entity.killTime && destroyed == entity.destroyed
-                && Objects.equals(startPosition, entity.startPosition)
-                && Objects.equals(arrivalPosition, entity.arrivalPosition)
-                && Objects.equals(currentPosition, entity.currentPosition)
-                && Objects.equals(previousPosition, entity.previousPosition)
-                && Objects.equals(entityColor, entity.entityColor)
-                && Objects.equals(positionManager, entity.positionManager);
+        return id == entity.id && Objects.equals(startPosition, entity.startPosition) && Objects.equals(currentPosition, entity.currentPosition);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startPosition, arrivalPosition, currentPosition, previousPosition, id, entityColor,
-                positionManager, killTime, destroyed);
-    }
-
-    @Override
-    public String toString() {
-        return "id: " + this.id + "    color: " + this.entityColor;
+        return Objects.hash(startPosition, currentPosition, id);
     }
 }

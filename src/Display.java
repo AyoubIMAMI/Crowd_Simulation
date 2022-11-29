@@ -96,7 +96,7 @@ public class Display {
      * @param entity to make disappeared
      */
     static void disappear(Entity entity) {
-        JPanel jPanel = jPanelList[entity.getArrivalPosition().getI()][entity.getArrivalPosition().getJ()];
+        JPanel jPanel = jPanelList[entity.getCurrentPosition().getI()][entity.getCurrentPosition().getJ()];
         jPanel.setBackground(Color.WHITE);
     }
 
