@@ -26,7 +26,7 @@ public class Main {
     //so if another entity B with a greater id wants its place it will wait
     //while the other entity A will keep dying and respawning
     //until the entity B wake up faster than the entity A respawn and takes the place
-    static int killTime = 1;
+    static int killTime = 1000;
 
     //true: display the grid and the entities
     static boolean displayMode = true;
