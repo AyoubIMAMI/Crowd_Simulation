@@ -39,10 +39,12 @@ public class Simulation {
      * Initialize the simulation: grid appearance and entities creation
      */
     public void initialize() throws Exception {
-        if(csvMode){//TODO GET ENTITIES LIST FROM THE CSV CONFIGURATION
+        if(csvMode){
             grid = csvManager.getConfigurationGrid();
             positionManager.setGrid(grid);
-            display.setGrid(grid);
+
+            if (Main.displayMode)
+                display.setGrid(grid);
         }
         else{
             for(int id = 0; id < entitiesNumber; id++){
@@ -63,21 +65,24 @@ public class Simulation {
      * @throws InterruptedException sleepTime
      */
     public void launch() throws InterruptedException {
-        display.displayGrid(grid);
+        if (Main.displayMode)
+            display.displayGrid(grid);
         //let the display appears
         sleep(sleepTime);
 
         List<Thread> allThreads = new ArrayList<>();
+        Main.startTime = System.nanoTime();
         for (Entity entity : entitiesList) {
-            Thread t = new Thread(entity);
-            allThreads.add(t);
-            t.start();
+            Thread thread = new Thread(entity);
+            allThreads.add(thread);
+            thread.start();
         }
 
         for (Thread t : allThreads) {
             t.join();
         }
-        display.close();
+        if (Main.displayMode)
+            display.close();
     }
 
     /**
@@ -87,6 +92,7 @@ public class Simulation {
     public void time(long startTime) {
         long endTime = System.nanoTime();
         long totalTime = endTime - startTime;
+        System.out.println("Program ran for " + totalTime / (Math.pow(10, 6)) + " milliseconds with a time sleep of " + sleepTime + " milliseconds.");
         System.out.println("Program ran for " + totalTime / (Math.pow(10, 9)) + " seconds with a time sleep of " + sleepTime + " milliseconds.");
         System.out.println("Program ran for " + totalTime / (6 * Math.pow(10, 10)) + " minutes with a time sleep of " + sleepTime + " milliseconds.");
     }

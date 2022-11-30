@@ -24,7 +24,7 @@ public class Box {
      */
     synchronized MovementState arrive(Entity entity) throws Exception {
         if (this.entity.isEmpty()) {
-            Simulation.grid.getBox(entity.getCurrentPosition().getI(), entity.getCurrentPosition().getJ()).depart(entity);
+            Simulation.grid.getBox(entity.getCurrentPosition().getI(), entity.getCurrentPosition().getJ()).depart();
             this.entity = Optional.of(entity);
             return MovementState.MOVE;
         }
@@ -37,14 +37,8 @@ public class Box {
 
     /**
      * Freed the box so another entity can go in
-     * @param entity entity that wants to leave the box
-     * @throws Exception exception
      */
-    synchronized void depart(Entity entity) throws Exception {
-        //TODO SECURITY ISSUE, 2 ENTITIES CALLS THE METHOD ON THE SAME BOX
-        //if (!this.entity.get().equals(entity))
-            //throw new Exception("[SECURITY] Not the same entity!");
-
+    synchronized void depart() {
         this.entity = Optional.empty();
         notifyAll();
     }

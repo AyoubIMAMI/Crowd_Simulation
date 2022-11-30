@@ -44,15 +44,16 @@ public class Entity implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println(this);
             while (!isDestroyed()) {
                 if (!isArrived())
                     move();
                 else
                     destroy();
 
-                Display.updateGrid(this);
-                sleep(Simulation.sleepTime);
+                if (Main.displayMode) {
+                    Display.updateGrid(this);
+                    sleep(Simulation.sleepTime);
+                }
             }
         } catch (Exception ignored){ }
     }
@@ -84,8 +85,10 @@ public class Entity implements Runnable {
      * Kill this entity: remove it from the box, update appearance and revive after a killTime
      */
     public void kill() throws Exception {
-        grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart(this);
-        Display.disappear(this);
+        grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart();
+        if (Main.displayMode)
+            Display.disappear(this);
+
         resetCurrentPosition();
         resetPreviousPosition();
         sleep(killTime);
@@ -97,14 +100,15 @@ public class Entity implements Runnable {
      */
     public void revive() throws InterruptedException {
         grid.getBox(this.startPosition.getI(), this.startPosition.getJ()).setEntity(this);
-        Display.reappear(this);
+        if (Main.displayMode)
+            Display.reappear(this);
     }
 
     /**
      * When an entity arrived to its arrival position, it is destroyed: removed from its box
      */
     public void destroy() throws Exception {
-        grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart(this);
+        grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart();
         this.destroyed = true;
     }
 
