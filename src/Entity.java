@@ -55,7 +55,9 @@ public class Entity implements Runnable {
                     sleep(Simulation.sleepTime);
                 }
             }
-        } catch (Exception ignored){ }
+        } catch (Exception e){
+            System.out.println(e);
+        }
     }
 
     /**
@@ -85,7 +87,7 @@ public class Entity implements Runnable {
      * Kill this entity: remove it from the box, update appearance and revive after a killTime
      */
     public void kill() throws Exception {
-        grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart();
+        grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart(this);
         if (Main.displayMode)
             Display.disappear(this);
 
@@ -108,9 +110,11 @@ public class Entity implements Runnable {
      * When an entity arrived to its arrival position, it is destroyed: removed from its box
      */
     public void destroy() throws Exception {
-        grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart();
+        Box box = grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ());
+        Entity e = box.getEntity().get();
+        box.depart(this);
         this.destroyed = true;
-    }
+    }//TODO COLOR NULL ISSUE
 
     /**
      * Check if an entity has moved
@@ -174,11 +178,11 @@ public class Entity implements Runnable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity entity = (Entity) o;
-        return id == entity.id && Objects.equals(startPosition, entity.startPosition) && Objects.equals(currentPosition, entity.currentPosition);
+        return id == entity.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startPosition, currentPosition, id);
+        return Objects.hash(id);
     }
 }
