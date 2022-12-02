@@ -11,12 +11,12 @@ public class Main {
     static long startTime;
 
     //grid of size lines*columns
-    static int lines = 120;
+    static int lines = 100;
     static int columns = 100;
 
     //number of entities on the grid - this number must be smaller than the grid of size lines*columns
     //entities cannot spawn on each other
-    static int entitiesNumber = 10000;
+    static int entitiesNumber = 1000;
 
     //sleep time in ms - needed to simulate movements on the display
     static int sleepTime = 100;
@@ -29,7 +29,7 @@ public class Main {
     static int killTime = 1000;
 
     //true: display the grid and the entities
-    static boolean displayMode = false;
+    static boolean displayMode = true;
 
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     static boolean csvMode = false;

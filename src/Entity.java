@@ -65,13 +65,7 @@ public class Entity implements Runnable {
      */
     public void move() throws Exception {
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
-        MovementState state = grid.getBox(position.getI(), position.getJ()).arrive(this);
-
-        switch (state) {
-            case MOVE -> moveTo(position);
-            case IS_WAITING -> { }
-            case DIE -> kill();
-        }
+        grid.getBox(position.getI(), position.getJ()).arrive(this);
     }
 
     /**
@@ -114,7 +108,7 @@ public class Entity implements Runnable {
         Entity e = box.getEntity().get();
         box.depart(this);
         this.destroyed = true;
-    }//TODO COLOR NULL ISSUE
+    }
 
     /**
      * Check if an entity has moved

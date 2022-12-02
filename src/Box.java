@@ -22,17 +22,23 @@ public class Box {
      * @return a state MOVE, DIE ord IS_WAITING depending on the situation described above
      * @throws Exception exception
      */
-    synchronized MovementState arrive(Entity entity) throws Exception {
-        if (this.entity.isEmpty()) {
-            Simulation.grid.getBox(entity.getCurrentPosition().getI(), entity.getCurrentPosition().getJ()).depart(entity);
-            this.entity = Optional.of(entity);
-            return MovementState.MOVE;
+    synchronized void arrive(Entity entity) throws Exception {
+        boolean gotKilled = false;
+        while(this.entity.isPresent()) {
+            if (entity.getId() < this.entity.get().getId()) {
+                entity.kill();
+                gotKilled = true;
+                break;
+            }
+            else
+                wait();
         }
-        if (entity.getId() < this.entity.get().getId())
-                return MovementState.DIE;
 
-        wait();
-        return MovementState.IS_WAITING;
+        if (!gotKilled) {
+            Simulation.grid.getBox(entity.getCurrentPosition().getI(), entity.getCurrentPosition().getJ()).depart(entity);
+            entity.moveTo(this.boxPosition);
+            this.entity = Optional.of(entity);
+        }
     }
 
     /**
@@ -53,7 +59,7 @@ public class Box {
      * @throws InterruptedException exception
      */
     synchronized void setEntity(Entity entity) throws InterruptedException {
-        if (this.entity.isPresent())
+        while (this.entity.isPresent())
             wait();
 
         this.entity = Optional.of(entity);
