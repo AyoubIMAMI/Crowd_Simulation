@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 import static java.lang.Thread.sleep;
 
@@ -8,24 +9,24 @@ import static java.lang.Thread.sleep;
  */
 public class Entity implements Runnable {
     //starting position
-    private final Position startPosition;
+    protected final Position startPosition;
     //arrival position
-    private final Position arrivalPosition;
+    protected final Position arrivalPosition;
     //current position
-    private Position currentPosition;
+    protected Position currentPosition;
     //optional previous position
-    private Optional<Position> previousPosition;
+    protected Optional<Position> previousPosition;
     //unique ID
-    private final int id;
+    protected final int id;
     //entity color
-    private Color entityColor;
+    protected Color entityColor;
     //positionManager which decides of the entity next move: move, die, revive or exit
     //once killed, dead for at least 2 rounds
-    private final int killTime;
+    protected final int killTime;
     //when an entity arrived to its arrival position, it is destroyed
-    private boolean destroyed;
+    protected boolean destroyed;
     //grid
-    private final Grid grid;
+    protected final Grid grid;
 
     public Entity(Position startPosition, Position arrivalPosition, int id) {
         this.startPosition = startPosition;
