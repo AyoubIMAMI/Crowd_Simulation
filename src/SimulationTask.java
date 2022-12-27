@@ -29,7 +29,11 @@ public class SimulationTask {
     List<Runnable> part2 = new ArrayList<Runnable>();
     List<Runnable> part3 = new ArrayList<Runnable>();
     List<Runnable> part4 = new ArrayList<Runnable>();
-    ExecutorService executor = Executors.newSingleThreadExecutor();
+    ExecutorService botRightExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService botLeftExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService topRightExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService topLeftExecutor = Executors.newSingleThreadExecutor();
+
 
 
     public SimulationTask(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
@@ -86,7 +90,13 @@ public class SimulationTask {
         while(!entitiesList.isEmpty()){
             System.out.println("tour n°"+tour++);
             for(EntityTask r : entitiesList){
-                results.add(executor.submit((Callable<EntityTurnResult>) r));
+                GridQuarterPosition quarterPosition = getQuarterPosition(r.getCurrentPosition());
+                switch (quarterPosition){
+                    case BOT_RIGHT -> results.add(botRightExecutor.submit((Callable<EntityTurnResult>) r));
+                    case BOT_LEFT -> results.add(botLeftExecutor.submit((Callable<EntityTurnResult>) r));
+                    case TOP_RIGHT -> results.add(topRightExecutor.submit((Callable<EntityTurnResult>) r));
+                    case TOP_LEFT -> results.add(topLeftExecutor.submit((Callable<EntityTurnResult>) r));
+                }
             }
             for(Future<EntityTurnResult> futurResult : results){
                 //System.out.println("wainting a result...");
@@ -120,5 +130,16 @@ public class SimulationTask {
         System.out.println("Program ran for " + totalTime / (Math.pow(10, 6)) + " milliseconds with a time sleep of " + sleepTime + " milliseconds.");
         System.out.println("Program ran for " + totalTime / (Math.pow(10, 9)) + " seconds with a time sleep of " + sleepTime + " milliseconds.");
         System.out.println("Program ran for " + totalTime / (6 * Math.pow(10, 10)) + " minutes with a time sleep of " + sleepTime + " milliseconds.");
+    }
+
+    private GridQuarterPosition getQuarterPosition(Position currentPosition) {
+        int i = currentPosition.getI();
+        int j = currentPosition.getJ();
+        if(i > grid.lines)
+            if(j > grid.columns) return GridQuarterPosition.BOT_RIGHT;
+            else return GridQuarterPosition.BOT_LEFT;
+        else
+            if(j > grid.columns) return GridQuarterPosition.TOP_RIGHT;
+            else return GridQuarterPosition.TOP_LEFT;
     }
 }
