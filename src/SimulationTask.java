@@ -29,7 +29,7 @@ public class SimulationTask {
     List<Runnable> part2 = new ArrayList<Runnable>();
     List<Runnable> part3 = new ArrayList<Runnable>();
     List<Runnable> part4 = new ArrayList<Runnable>();
-    ExecutorService executor = Executors.newFixedThreadPool(100);
+    ExecutorService executor = Executors.newSingleThreadExecutor();
 
 
     public SimulationTask(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
@@ -89,12 +89,13 @@ public class SimulationTask {
                 results.add(executor.submit((Callable<EntityTurnResult>) r));
             }
             for(Future<EntityTurnResult> futurResult : results){
-                System.out.println("wainting a result...");
+                //System.out.println("wainting a result...");
                 EntityTurnResult result = futurResult.get();
-                System.out.println("The result: "+result);
+                //System.out.println("The result: "+result);
                 if(result.isDestroyed())
                     removeEntityWithId(result.getId());
             }
+            System.out.println("fin du tour");
         }
 
         if (Main.displayMode)

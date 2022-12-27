@@ -33,8 +33,8 @@ public class Box {
         }
         if (entity.getId() < this.entity.get().getId())
             return MovementState.DIE;
-
-        wait();
+        if (entity.getId() == this.entity.get().getId()) throw new Exception("WOAAA");
+        //wait();
         return MovementState.IS_WAITING;
     }
 
@@ -42,7 +42,9 @@ public class Box {
      * Freed the box so another entity can go in
      */
     synchronized void depart(Entity entity) throws Exception {
-        if (!this.entity.get().equals(entity))
+        if(this.entity.isEmpty())
+            System.out.println("ERROR non entity on the box: "+entity);
+        else if (!this.entity.get().equals(entity))
             System.out.println("================ [SECURITY] Not the same entities! ================");
         else {
             this.entity = Optional.empty();
@@ -56,8 +58,13 @@ public class Box {
      * @throws InterruptedException exception
      */
     synchronized void setEntity(Entity entity) throws InterruptedException {
-        while (this.entity.isPresent())
+        while (this.entity.isPresent()){
+            System.out.println(this + "is waiting to set him in a box in setEntity(Entity entity) method of Box");
             wait();
+        }
+
+
+        if(this.entity.isPresent()) return;
 
         this.entity = Optional.of(entity);
     }

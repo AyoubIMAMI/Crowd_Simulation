@@ -71,7 +71,7 @@ public class Entity implements Runnable {
         System.out.println(this+": "+state);
         switch (state) {
             case MOVE -> moveTo(position);
-            case IS_WAITING -> { }
+            case IS_WAITING -> {}
             case DIE -> kill();
         }
     }
@@ -95,7 +95,7 @@ public class Entity implements Runnable {
 
         resetCurrentPosition();
         resetPreviousPosition();
-        sleep(killTime);
+        wait();
         revive();
     }
 
@@ -106,6 +106,7 @@ public class Entity implements Runnable {
         grid.getBox(this.startPosition.getI(), this.startPosition.getJ()).setEntity(this);
         if (Main.displayMode)
             Display.reappear(this);
+        System.out.println("Revive !!!");
     }
 
     /**

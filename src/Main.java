@@ -19,7 +19,7 @@ public class Main {
     static int entitiesNumber = 25;
 
     //sleep time in ms - needed to simulate movements on the display
-    static int sleepTime = 100;
+    static int sleepTime = 1;
     //kill time in ms - to simulate the time for which an entity (thread) will be dead
     //Be aware that if you set it at 0, there can be a situation where:
     // when an entity A die, it will instantly respawn,
@@ -47,12 +47,12 @@ public class Main {
 
             //initialize and run the simulation - compute execution time
             Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
-            //SimulationTask simulationTask = new SimulationTask(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
+            SimulationTask simulationTask = new SimulationTask(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
 
 
-            simulation.initialize();
-            simulation.launch();
-            simulation.time(startTime);
+            simulationTask.initialize();
+            simulationTask.launch();
+            simulationTask.time(startTime);
         }
     }
 }
