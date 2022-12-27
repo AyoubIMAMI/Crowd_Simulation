@@ -1,5 +1,7 @@
 import java.util.Optional;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Box which contains an entity
  */
@@ -18,27 +20,22 @@ public class Box {
     /**
      * Put the entity in the box if it is empty, otherwise die if the entity id is smaller or wait if its id is greater
      * than the one of the entity already in the box
+     *
      * @param entity that wants to go in the box
      * @return a state MOVE, DIE ord IS_WAITING depending on the situation described above
      * @throws Exception exception
      */
-    synchronized void arrive(Entity entity) throws Exception {
-        boolean gotKilled = false;
-        while(this.entity.isPresent()) {
-            if (entity.getId() < this.entity.get().getId()) {
-                entity.kill();
-                gotKilled = true;
-                break;
-            }
-            else
-                wait();
-        }
-
-        if (!gotKilled) {
+    synchronized MovementState arrive(Entity entity) throws Exception {
+        if (this.entity.isEmpty()) {
             Simulation.grid.getBox(entity.getCurrentPosition().getI(), entity.getCurrentPosition().getJ()).depart(entity);
-            entity.moveTo(this.boxPosition);
             this.entity = Optional.of(entity);
+            return MovementState.MOVE;
         }
+        if (entity.getId() < this.entity.get().getId())
+            return MovementState.DIE;
+
+        //wait();
+        return MovementState.IS_WAITING;
     }
 
     /**

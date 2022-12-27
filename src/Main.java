@@ -11,12 +11,12 @@ public class Main {
     static long startTime;
 
     //grid of size lines*columns
-    static int lines = 100;
-    static int columns = 100;
+    static int lines = 10;
+    static int columns = 10;
 
     //number of entities on the grid - this number must be smaller than the grid of size lines*columns
     //entities cannot spawn on each other
-    static int entitiesNumber = 1000;
+    static int entitiesNumber = 25;
 
     //sleep time in ms - needed to simulate movements on the display
     static int sleepTime = 100;
@@ -35,24 +35,24 @@ public class Main {
     static boolean csvMode = false;
 
     public static void main(String[] args) throws Exception {
-while(true) {
-    //create the grid on which entities move
-    Grid grid = new Grid(lines, columns);
-    //create the position manager which decides of the entity next move: move, die, revive or exit
-    PositionManager positionManager = new PositionManager(grid);
-    //create an instance to display the grid
-    Display display = new Display(grid);
-    //create the csvManager
-    CsvManager csvManager = new CsvManager("input.csv");
+        while(true){
+            //create the grid on which entities move
+            Grid grid = new Grid(lines, columns);
+            //create the position manager which decides of the entity next move: move, die, revive or exit
+            PositionManager positionManager = new PositionManager(grid);
+            //create an instance to display the grid
+            Display display = new Display(grid);
+            //create the csvManager
+            CsvManager csvManager = new CsvManager("input.csv");
 
-    //initialize and run the simulation - compute execution time
-    Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
-    //SimulationTask simulationTask = new SimulationTask(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
+            //initialize and run the simulation - compute execution time
+            Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
+            //SimulationTask simulationTask = new SimulationTask(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
 
 
-    simulation.initialize();
-    simulation.launch();
-    simulation.time(startTime);
-}
+            simulation.initialize();
+            simulation.launch();
+            simulation.time(startTime);
+        }
     }
 }

@@ -26,7 +26,7 @@ public class Entity implements Runnable {
     //when an entity arrived to its arrival position, it is destroyed
     protected boolean destroyed;
     //grid
-    protected final Grid grid;
+    protected Grid grid;
 
     public Entity(Position startPosition, Position arrivalPosition, int id) {
         this.startPosition = startPosition;
@@ -66,7 +66,14 @@ public class Entity implements Runnable {
      */
     public void move() throws Exception {
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
-        grid.getBox(position.getI(), position.getJ()).arrive(this);
+        //grid.getBox(position.getI(), position.getJ()).arrive(this);
+        MovementState state = grid.getBox(position.getI(), position.getJ()).arrive(this);
+        System.out.println(this+": "+state);
+        switch (state) {
+            case MOVE -> moveTo(position);
+            case IS_WAITING -> { }
+            case DIE -> kill();
+        }
     }
 
     /**
