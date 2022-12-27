@@ -34,7 +34,7 @@ public class Box {
         if (entity.getId() < this.entity.get().getId())
             return MovementState.DIE;
 
-        //wait();
+        wait();
         return MovementState.IS_WAITING;
     }
 
