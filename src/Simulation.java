@@ -67,7 +67,7 @@ public class Simulation{
                 Entity entity = new Entity(startPosition, arrivalPosition, id);
                 grid.addEntity(entity);
                 entitiesList.add(entity);
-
+                TaskExecutorManager.placeInExecutor(entity, GridQuarterPosition.getQuarterPosition(entity.getCurrentPosition(), grid));
             }
         }
     }
@@ -77,7 +77,6 @@ public class Simulation{
      * @throws InterruptedException sleepTime
      */
     public void launch() throws InterruptedException, ExecutionException {
-        List<Future<EntityTurnResult>> results = new ArrayList<>();
         if (Main.displayMode)
             display.displayGrid(grid);
         //let the display appears
@@ -109,6 +108,5 @@ public class Simulation{
         System.out.println("Program ran for " + totalTime / (Math.pow(10, 9)) + " seconds with a time sleep of " + sleepTime + " milliseconds.");
         System.out.println("Program ran for " + totalTime / (6 * Math.pow(10, 10)) + " minutes with a time sleep of " + sleepTime + " milliseconds.");
     }
-
 
 }

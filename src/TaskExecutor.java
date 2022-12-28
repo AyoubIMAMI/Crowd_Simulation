@@ -34,7 +34,7 @@ public class TaskExecutor {
             for(Entity entity : currentEntities) {
                 GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.getCurrentPosition(), grid);
                 if (!quarterPosition.equals(this.quarter)){
-                    TaskExecutorManager.changeExecutor(entity, quarterPosition);
+                    TaskExecutorManager.placeInExecutor(entity, quarterPosition);
                     this.currentEntities.remove(entity);
                 }
             }

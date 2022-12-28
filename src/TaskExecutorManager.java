@@ -16,7 +16,7 @@ public class TaskExecutorManager {
     }
 
 
-    public static void changeExecutor(Entity entity, GridQuarterPosition quarterPosition) {
+    public static void placeInExecutor(Entity entity, GridQuarterPosition quarterPosition) {
         switch (quarterPosition){
             case BOT_RIGHT -> botRightExecutor.addNewEntity(entity);
             case BOT_LEFT -> botLeftExecutor.addNewEntity(entity);
@@ -26,10 +26,10 @@ public class TaskExecutorManager {
     }
 
     public void runAll() throws ExecutionException, InterruptedException {
+        topLeftExecutor.execute();
         topRightExecutor.execute();
         botRightExecutor.execute();
         botLeftExecutor.execute();
-        topLeftExecutor.execute();
     }
 
 
