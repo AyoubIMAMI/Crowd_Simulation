@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class TaskExecutor {
+public class TaskExecutor extends Thread{
 
     private final Grid grid;
     private final GridQuarterPosition quarter;
@@ -17,19 +17,26 @@ public class TaskExecutor {
         this.currentEntities = new ArrayList<>();
         this.nextNewEntities = new ArrayList<>();
     }
-
-    public void execute() throws ExecutionException, InterruptedException {
+    @Override
+    public void run() {
         List<Future<EntityTurnResult>> results = new ArrayList<>();
 
         while(!Simulation.entitiesList.isEmpty()) {
-           copyNextEntitiesIntoCurrentEntities();
+            copyNextEntitiesIntoCurrentEntities();
             for(Entity entity : currentEntities){
                 results.add(executor.submit((Callable<EntityTurnResult>) entity));
             }
             for(Future<EntityTurnResult> futureResult : results){
-                EntityTurnResult result = futureResult.get();
-                if(result.isDestroyed())
-                    Simulation.removeEntityWithId(result.getId());
+                EntityTurnResult result = null;
+                try {
+                    result = futureResult.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+                if(result.isDestroyed()){
+                    Simulation.removeEntityWithId(Simulation.entitiesList, result.getId());
+                    Simulation.removeEntityWithId(this.currentEntities, result.getId());
+                }
             }
             for(Entity entity : currentEntities) {
                 GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.getCurrentPosition(), grid);
@@ -69,4 +76,6 @@ public class TaskExecutor {
     synchronized void addNewEntity(Entity entity){
         this.nextNewEntities.add(entity);
     }
+
+
 }

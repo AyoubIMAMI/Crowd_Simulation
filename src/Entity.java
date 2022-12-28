@@ -128,6 +128,7 @@ public class Entity implements Callable<EntityTurnResult> {
      * When an entity arrived to its arrival position, it is destroyed: removed from its box
      */
     public void destroy() throws Exception {
+        System.out.println("Destroy");
         Box box = grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ());
         Entity e = box.getEntity().get();
         box.depart(this);
