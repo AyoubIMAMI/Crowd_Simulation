@@ -7,7 +7,7 @@ import static java.lang.Thread.sleep;
 /**
  * Entity which move on the grid
  */
-public class Entity implements Runnable {
+public class Entity implements Callable<EntityTurnResult> {
     //starting position
     protected final Position startPosition;
     //arrival position
@@ -28,6 +28,9 @@ public class Entity implements Runnable {
     //grid
     protected Grid grid;
 
+    int canRevive = 0;
+    boolean dead = false;
+
     public Entity(Position startPosition, Position arrivalPosition, int id) {
         this.startPosition = startPosition;
         this.previousPosition = Optional.empty();
@@ -43,23 +46,32 @@ public class Entity implements Runnable {
      * Makes all the decision about the entity movement: move, die, revive and update the grid appearance
      */
     @Override
-    public void run() {
-        try {
-            while (!isDestroyed()) {
-                if (!isArrived())
-                    move();
-                else
-                    destroy();
-
-                if (Main.displayMode) {
-                    Display.updateGrid(this);
-                    sleep(Simulation.sleepTime);
-                }
+    public EntityTurnResult call() throws Exception {
+        if(dead){
+            if(canRevive >= 2){
+                dead = false;
+                revive();
             }
-        } catch (Exception e){
-            System.out.println(e);
+            else
+                canRevive +=1;
         }
+        else if (!isArrived())
+            move();
+        else
+            destroy();
+
+        if (Main.displayMode) {
+            Display.updateGrid(this);
+            sleep(Simulation.sleepTime);
+        }
+
+        return getEntityTurnResult();
     }
+
+    protected EntityTurnResult getEntityTurnResult() {
+        return new EntityTurnResult(this.id, this.destroyed);
+    }
+
 
     /**
      * If possible, change the entity previous position with the current one, and the current one with the new one
@@ -95,18 +107,21 @@ public class Entity implements Runnable {
 
         resetCurrentPosition();
         resetPreviousPosition();
-        wait();
-        revive();
+        dead = true;
+        System.out.println("dead :(");
     }
 
     /**
      * Revive entity: put it in its start box if it is empty, otherwise wait and update appearance
      */
     public void revive() throws InterruptedException {
-        grid.getBox(this.startPosition.getI(), this.startPosition.getJ()).setEntity(this);
-        if (Main.displayMode)
-            Display.reappear(this);
-        System.out.println("Revive !!!");
+        if(grid.getBox(this.startPosition.getI(), this.startPosition.getJ()).getEntity().isEmpty()){
+            grid.getBox(this.startPosition.getI(), this.startPosition.getJ()).setEntity(this);
+            if (Main.displayMode)
+                Display.reappear(this);
+            System.out.println("Revive !!!");
+        }
+        else dead = true;
     }
 
     /**

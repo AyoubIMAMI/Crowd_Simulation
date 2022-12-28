@@ -47,12 +47,11 @@ public class Main {
 
             //initialize and run the simulation - compute execution time
             Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
-            SimulationTask simulationTask = new SimulationTask(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
 
 
-            simulationTask.initialize();
-            simulationTask.launch();
-            simulationTask.time(startTime);
+            simulation.initialize();
+            simulation.launch();
+            simulation.time(startTime);
         }
     }
 }

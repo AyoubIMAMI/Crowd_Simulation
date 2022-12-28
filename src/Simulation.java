@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 import static java.lang.Thread.sleep;
 
 /**
  * Initialize and run the simulation
  */
-public class Simulation {
+public class Simulation{
     //grid on which entities move
     public static Grid grid;
     //number of entities in the crowd
@@ -23,6 +24,13 @@ public class Simulation {
     static long sleepTime;
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     boolean csvMode;
+
+    ExecutorService botRightExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService botLeftExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService topRightExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService topLeftExecutor = Executors.newSingleThreadExecutor();
+
+
 
     public Simulation(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
         Simulation.sleepTime = sleepTime;
@@ -47,6 +55,7 @@ public class Simulation {
                 display.setGrid(grid);
         }
         else{
+
             for(int id = 0; id < entitiesNumber; id++){
                 Position startPosition = positionManager.getRandomPosition();
                 while(positionManager.isPositionTaken(startPosition))
@@ -56,6 +65,7 @@ public class Simulation {
                 Entity entity = new Entity(startPosition, arrivalPosition, id);
                 grid.addEntity(entity);
                 entitiesList.add(entity);
+
             }
         }
     }
@@ -64,25 +74,46 @@ public class Simulation {
      * Run the simulation - round by round
      * @throws InterruptedException sleepTime
      */
-    public void launch() throws InterruptedException {
+    public void launch() throws InterruptedException, ExecutionException {
+        List<Future<EntityTurnResult>> results = new ArrayList<>();
         if (Main.displayMode)
             display.displayGrid(grid);
         //let the display appears
         sleep(sleepTime);
 
-        List<Thread> allThreads = new ArrayList<>();
         Main.startTime = System.nanoTime();
-        for (Entity entity : entitiesList) {
-            Thread thread = new Thread(entity);
-            allThreads.add(thread);
-            thread.start();
+        int tour =0;
+        while(!entitiesList.isEmpty()){
+            System.out.println("tour n°"+tour++);
+            for(Entity r : entitiesList){
+                GridQuarterPosition quarterPosition = getQuarterPosition(r.getCurrentPosition());
+                switch (quarterPosition){
+                    case BOT_RIGHT -> results.add(botRightExecutor.submit((Callable<EntityTurnResult>) r));
+                    case BOT_LEFT -> results.add(botLeftExecutor.submit((Callable<EntityTurnResult>) r));
+                    case TOP_RIGHT -> results.add(topRightExecutor.submit((Callable<EntityTurnResult>) r));
+                    case TOP_LEFT -> results.add(topLeftExecutor.submit((Callable<EntityTurnResult>) r));
+                }
+            }
+            for(Future<EntityTurnResult> futurResult : results){
+                //System.out.println("wainting a result...");
+                EntityTurnResult result = futurResult.get();
+                //System.out.println("The result: "+result);
+                if(result.isDestroyed())
+                    removeEntityWithId(result.getId());
+            }
+            System.out.println("fin du tour");
         }
 
-        for (Thread t : allThreads) {
-            t.join();
-        }
         if (Main.displayMode)
             display.close();
+    }
+
+    private void removeEntityWithId(int id) {
+        for (Entity entity : entitiesList)
+            if (entity.getId() == id){
+                entitiesList.remove(entity);
+                break;
+            }
     }
 
     /**
@@ -95,5 +126,16 @@ public class Simulation {
         System.out.println("Program ran for " + totalTime / (Math.pow(10, 6)) + " milliseconds with a time sleep of " + sleepTime + " milliseconds.");
         System.out.println("Program ran for " + totalTime / (Math.pow(10, 9)) + " seconds with a time sleep of " + sleepTime + " milliseconds.");
         System.out.println("Program ran for " + totalTime / (6 * Math.pow(10, 10)) + " minutes with a time sleep of " + sleepTime + " milliseconds.");
+    }
+
+    private GridQuarterPosition getQuarterPosition(Position currentPosition) {
+        int i = currentPosition.getI();
+        int j = currentPosition.getJ();
+        if(i > grid.lines)
+            if(j > grid.columns) return GridQuarterPosition.BOT_RIGHT;
+            else return GridQuarterPosition.BOT_LEFT;
+        else
+        if(j > grid.columns) return GridQuarterPosition.TOP_RIGHT;
+        else return GridQuarterPosition.TOP_LEFT;
     }
 }
