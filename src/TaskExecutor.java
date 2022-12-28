@@ -3,15 +3,19 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class TaskExecutor {
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
-    private List<Entity> currentEntities = new ArrayList<>();
-    private List<Entity> nextNewEntities = new ArrayList<>();
-    private GridQuarterPosition quarter;
-    private Grid grid;
 
-    public TaskExecutor(GridQuarterPosition quarter, Grid grid) {
+    private final Grid grid;
+    private final GridQuarterPosition quarter;
+    private final ExecutorService executor;
+    private List<Entity> currentEntities;
+    private List<Entity> nextNewEntities;
+
+    public TaskExecutor(Grid grid, GridQuarterPosition quarter) {
         this.quarter = quarter;
         this.grid = grid;
+        this.executor = Executors.newSingleThreadExecutor();
+        this.currentEntities = new ArrayList<>();
+        this.nextNewEntities = new ArrayList<>();
     }
 
     public void execute() throws ExecutionException, InterruptedException {
@@ -22,8 +26,8 @@ public class TaskExecutor {
             for(Entity entity : currentEntities){
                 results.add(executor.submit((Callable<EntityTurnResult>) entity));
             }
-            for(Future<EntityTurnResult> futurResult : results){
-                EntityTurnResult result = futurResult.get();
+            for(Future<EntityTurnResult> futureResult : results){
+                EntityTurnResult result = futureResult.get();
                 if(result.isDestroyed())
                     Simulation.removeEntityWithId(result.getId());
             }
@@ -50,7 +54,7 @@ public class TaskExecutor {
         return quarter;
     }
 
-    public ExecutorService getBotRightExecutor() {
+    public ExecutorService getExecutor() {
         return executor;
     }
 

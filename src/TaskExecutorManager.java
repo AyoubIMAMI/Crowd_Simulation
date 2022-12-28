@@ -1,18 +1,18 @@
-import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 public class TaskExecutorManager {
     Grid grid;
+    static TaskExecutor topRightExecutor;
     static TaskExecutor botRightExecutor;
     static TaskExecutor botLeftExecutor;
-    static TaskExecutor topRightExecutor;
     static TaskExecutor topLeftExecutor;
 
     public TaskExecutorManager(Grid grid) {
         this.grid = grid;
-        botRightExecutor = new TaskExecutor(GridQuarterPosition.BOT_RIGHT, grid);
-        botLeftExecutor = new TaskExecutor(GridQuarterPosition.BOT_LEFT, grid);
-        topRightExecutor = new TaskExecutor(GridQuarterPosition.TOP_RIGHT, grid);
-        topLeftExecutor = new TaskExecutor(GridQuarterPosition.TOP_LEFT, grid);
+        topRightExecutor = new TaskExecutor(grid, GridQuarterPosition.TOP_RIGHT);
+        botRightExecutor = new TaskExecutor(grid, GridQuarterPosition.BOT_RIGHT);
+        botLeftExecutor = new TaskExecutor(grid, GridQuarterPosition.BOT_LEFT);
+        topLeftExecutor = new TaskExecutor(grid, GridQuarterPosition.TOP_LEFT);
     }
 
 
@@ -23,5 +23,20 @@ public class TaskExecutorManager {
             case TOP_RIGHT -> topRightExecutor.addNewEntity(entity);
             case TOP_LEFT -> topLeftExecutor.addNewEntity(entity);
         }
+    }
+
+    public void runAll() throws ExecutionException, InterruptedException {
+        topRightExecutor.execute();
+        botRightExecutor.execute();
+        botLeftExecutor.execute();
+        topLeftExecutor.execute();
+    }
+
+
+    public void shutdownAll() {
+        topRightExecutor.getExecutor().shutdown();
+        botRightExecutor.getExecutor().shutdown();
+        botLeftExecutor.getExecutor().shutdown();
+        topLeftExecutor.getExecutor().shutdown();
     }
 }
