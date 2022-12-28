@@ -115,13 +115,17 @@ public class Entity implements Callable<EntityTurnResult> {
      * Revive entity: put it in its start box if it is empty, otherwise wait and update appearance
      */
     public void revive() throws InterruptedException {
-        if(grid.getBox(this.startPosition.getI(), this.startPosition.getJ()).getEntity().isEmpty()){
-            grid.getBox(this.startPosition.getI(), this.startPosition.getJ()).setEntity(this);
-            if (Main.displayMode)
-                Display.reappear(this);
-            System.out.println("Revive !!!");
+        Box b = grid.getBox(this.startPosition.getI(), this.startPosition.getJ());
+        synchronized (b){
+            if(b.getEntity().isEmpty()){
+                b.setEntity(this);
+                canRevive = 0;
+                if (Main.displayMode)
+                    Display.reappear(this);
+                System.out.println("Revive !!!");
+            }
+            else dead = true;
         }
-        else dead = true;
     }
 
     /**

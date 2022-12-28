@@ -62,8 +62,6 @@ public class Box {
             System.out.println(this + "is waiting to set him in a box in setEntity(Entity entity) method of Box");
             wait();
         }
-
-
         if(this.entity.isPresent()) return;
 
         this.entity = Optional.of(entity);

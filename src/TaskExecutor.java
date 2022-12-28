@@ -13,7 +13,7 @@ public class TaskExecutor extends Thread{
     public TaskExecutor(Grid grid, GridQuarterPosition quarter) {
         this.quarter = quarter;
         this.grid = grid;
-        this.executor = Executors.newSingleThreadExecutor();
+        this.executor = Executors.newFixedThreadPool(1);
         this.currentEntities = new ArrayList<>();
         this.nextNewEntities = new ArrayList<>();
     }
@@ -38,13 +38,15 @@ public class TaskExecutor extends Thread{
                     Simulation.removeEntityWithId(this.currentEntities, result.getId());
                 }
             }
+            List<Entity> removable = new ArrayList<>();
             for(Entity entity : currentEntities) {
                 GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.getCurrentPosition(), grid);
                 if (!quarterPosition.equals(this.quarter)){
-                    TaskExecutorManager.placeInExecutor(entity, quarterPosition);
-                    this.currentEntities.remove(entity);
+                    TaskExecutorManager.changeExecutor(entity, quarterPosition);
+                    removable.add(entity);
                 }
             }
+            this.currentEntities.removeAll(removable);
         }
     }
 

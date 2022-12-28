@@ -11,15 +11,15 @@ public class Main {
     static long startTime;
 
     //grid of size lines*columns
-    static int lines = 10;
-    static int columns = 10;
+    static int lines = 100;
+    static int columns = 100;
 
     //number of entities on the grid - this number must be smaller than the grid of size lines*columns
     //entities cannot spawn on each other
-    static int entitiesNumber = 25;
+    static int entitiesNumber = 1000;
 
     //sleep time in ms - needed to simulate movements on the display
-    static int sleepTime = 1;
+    static int sleepTime = 0;
     //kill time in ms - to simulate the time for which an entity (thread) will be dead
     //Be aware that if you set it at 0, there can be a situation where:
     // when an entity A die, it will instantly respawn,
@@ -35,7 +35,7 @@ public class Main {
     static boolean csvMode = false;
 
     public static void main(String[] args) throws Exception {
-        while(true){
+        //while(true){
             //create the grid on which entities move
             Grid grid = new Grid(lines, columns);
             //create the position manager which decides of the entity next move: move, die, revive or exit
@@ -51,6 +51,6 @@ public class Main {
             simulation.initialize();
             simulation.launch();
             simulation.time(startTime);
-        }
+        //}
     }
 }
