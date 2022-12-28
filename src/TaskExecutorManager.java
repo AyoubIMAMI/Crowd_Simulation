@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class TaskExecutorManager {
@@ -28,7 +29,7 @@ public class TaskExecutorManager {
     public void runAll(List<Entity> entities) throws ExecutionException, InterruptedException {
         for(Entity entity: entities){
             GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.currentPosition, grid);
-            changeExecutor(entity, quarterPosition);
+            placeInExecutor(entity, quarterPosition);
         }
         topRightExecutor.start();
         botRightExecutor.start();
