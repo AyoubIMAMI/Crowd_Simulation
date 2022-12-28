@@ -25,11 +25,15 @@ public class TaskExecutorManager {
         }
     }
 
-    public void runAll() throws ExecutionException, InterruptedException {
-        topLeftExecutor.execute();
-        topRightExecutor.execute();
-        botRightExecutor.execute();
-        botLeftExecutor.execute();
+    public void runAll(List<Entity> entities) throws ExecutionException, InterruptedException {
+        for(Entity entity: entities){
+            GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.currentPosition, grid);
+            changeExecutor(entity, quarterPosition);
+        }
+        topRightExecutor.start();
+        botRightExecutor.start();
+        botLeftExecutor.start();
+        topLeftExecutor.start();
     }
 
 
@@ -38,5 +42,12 @@ public class TaskExecutorManager {
         botRightExecutor.getExecutor().shutdown();
         botLeftExecutor.getExecutor().shutdown();
         topLeftExecutor.getExecutor().shutdown();
+    }
+
+    public void joinAll() throws InterruptedException {
+        topRightExecutor.join();
+        botRightExecutor.join();
+        botLeftExecutor.join();
+        topLeftExecutor.join();
     }
 }

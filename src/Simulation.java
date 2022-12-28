@@ -83,16 +83,17 @@ public class Simulation{
         sleep(sleepTime);
 
         Main.startTime = System.nanoTime();
-        taskExecutorManager.runAll();
+        taskExecutorManager.runAll(entitiesList);
+        taskExecutorManager.joinAll();
         taskExecutorManager.shutdownAll();
         if (Main.displayMode)
             display.close();
     }
 
-    static synchronized public void removeEntityWithId(int id) {
-        for (Entity entity : entitiesList)
+    static synchronized public void removeEntityWithId(List<Entity> entities, int id) {
+        for (Entity entity : entities)
             if (entity.getId() == id){
-                entitiesList.remove(entity);
+                entities.remove(entity);
                 break;
             }
     }
