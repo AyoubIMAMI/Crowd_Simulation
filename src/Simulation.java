@@ -25,11 +25,12 @@ public class Simulation{
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     boolean csvMode;
 
-    ExecutorService botRightExecutor = Executors.newSingleThreadExecutor();
+    /*ExecutorService botRightExecutor = Executors.newSingleThreadExecutor();
     ExecutorService botLeftExecutor = Executors.newSingleThreadExecutor();
     ExecutorService topRightExecutor = Executors.newSingleThreadExecutor();
-    ExecutorService topLeftExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService topLeftExecutor = Executors.newSingleThreadExecutor();*/
 
+    TaskExecutorManager taskExecutorManager;
 
 
     public Simulation(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
@@ -41,6 +42,7 @@ public class Simulation{
         this.csvManager = csvManager;
         this.csvMode = csvMode;
         entitiesList = new ArrayList<>();
+        taskExecutorManager =  new TaskExecutorManager(grid);
     }
 
     /**
@@ -82,33 +84,13 @@ public class Simulation{
         sleep(sleepTime);
 
         Main.startTime = System.nanoTime();
-        int tour =0;
-        while(!entitiesList.isEmpty()){
-            System.out.println("tour n°"+tour++);
-            for(Entity r : entitiesList){
-                GridQuarterPosition quarterPosition = getQuarterPosition(r.getCurrentPosition());
-                switch (quarterPosition){
-                    case BOT_RIGHT -> results.add(botRightExecutor.submit((Callable<EntityTurnResult>) r));
-                    case BOT_LEFT -> results.add(botLeftExecutor.submit((Callable<EntityTurnResult>) r));
-                    case TOP_RIGHT -> results.add(topRightExecutor.submit((Callable<EntityTurnResult>) r));
-                    case TOP_LEFT -> results.add(topLeftExecutor.submit((Callable<EntityTurnResult>) r));
-                }
-            }
-            for(Future<EntityTurnResult> futurResult : results){
-                //System.out.println("wainting a result...");
-                EntityTurnResult result = futurResult.get();
-                //System.out.println("The result: "+result);
-                if(result.isDestroyed())
-                    removeEntityWithId(result.getId());
-            }
-            System.out.println("fin du tour");
-        }
-
+        taskExecutorManager.runAll();
+        taskExecutorManager.joinAll();
         if (Main.displayMode)
             display.close();
     }
 
-    private void removeEntityWithId(int id) {
+    static synchronized public void removeEntityWithId(int id) {
         for (Entity entity : entitiesList)
             if (entity.getId() == id){
                 entitiesList.remove(entity);
@@ -128,14 +110,5 @@ public class Simulation{
         System.out.println("Program ran for " + totalTime / (6 * Math.pow(10, 10)) + " minutes with a time sleep of " + sleepTime + " milliseconds.");
     }
 
-    private GridQuarterPosition getQuarterPosition(Position currentPosition) {
-        int i = currentPosition.getI();
-        int j = currentPosition.getJ();
-        if(i > grid.lines)
-            if(j > grid.columns) return GridQuarterPosition.BOT_RIGHT;
-            else return GridQuarterPosition.BOT_LEFT;
-        else
-        if(j > grid.columns) return GridQuarterPosition.TOP_RIGHT;
-        else return GridQuarterPosition.TOP_LEFT;
-    }
+
 }
