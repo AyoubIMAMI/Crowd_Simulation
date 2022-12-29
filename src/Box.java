@@ -59,7 +59,6 @@ public class Box {
      */
     synchronized void setEntity(Entity entity) throws InterruptedException {
         while (this.entity.isPresent()){
-            System.out.println(this + "is waiting to set him in a box in setEntity(Entity entity) method of Box");
             wait();
         }
         if(this.entity.isPresent()) return;

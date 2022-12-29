@@ -29,13 +29,13 @@ public class Main {
     static int killTime = 1000;
 
     //true: display the grid and the entities
-    static boolean displayMode = true;
+    static boolean displayMode = false;
 
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     static boolean csvMode = false;
 
     public static void main(String[] args) throws Exception {
-        //while(true){
+        for(int i = 1; i < 1002; i += 100){
             //create the grid on which entities move
             Grid grid = new Grid(lines, columns);
             //create the position manager which decides of the entity next move: move, die, revive or exit
@@ -46,11 +46,13 @@ public class Main {
             CsvManager csvManager = new CsvManager("input.csv");
 
             //initialize and run the simulation - compute execution time
-            Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
+            Simulation simulation = new Simulation(grid, i, positionManager, display, sleepTime, csvManager, csvMode);
 
             simulation.initialize();
             simulation.launch();
             simulation.time(startTime);
-        //}
+
+            System.out.println(i+"\n");
+        }
     }
 }

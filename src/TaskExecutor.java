@@ -24,10 +24,10 @@ public class TaskExecutor extends Thread{
         while(!Simulation.entitiesList.isEmpty()) {
             copyNextEntitiesIntoCurrentEntities();
             for(Entity entity : currentEntities){
-                results.add(executor.submit((Callable<EntityTurnResult>) entity));
+                results.add(executor.submit(entity));
             }
             for(Future<EntityTurnResult> futureResult : results){
-                EntityTurnResult result = null;
+                EntityTurnResult result;
                 try {
                     result = futureResult.get();
                 } catch (InterruptedException | ExecutionException e) {

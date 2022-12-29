@@ -80,7 +80,7 @@ public class Entity implements Callable<EntityTurnResult> {
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         //grid.getBox(position.getI(), position.getJ()).arrive(this);
         MovementState state = grid.getBox(position.getI(), position.getJ()).arrive(this);
-        System.out.println(this+": "+state);
+        //System.out.println(this+": "+state);
         switch (state) {
             case MOVE -> moveTo(position);
             case IS_WAITING -> {}
@@ -108,7 +108,7 @@ public class Entity implements Callable<EntityTurnResult> {
         resetCurrentPosition();
         resetPreviousPosition();
         dead = true;
-        System.out.println("dead :(");
+        //System.out.println("dead :(");
     }
 
     /**
@@ -122,7 +122,7 @@ public class Entity implements Callable<EntityTurnResult> {
                 canRevive = 0;
                 if (Main.displayMode)
                     Display.reappear(this);
-                System.out.println("Revive !!!");
+                //System.out.println("Revive !!!");
             }
             else dead = true;
         }
@@ -132,7 +132,6 @@ public class Entity implements Callable<EntityTurnResult> {
      * When an entity arrived to its arrival position, it is destroyed: removed from its box
      */
     public void destroy() throws Exception {
-        System.out.println("Destroy");
         Box box = grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ());
         Entity e = box.getEntity().get();
         box.depart(this);
