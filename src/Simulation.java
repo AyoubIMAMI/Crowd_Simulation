@@ -25,6 +25,11 @@ public class Simulation{
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     boolean csvMode;
 
+    /*ExecutorService botRightExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService botLeftExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService topRightExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService topLeftExecutor = Executors.newSingleThreadExecutor();*/
+
     TaskExecutorManager taskExecutorManager;
 
 
@@ -52,6 +57,7 @@ public class Simulation{
                 display.setGrid(grid);
         }
         else{
+
             for(int id = 0; id < entitiesNumber; id++){
                 Position startPosition = positionManager.getRandomPosition();
                 while(positionManager.isPositionTaken(startPosition))
@@ -62,8 +68,6 @@ public class Simulation{
                 grid.addEntity(entity);
                 entitiesList.add(entity);
 
-                GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.currentPosition, grid);
-                TaskExecutorManager.placeInExecutor(entity, quarterPosition);
             }
         }
     }
@@ -73,13 +77,14 @@ public class Simulation{
      * @throws InterruptedException sleepTime
      */
     public void launch() throws InterruptedException, ExecutionException {
+        List<Future<EntityTurnResult>> results = new ArrayList<>();
         if (Main.displayMode)
             display.displayGrid(grid);
         //let the display appears
         sleep(sleepTime);
 
-        taskExecutorManager.initializeAll(entitiesList);
         Main.startTime = System.nanoTime();
+        taskExecutorManager.initializeAll(entitiesList);
         taskExecutorManager.runAll();
         taskExecutorManager.joinAll();
         taskExecutorManager.shutdownAll();

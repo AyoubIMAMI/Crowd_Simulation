@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class TaskExecutor extends Thread{
+    public class TaskExecutor extends Thread{
 
     private final Grid grid;
     private final GridQuarterPosition quarter;
@@ -24,10 +24,10 @@ public class TaskExecutor extends Thread{
         while(!Simulation.entitiesList.isEmpty()) {
             copyNextEntitiesIntoCurrentEntities();
             for(Entity entity : currentEntities){
-                results.add(executor.submit(entity));
+                results.add(executor.submit((Callable<EntityTurnResult>) entity));
             }
             for(Future<EntityTurnResult> futureResult : results){
-                EntityTurnResult result;
+                EntityTurnResult result = null;
                 try {
                     result = futureResult.get();
                 } catch (InterruptedException | ExecutionException e) {
@@ -42,7 +42,7 @@ public class TaskExecutor extends Thread{
             for(Entity entity : currentEntities) {
                 GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.getCurrentPosition(), grid);
                 if (!quarterPosition.equals(this.quarter)){
-                    TaskExecutorManager.placeInExecutor(entity, quarterPosition);
+                    TaskExecutorManager.placeExecutor(entity, quarterPosition);
                     removable.add(entity);
                 }
             }

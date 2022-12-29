@@ -35,7 +35,7 @@ public class Main {
     static boolean csvMode = false;
 
     public static void main(String[] args) throws Exception {
-        for(int i = 1; i < 1002; i += 100){
+        while(true){
             //create the grid on which entities move
             Grid grid = new Grid(lines, columns);
             //create the position manager which decides of the entity next move: move, die, revive or exit
@@ -46,13 +46,11 @@ public class Main {
             CsvManager csvManager = new CsvManager("input.csv");
 
             //initialize and run the simulation - compute execution time
-            Simulation simulation = new Simulation(grid, i, positionManager, display, sleepTime, csvManager, csvMode);
+            Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
 
             simulation.initialize();
             simulation.launch();
             simulation.time(startTime);
-
-            System.out.println(i+"\n");
         }
     }
 }

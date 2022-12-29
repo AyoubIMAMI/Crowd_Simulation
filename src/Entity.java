@@ -80,7 +80,6 @@ public class Entity implements Callable<EntityTurnResult> {
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         //grid.getBox(position.getI(), position.getJ()).arrive(this);
         MovementState state = grid.getBox(position.getI(), position.getJ()).arrive(this);
-        //System.out.println(this+": "+state);
         switch (state) {
             case MOVE -> moveTo(position);
             case IS_WAITING -> {}
@@ -108,7 +107,6 @@ public class Entity implements Callable<EntityTurnResult> {
         resetCurrentPosition();
         resetPreviousPosition();
         dead = true;
-        //System.out.println("dead :(");
     }
 
     /**
@@ -122,7 +120,6 @@ public class Entity implements Callable<EntityTurnResult> {
                 canRevive = 0;
                 if (Main.displayMode)
                     Display.reappear(this);
-                //System.out.println("Revive !!!");
             }
             else dead = true;
         }
