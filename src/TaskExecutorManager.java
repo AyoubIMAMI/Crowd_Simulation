@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class TaskExecutorManager {
     Grid grid;
@@ -16,8 +15,7 @@ public class TaskExecutorManager {
         topLeftExecutor = new TaskExecutor(grid, GridQuarterPosition.TOP_LEFT);
     }
 
-
-    public static void changeExecutor(Entity entity, GridQuarterPosition quarterPosition) {
+    public static void placeInExecutor(Entity entity, GridQuarterPosition quarterPosition) {
         switch (quarterPosition){
             case BOT_RIGHT -> botRightExecutor.addNewEntity(entity);
             case BOT_LEFT -> botLeftExecutor.addNewEntity(entity);
@@ -29,7 +27,7 @@ public class TaskExecutorManager {
     public void initializeAll(List<Entity> entities){
         for(Entity entity: entities){
             GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.currentPosition, grid);
-            placeExecutor(entity, quarterPosition);
+            placeInExecutor(entity, quarterPosition);
         }
     }
 
@@ -39,7 +37,6 @@ public class TaskExecutorManager {
         botLeftExecutor.start();
         topLeftExecutor.start();
     }
-
 
     public void shutdownAll() {
         topRightExecutor.getExecutor().shutdown();

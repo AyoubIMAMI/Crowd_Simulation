@@ -52,7 +52,6 @@ public class Simulation{
                 display.setGrid(grid);
         }
         else{
-
             for(int id = 0; id < entitiesNumber; id++){
                 Position startPosition = positionManager.getRandomPosition();
                 while(positionManager.isPositionTaken(startPosition))
@@ -64,7 +63,7 @@ public class Simulation{
                 entitiesList.add(entity);
 
                 GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.currentPosition, grid);
-                TaskExecutorManager.changeExecutor(entity, quarterPosition);
+                TaskExecutorManager.placeInExecutor(entity, quarterPosition);
             }
         }
     }
@@ -79,8 +78,8 @@ public class Simulation{
         //let the display appears
         sleep(sleepTime);
 
-        Main.startTime = System.nanoTime();
         taskExecutorManager.initializeAll(entitiesList);
+        Main.startTime = System.nanoTime();
         taskExecutorManager.runAll();
         taskExecutorManager.joinAll();
         taskExecutorManager.shutdownAll();
