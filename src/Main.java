@@ -11,7 +11,7 @@ public class Main {
     static long startTime;
 
     //grid of size lines*columns
-    static int lines = 100;
+    static int lines = 120;
     static int columns = 100;
 
     //number of entities on the grid - this number must be smaller than the grid of size lines*columns

@@ -65,13 +65,8 @@ public class Entity implements Callable<EntityTurnResult> {
             sleep(Simulation.sleepTime);
         }
 
-        return getEntityTurnResult();
-    }
-
-    protected EntityTurnResult getEntityTurnResult() {
         return new EntityTurnResult(this.id, this.destroyed);
     }
-
 
     /**
      * If possible, change the entity previous position with the current one, and the current one with the new one
@@ -113,10 +108,10 @@ public class Entity implements Callable<EntityTurnResult> {
      * Revive entity: put it in its start box if it is empty, otherwise wait and update appearance
      */
     public void revive() throws InterruptedException {
-        Box b = grid.getBox(this.startPosition.getI(), this.startPosition.getJ());
-        synchronized (b){
-            if(b.getEntity().isEmpty()){
-                b.setEntity(this);
+        Box box = grid.getBox(this.startPosition.getI(), this.startPosition.getJ());
+        synchronized (box){
+            if(box.getEntity().isEmpty()){
+                box.setEntity(this);
                 canRevive = 0;
                 if (Main.displayMode)
                     Display.reappear(this);
@@ -130,7 +125,6 @@ public class Entity implements Callable<EntityTurnResult> {
      */
     public void destroy() throws Exception {
         Box box = grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ());
-        Entity e = box.getEntity().get();
         box.depart(this);
         this.destroyed = true;
     }

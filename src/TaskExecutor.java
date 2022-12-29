@@ -13,7 +13,7 @@ import java.util.concurrent.*;
     public TaskExecutor(Grid grid, GridQuarterPosition quarter) {
         this.quarter = quarter;
         this.grid = grid;
-        this.executor = Executors.newFixedThreadPool(1);
+        this.executor = Executors.newSingleThreadExecutor();
         this.currentEntities = new ArrayList<>();
         this.nextNewEntities = new ArrayList<>();
     }
@@ -24,7 +24,7 @@ import java.util.concurrent.*;
         while(!Simulation.entitiesList.isEmpty()) {
             copyNextEntitiesIntoCurrentEntities();
             for(Entity entity : currentEntities){
-                results.add(executor.submit((Callable<EntityTurnResult>) entity));
+                results.add(executor.submit(entity));
             }
             for(Future<EntityTurnResult> futureResult : results){
                 EntityTurnResult result = null;
@@ -53,10 +53,6 @@ import java.util.concurrent.*;
     synchronized private void copyNextEntitiesIntoCurrentEntities() {
         this.currentEntities.addAll(nextNewEntities);
         nextNewEntities.clear();
-    }
-
-    public Grid getGrid() {
-        return grid;
     }
 
     public GridQuarterPosition getQuarter() {
