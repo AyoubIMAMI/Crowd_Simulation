@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class TaskExecutor extends Thread{
+    public class TaskExecutor extends Thread{
 
     private final Grid grid;
     private final GridQuarterPosition quarter;
@@ -42,7 +42,7 @@ public class TaskExecutor extends Thread{
             for(Entity entity : currentEntities) {
                 GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.getCurrentPosition(), grid);
                 if (!quarterPosition.equals(this.quarter)){
-                    TaskExecutorManager.changeExecutor(entity, quarterPosition);
+                    TaskExecutorManager.placeExecutor(entity, quarterPosition);
                     removable.add(entity);
                 }
             }

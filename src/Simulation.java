@@ -80,6 +80,7 @@ public class Simulation{
         sleep(sleepTime);
 
         Main.startTime = System.nanoTime();
+        taskExecutorManager.initializeAll(entitiesList);
         taskExecutorManager.runAll();
         taskExecutorManager.joinAll();
         taskExecutorManager.shutdownAll();
