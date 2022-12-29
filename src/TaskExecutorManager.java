@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -18,7 +17,7 @@ public class TaskExecutorManager {
     }
 
 
-    public static void changeExecutor(Entity entity, GridQuarterPosition quarterPosition) {
+    public static void placeExecutor(Entity entity, GridQuarterPosition quarterPosition) {
         switch (quarterPosition){
             case BOT_RIGHT -> botRightExecutor.addNewEntity(entity);
             case BOT_LEFT -> botLeftExecutor.addNewEntity(entity);
@@ -27,11 +26,14 @@ public class TaskExecutorManager {
         }
     }
 
-    public void runAll(List<Entity> entities) throws ExecutionException, InterruptedException {
+    public void initializeAll(List<Entity> entities){
         for(Entity entity: entities){
             GridQuarterPosition quarterPosition = GridQuarterPosition.getQuarterPosition(entity.currentPosition, grid);
-            changeExecutor(entity, quarterPosition);
+            placeExecutor(entity, quarterPosition);
         }
+    }
+
+    public void runAll(){
         topRightExecutor.start();
         botRightExecutor.start();
         botLeftExecutor.start();

@@ -84,7 +84,8 @@ public class Simulation{
         sleep(sleepTime);
 
         Main.startTime = System.nanoTime();
-        taskExecutorManager.runAll(entitiesList);
+        taskExecutorManager.initializeAll(entitiesList);
+        taskExecutorManager.runAll();
         taskExecutorManager.joinAll();
         taskExecutorManager.shutdownAll();
         if (Main.displayMode)
