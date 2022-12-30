@@ -95,7 +95,7 @@ public class Entity implements Callable<EntityTurnResult> {
      * Kill this entity: remove it from the box, update appearance and revive after a killTime
      */
     public void kill() throws Exception {
-        grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart(this);
+        grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart();
         if (Main.displayMode)
             Display.disappear(this);
 
@@ -125,7 +125,7 @@ public class Entity implements Callable<EntityTurnResult> {
      */
     public void destroy() throws Exception {
         Box box = grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ());
-        box.depart(this);
+        box.depart();
         this.destroyed = true;
     }
 
