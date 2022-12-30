@@ -27,8 +27,9 @@ public class Entity implements Callable<EntityTurnResult> {
     protected boolean destroyed;
     //grid
     protected Grid grid;
-
+    //counter: allows the entity to wait before respawning on the grid
     int canRevive = 0;
+    //boolean to know if the entity is dead or not
     boolean dead = false;
 
     public Entity(Position startPosition, Position arrivalPosition, int id) {
@@ -71,7 +72,7 @@ public class Entity implements Callable<EntityTurnResult> {
     /**
      * If possible, change the entity previous position with the current one, and the current one with the new one
      */
-    public void move() throws Exception {
+    public void move() {
         Position position = PositionManager.getNewPosition(this.currentPosition, this.arrivalPosition);
         //grid.getBox(position.getI(), position.getJ()).arrive(this);
         MovementState state = grid.getBox(position.getI(), position.getJ()).arrive(this);
@@ -92,9 +93,9 @@ public class Entity implements Callable<EntityTurnResult> {
     }
 
     /**
-     * Kill this entity: remove it from the box, update appearance and revive after a killTime
+     * Kill this entity: remove it from the box, update appearance and revive after a killTime or a round number
      */
-    public void kill() throws Exception {
+    public void kill() {
         grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ()).depart();
         if (Main.displayMode)
             Display.disappear(this);
@@ -123,7 +124,7 @@ public class Entity implements Callable<EntityTurnResult> {
     /**
      * When an entity arrived to its arrival position, it is destroyed: removed from its box
      */
-    public void destroy() throws Exception {
+    public void destroy() {
         Box box = grid.getBox(this.currentPosition.getI(), this.currentPosition.getJ());
         box.depart();
         this.destroyed = true;
