@@ -39,22 +39,20 @@ public class Main {
     static boolean csvMode = false;
 
     public static void main(String[] args) throws Exception {
-        while(true){
-            //create the grid on which entities move
-            Grid grid = new Grid(lines, columns);
-            //create the position manager which decides of the entity next move: move, die, revive or exit
-            PositionManager positionManager = new PositionManager(grid);
-            //create an instance to display the grid
-            Display display = new Display(grid);
-            //create the csvManager
-            CsvManager csvManager = new CsvManager("input.csv");
+        //create the grid on which entities move
+        Grid grid = new Grid(lines, columns);
+        //create the position manager which decides of the entity next move: move, die, revive or exit
+        PositionManager positionManager = new PositionManager(grid);
+        //create an instance to display the grid
+        Display display = new Display(grid);
+        //create the csvManager
+        CsvManager csvManager = new CsvManager("input.csv");
 
-            //initialize and run the simulation - compute execution time
-            Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
+        //initialize and run the simulation - compute execution time
+        Simulation simulation = new Simulation(grid, entitiesNumber, positionManager, display, sleepTime, csvManager, csvMode);
 
-            simulation.initialize();
-            simulation.launch();
-            simulation.time(startTime);
-        }
+        simulation.initialize();
+        simulation.launch();
+        simulation.time(startTime);
     }
 }
