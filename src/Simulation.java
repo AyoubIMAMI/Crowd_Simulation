@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
 
 import static java.lang.Thread.sleep;
 
@@ -24,14 +23,8 @@ public class Simulation{
     static long sleepTime;
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     boolean csvMode;
-
-    /*ExecutorService botRightExecutor = Executors.newSingleThreadExecutor();
-    ExecutorService botLeftExecutor = Executors.newSingleThreadExecutor();
-    ExecutorService topRightExecutor = Executors.newSingleThreadExecutor();
-    ExecutorService topLeftExecutor = Executors.newSingleThreadExecutor();*/
-
+    //Manage the tasks that are responsible for a quarter of the grid
     TaskExecutorManager taskExecutorManager;
-
 
     public Simulation(Grid grid, int entitiesNumber, PositionManager positionManager, Display display, int sleepTime, CsvManager csvManager, boolean csvMode) {
         Simulation.sleepTime = sleepTime;
@@ -67,7 +60,6 @@ public class Simulation{
                 Entity entity = new Entity(startPosition, arrivalPosition, id);
                 grid.addEntity(entity);
                 entitiesList.add(entity);
-
             }
         }
     }
@@ -76,8 +68,7 @@ public class Simulation{
      * Run the simulation - round by round
      * @throws InterruptedException sleepTime
      */
-    public void launch() throws InterruptedException, ExecutionException {
-        List<Future<EntityTurnResult>> results = new ArrayList<>();
+    public void launch() throws InterruptedException {
         if (Main.displayMode)
             display.displayGrid(grid);
         //let the display appears
@@ -92,6 +83,11 @@ public class Simulation{
             display.close();
     }
 
+    /**
+     * Remove an entity from the given list using its id
+     * @param entities given list
+     * @param id id of the entity to remove
+     */
     static synchronized public void removeEntityWithId(List<Entity> entities, int id) {
         for (Entity entity : entities)
             if (entity.getId() == id){
@@ -111,6 +107,4 @@ public class Simulation{
         System.out.println("Program ran for " + totalTime / (Math.pow(10, 9)) + " seconds with a time sleep of " + sleepTime + " milliseconds.");
         System.out.println("Program ran for " + totalTime / (6 * Math.pow(10, 10)) + " minutes with a time sleep of " + sleepTime + " milliseconds.");
     }
-
-
 }

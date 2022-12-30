@@ -2,12 +2,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-    public class TaskExecutor extends Thread{
+/**
+ * Task which will manage the entities of a specific grid area
+ */
+public class TaskExecutor extends Thread {
 
+    //grid
     private final Grid grid;
+    //quarter of the grid
     private final GridQuarterPosition quarter;
+    //task
     private final ExecutorService executor;
+    //entities to manage
     private List<Entity> currentEntities;
+    //entities which joined the quarter
     private List<Entity> nextNewEntities;
 
     public TaskExecutor(Grid grid, GridQuarterPosition quarter) {
@@ -17,6 +25,11 @@ import java.util.concurrent.*;
         this.currentEntities = new ArrayList<>();
         this.nextNewEntities = new ArrayList<>();
     }
+
+    /**
+     * Manage entities movements in this quarter
+     * which also means arrival and departure from this quarter
+     */
     @Override
     public void run() {
         List<Future<EntityTurnResult>> results = new ArrayList<>();
@@ -27,7 +40,7 @@ import java.util.concurrent.*;
                 results.add(executor.submit(entity));
             }
             for(Future<EntityTurnResult> futureResult : results){
-                EntityTurnResult result = null;
+                EntityTurnResult result;
                 try {
                     result = futureResult.get();
                 } catch (InterruptedException | ExecutionException e) {
@@ -50,30 +63,20 @@ import java.util.concurrent.*;
         }
     }
 
+    /**
+     * Add the new coming entities in the quarter to the entities which already are in the quarter
+     * that the task manages
+     */
     synchronized private void copyNextEntitiesIntoCurrentEntities() {
         this.currentEntities.addAll(nextNewEntities);
         nextNewEntities.clear();
-    }
-
-    public GridQuarterPosition getQuarter() {
-        return quarter;
-    }
-
-    public ExecutorService getExecutor() {
-        return executor;
-    }
-
-    public List<Entity> getCurrentEntities() {
-        return currentEntities;
-    }
-
-    synchronized public List<Entity> getNextNewEntities() {
-        return nextNewEntities;
     }
 
     synchronized void addNewEntity(Entity entity){
         this.nextNewEntities.add(entity);
     }
 
-
+    public ExecutorService getExecutor() {
+        return executor;
+    }
 }
