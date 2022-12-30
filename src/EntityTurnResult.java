@@ -1,5 +1,11 @@
+/**
+ * Entity state result of a round
+ */
 public class EntityTurnResult {
+
+    //attribute to know if the entity has been destroyed on this turn
     boolean isDestroyed;
+    //entity id
     int id;
 
     public EntityTurnResult(int id, boolean isDestroyed) {

@@ -20,9 +20,11 @@ public class Main {
 
     //sleep time in ms - needed to simulate movements on the display
     static int sleepTime = 0;
+
     //kill time in ms - to simulate the time for which an entity (thread) will be dead
+    //useful in the case: a thread per entity
     //Be aware that if you set it at 0, there can be a situation where:
-    // when an entity A die, it will instantly respawn,
+    //when an entity A die, it will instantly respawn,
     //so if another entity B with a greater id wants its place it will wait
     //while the other entity A will keep dying and respawning
     //until the entity B wake up faster than the entity A respawn and takes the place
@@ -32,6 +34,8 @@ public class Main {
     static boolean displayMode = false;
 
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
+    //there is no security on what is written on the file,
+    // therefore the file must respect the grid size and the entities declaration
     static boolean csvMode = false;
 
     public static void main(String[] args) throws Exception {
