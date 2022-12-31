@@ -21,7 +21,7 @@ public class TaskExecutor extends Thread {
     public TaskExecutor(Grid grid, GridQuarterPosition quarter) {
         this.quarter = quarter;
         this.grid = grid;
-        this.executor = Executors.newSingleThreadExecutor();
+        this.executor = Executors.newFixedThreadPool(1);
         this.currentEntities = new ArrayList<>();
         this.nextNewEntities = new ArrayList<>();
     }
