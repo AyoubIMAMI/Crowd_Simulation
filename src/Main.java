@@ -10,16 +10,16 @@ public class Main {
     //time at which the program start running - needed to compute how much time the program ran
     static long startTime;
 
-    //grid of size lines*columns
-    static int lines = 120;
-    static int columns = 100;
+    //grid of size lines*columns - since the grid is split in 4 parts the minimum size is 2*2
+    static int lines = 12;
+    static int columns = 10;
 
     //number of entities on the grid - this number must be smaller than the grid of size lines*columns
     //entities cannot spawn on each other
-    static int entitiesNumber = 1000;
+    static int entitiesNumber = 20;
 
     //sleep time in ms - needed to simulate movements on the display
-    static int sleepTime = 0;
+    static int sleepTime = 250;
 
     //kill time in ms - to simulate the time for which an entity (thread) will be dead
     //useful in the case: a thread per entity
@@ -31,7 +31,7 @@ public class Main {
     static int killTime = 1000;
 
     //true: display the grid and the entities
-    static boolean displayMode = false;
+    static boolean displayMode = true;
 
     //true: read the csv file to set up the grid - false: set up the grid with the class Main attributes
     //there is no security on what is written on the file,
